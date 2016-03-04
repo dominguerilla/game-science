@@ -1,0 +1,19 @@
+LOCOMOTION 1.0 DOCUMENTATION--CMD363
+====================================
+
+There are two prefabs, MocapAvatar and Skeleton that are ready to use out of the box.
+WASD to run/walk
+CapsLock to toggle run/walk
+Space to Jump
+
+In order to utilize your own model:
+First, note that the script controlling movement is PlayerMove.cs.
+1. Spawn your Mecanim-friendly model, along with its avatar. 
+2. If somehow your model does not have an Animator component, add it as a component.
+3. Drag the Animator Controller 'PlayerMove' to the Controller slot in the Animator component in the Inspector.
+4. Uncheck the box under the Animator Component section in the Inspector that says 'Apply Root Motion'.
+5. Create an empty GameObject, and make your model the child of this empty object.
+6. Add the script PlayerMove.cs TO THE EMPTY PARENT GAMEOBJECT. It should automatically add a CharacterController component to it. If not, add a CharacterController component to the parent Gameobject.
+7. Finally, ensure that the X-Y orientation of the parent CharacterController and the child model are the same. If not, rotate one or the other so that they match.
+
+You may have to adjust the Y-displacement of the model so that the model's feet properly touches the floor.
