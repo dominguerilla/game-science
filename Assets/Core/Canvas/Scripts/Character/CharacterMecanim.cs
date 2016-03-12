@@ -110,6 +110,8 @@ public class CharacterMecanim : MonoBehaviour
     {
         this.Body.NavSetOrientationBehavior(behavior.Value);
         return RunStatus.Success;
+
+
     }
 
     /// <summary>
