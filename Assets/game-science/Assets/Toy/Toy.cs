@@ -22,6 +22,9 @@ public class Toy : SmartObject {
     private SmartCharacter schar;
     private Animator anim;
 
+    // Testing: waypoints for the character, used for IdleBehavior
+    private GameObject waypoint1, waypoint2;
+
     //The current Accessory in range of use for this Toy.
     private GameObject AccessoryInRange;
 
@@ -31,20 +34,40 @@ public class Toy : SmartObject {
     //The current number of available Accessory slots on the Toy.
     private int AvailableSlots;
 
+    #region getters
     public override string Archetype
     { get { return "Toy"; } }
 
-    [Affordance]
+    // Getter for behavior trees
+    public NavMeshAgent GetAgent
+    { get { return agent; } }
+
+    // Getter for behavior trees
+    public GameObject GetWayPoint1
+    { get { return waypoint1; } }
+
+    // Getter for behavior trees
+    public GameObject GetWayPoint2
+    { get { return waypoint2; } }
+    #endregion
+
+    //[Affordance]
     protected Node IdleTree()
     {
-        return new DecoratorLoop(
+        //return IdleBehaviors.TestBehavior(this);
+
+        //return IdleBehaviors.WalkBackAndForth(this);
+
+        return IdleBehaviors.IdleWander(this);
+
+        /*return new DecoratorLoop(
             new Sequence(
                 // TODO: Make this an actual behavior
                 // Would be nice if it was a random wandering behavior
                 // Would be even better if the character picked things up
                 new LeafWait(2000)
                 )
-            );
+            );*/
     }
 
     //[Affordance]
@@ -52,7 +75,7 @@ public class Toy : SmartObject {
         // TODO
     }
 
-    [Affordance]
+    //[Affordance]
     protected Node PickUpAxe(SmartCharacter user)
     {
         // TODO
@@ -82,6 +105,7 @@ public class Toy : SmartObject {
         }
     }
 
+    /*
     void OnCollisionEnter(Collider other)
     {
         if(other.gameObject.GetComponent<Accessory>() != null)
@@ -97,11 +121,20 @@ public class Toy : SmartObject {
             AccessoryInRange = null;
         }
     }
+    */
 
     public int GetAvailableSlotCount()
     {
         return AvailableSlots;
     }
+
+    #region behavior nodes
+    public Node Node_GoTo(Val<Vector3> position)
+    {
+        return this.Node_GoTo(position);
+    }
+    #endregion
+
 }
 
 #region additional comments

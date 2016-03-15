@@ -1,4 +1,4 @@
-Last updated: 3/14
+Last updated: 3/15
 
 game-science folder contains
 	Assets:
@@ -7,8 +7,12 @@ game-science folder contains
 	Scenes:
 		-Scene1, which shows lumberjack with a simple behavior script
 			-And some accessories
-		-TrollScene, which shows troll with WASD controls
+		-TrollScene, which shows troll
 	Accessories:
+		-Accessory class
+		-SmartAxe class
 	Scripts:
+		-Static IdleBehavior class
+		-Utils class
 	Toy:
 		-Implementation of our Toy SmartCharacter
