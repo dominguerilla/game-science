@@ -1,6 +1,7 @@
 ﻿using RootMotion.FinalIK;
 using TreeSharpPlus;
 using UnityEngine;
+using System.Collections.Generic;
 
 /// <summary>
 /// Toy class is our implementation of SmartCharacter
@@ -20,6 +21,15 @@ public class Toy : SmartObject {
     private BehaviorAgent bagent;
     private SmartCharacter schar;
     private Animator anim;
+
+    //The current Accessory in range of use for this Toy.
+    private GameObject AccessoryInRange;
+
+    //This is used to specify where equipped Accessories will show up on the Toy.
+    public List<Transform> AccessorySlots = new List<Transform>();
+    
+    //The current number of available Accessory slots on the Toy.
+    private int AvailableSlots;
 
     public override string Archetype
     { get { return "Toy"; } }
@@ -55,12 +65,42 @@ public class Toy : SmartObject {
         schar = GetComponent<SmartCharacter>();
         anim = GetComponent<Animator>();
         bagent = new BehaviorAgent(IdleTree());
+        AvailableSlots = AccessorySlots.Count;
         bagent.StartBehavior();
     }
 	
 	// Update is called once per frame
 	void Update () {
         anim.SetBool("Moving", agent.hasPath);
+        if (Input.GetMouseButtonDown(0))
+        {
+            if (AccessoryInRange)
+            {
+                Accessory acc = AccessoryInRange.GetComponent<Accessory>();
+                Node OnUse = acc.OnUse(this);
+            }
+        }
+    }
+
+    void OnCollisionEnter(Collider other)
+    {
+        if(other.gameObject.GetComponent<Accessory>() != null)
+        {
+            AccessoryInRange = other.gameObject;
+        }
+    }
+
+    void OnCollisionExit(Collider other)
+    {
+        if (other.gameObject == AccessoryInRange)
+        {
+            AccessoryInRange = null;
+        }
+    }
+
+    public int GetAvailableSlotCount()
+    {
+        return AvailableSlots;
     }
 }
 
