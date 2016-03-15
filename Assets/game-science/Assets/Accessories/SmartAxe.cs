@@ -3,11 +3,15 @@ using System.Collections;
 using TreeSharpPlus;
 
 public class SmartAxe : Accessory {
-    
+
+    public GameObject equipModel;
+    public float RotateSpeed = 100.0f;
+
     public override string Archetype { get { return "SmartAxe"; } }
     public override bool IsEquippable { get { return true; } }
+    public override GameObject EquipModel { get { return equipModel; } }
 
-    public float RotateSpeed = 100.0f;
+    
 
     private bool isEquipped; //Whether or not this item is equipped--this is a placeholder for state
 
@@ -24,7 +28,9 @@ public class SmartAxe : Accessory {
     {
         return new Sequence(
             new LeafAssert(() => { return IsEquippable; }),
-            new LeafAssert(() => { return toy.GetAvailableSlotCount() > 0; })
+            new LeafAssert(() => { return toy.GetAvailableSlotCount() > 0; }),
+            new EquipAccessory(toy, this),
+            new LeafInvoke(() => { GameObject.Destroy(this); })
             );
     }
 

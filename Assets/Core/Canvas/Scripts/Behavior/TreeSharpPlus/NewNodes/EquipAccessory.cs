@@ -19,10 +19,17 @@ namespace TreeSharpPlus
 
         public override IEnumerable<RunStatus> Execute()
         {
-            //toy.GetComponent<Animator>().SetTrigger("PickUp");
-            //GameObject accModel = GameObject.Instantiate(acc.GetComponent<Toy>().GetEquipModel());
-            //accModel.parent = toy.AccessorySlots.Get(0); //currently gets the first slot only
-            //GameObject.Destroy(Accessory);
+            //Trigger the animation for picking up Accessories
+            toy.GetComponent<Animator>().SetTrigger("IdlePickUp");
+
+            //Spawn a model that will appear on the Toy picking up the Accessory
+            GameObject accModel = (GameObject)GameObject.Instantiate(acc.EquipModel, toy.AccessorySlots[0].transform.position, Quaternion.identity);
+
+            //Make the model a child of the bones of the Toy model
+            accModel.transform.parent = toy.AccessorySlots[0]; //currently gets the first slot only
+
+            //Destroy the Accessory on the ground
+            acc.gameObject.SetActive(false);
             yield return RunStatus.Success;
         }
     }

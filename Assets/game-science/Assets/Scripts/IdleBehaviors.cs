@@ -31,13 +31,10 @@ public static class IdleBehaviors {
         ));
     }
 
-    // TODO doesn't work
     //[Affordance]
-    public static Node WalkBackAndForth(Toy toy)
+    public static Node WalkBackAndForth(Toy toy, GameObject position1, GameObject position2)
     {
         NavMeshAgent agent = toy.GetAgent;
-        GameObject position1 = toy.GetWayPoint1;
-        GameObject position2 = toy.GetWayPoint2;
 
         return new DecoratorLoop(
             new Sequence(
@@ -47,5 +44,30 @@ public static class IdleBehaviors {
                 new LeafWait(2000)
                 )
             );
+    }
+
+
+    public static Node IdleStand()
+    {
+        return new DecoratorLoop(
+                new LeafWait(2000)
+            );
+    }
+
+    /// <summary>
+    /// Returns a PBT that will perform an action, and then make the character return to standing idly.
+    /// </summary>
+    /// <param name="subtree">The action that will be performed before standing idly.</param>
+    /// <returns>The root node of the overall PBT.</returns>
+    public static Node IdleStandDuringAction(Node subtree)
+    {
+        return new DecoratorLoop(
+                        new SequenceParallel(
+                            subtree,
+                            new DecoratorLoop(
+                                new LeafWait(2000)    
+                                )
+                        )
+                    );
     }
 }

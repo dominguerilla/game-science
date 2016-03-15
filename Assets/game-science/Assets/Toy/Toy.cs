@@ -34,6 +34,13 @@ public class Toy : SmartObject {
     //The current number of available Accessory slots on the Toy.
     private int AvailableSlots;
 
+    //Specifies if the player is currently in control of this Toy.
+    public bool playerInControl;
+
+    //The node of the Behavior Tree that defines the Toy's idle behavior.
+    public Node IdleTreeRoot;
+
+
     #region getters
     public override string Archetype
     { get { return "Toy"; } }
@@ -42,71 +49,47 @@ public class Toy : SmartObject {
     public NavMeshAgent GetAgent
     { get { return agent; } }
 
+    //Got rid of these--better to just pass the positions to the Node function itself
     // Getter for behavior trees
-    public GameObject GetWayPoint1
-    { get { return waypoint1; } }
+    //public GameObject GetWayPoint1
+    //{ get { return waypoint1; } }
 
     // Getter for behavior trees
-    public GameObject GetWayPoint2
-    { get { return waypoint2; } }
+    //public GameObject GetWayPoint2
+    //{ get { return waypoint2; } }
+
+    public int GetAvailableSlotCount()
+    {
+        return AvailableSlots;
+    }
     #endregion
-
-    //[Affordance]
-    protected Node IdleTree()
-    {
-        //return IdleBehaviors.TestBehavior(this);
-
-        //return IdleBehaviors.WalkBackAndForth(this);
-
-        return IdleBehaviors.IdleWander(this);
-
-        /*return new DecoratorLoop(
-            new Sequence(
-                // TODO: Make this an actual behavior
-                // Would be nice if it was a random wandering behavior
-                // Would be even better if the character picked things up
-                new LeafWait(2000)
-                )
-            );*/
-    }
-
-    //[Affordance]
-    protected void PlayerInstructions() {
-        // TODO
-    }
-
-    //[Affordance]
-    protected Node PickUpAxe(SmartCharacter user)
-    {
-        // TODO
-        return new Sequence();
-    }
 
     // Use this for initialization
     void Start () {
         agent = GetComponent<NavMeshAgent>();
         schar = GetComponent<SmartCharacter>();
         anim = GetComponent<Animator>();
-        bagent = new BehaviorAgent(IdleTree());
+        anim.SetBool("isWalk", true);
+        playerInControl = true;
         AvailableSlots = AccessorySlots.Count;
-        bagent.StartBehavior();
     }
 	
 	// Update is called once per frame
 	void Update () {
         anim.SetBool("Moving", agent.hasPath);
-        if (Input.GetMouseButtonDown(0))
+        if (playerInControl)
         {
-            if (AccessoryInRange)
+            if (Input.GetKeyDown(KeyCode.E))
             {
-                Accessory acc = AccessoryInRange.GetComponent<Accessory>();
-                Node OnUse = acc.OnUse(this);
+                //Attempt to equip an Accessory
+                DEBUG_EquipAccessory();
             }
         }
     }
 
-    /*
-    void OnCollisionEnter(Collider other)
+    
+
+    void OnTriggerEnter(Collider other)
     {
         if(other.gameObject.GetComponent<Accessory>() != null)
         {
@@ -114,24 +97,51 @@ public class Toy : SmartObject {
         }
     }
 
-    void OnCollisionExit(Collider other)
+    void OnTriggerExit(Collider other)
     {
         if (other.gameObject == AccessoryInRange)
         {
             AccessoryInRange = null;
         }
     }
-    */
+    
 
-    public int GetAvailableSlotCount()
+   
+
+    #region Debugging Functions, that may or may not be called by our GUI
+    //Assuming that the Behavior Agent hasn't been initialized or started yet, will attempt to equip an Accessory within range.
+    bool DEBUG_EquipAccessory()
     {
-        return AvailableSlots;
+        if (AccessoryInRange != null && AccessoryInRange.activeInHierarchy)
+        {
+            Accessory acc = AccessoryInRange.GetComponent<Accessory>();
+            Node OnUse = acc.OnUse(this);
+            bagent = new BehaviorAgent(IdleBehaviors.IdleStandDuringAction(OnUse));
+            //Node AccessoryAbility = acc.ToyUse(this);
+            bagent.StartBehavior();
+            return true;
+        }
+        else
+        {
+            Debug.Log("No Accessory within range.");
+            return false;
+        }
     }
-
-    #region behavior nodes
-    public Node Node_GoTo(Val<Vector3> position)
+    public void DEBUG_SetIdleRootAsIdleStand()
     {
-        return this.Node_GoTo(position);
+        IdleTreeRoot = IdleBehaviors.IdleStand();
+    }
+    public void DEBUG_SetIdleRootAsWander()
+    {
+        IdleTreeRoot = IdleBehaviors.IdleWander(this);
+    }
+    public void DEBUG_StartBehavior()
+    {
+        if (IdleTreeRoot != null)
+        {
+            bagent = new BehaviorAgent(IdleTreeRoot);
+            bagent.StartBehavior();
+        }
     }
     #endregion
 
