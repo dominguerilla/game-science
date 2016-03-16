@@ -3,6 +3,8 @@ using System.Collections;
 
 public class Utils {
 
+    public static Vector3 ORIGIN_VECTOR = new Vector3(0, 0, 0);
+
     // Given a vector, returns a new vector in a random range
     public static Vector3 GetNewRandomPosition(Vector3 pos)
     {
