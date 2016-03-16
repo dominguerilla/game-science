@@ -22,6 +22,8 @@ public class Toy : SmartObject {
     private SmartCharacter schar;
     private Animator anim;
 
+    
+
     // Testing: waypoints for the character, used for IdleBehavior
     private GameObject waypoint1, waypoint2;
 
@@ -29,7 +31,7 @@ public class Toy : SmartObject {
     private GameObject AccessoryInRange;
 
     //This is used to specify where equipped Accessories will show up on the Toy.
-    public List<Transform> AccessorySlots = new List<Transform>();
+    public Transform[] AccessorySlots = new Transform[10];
     
     //The current number of available Accessory slots on the Toy.
     private int AvailableSlots;
@@ -71,7 +73,7 @@ public class Toy : SmartObject {
         anim = GetComponent<Animator>();
         anim.SetBool("isWalk", true);
         playerInControl = true;
-        AvailableSlots = AccessorySlots.Count;
+        AvailableSlots = AccessorySlots.Length;
     }
 	
 	// Update is called once per frame
@@ -82,7 +84,20 @@ public class Toy : SmartObject {
             if (Input.GetKeyDown(KeyCode.E))
             {
                 //Attempt to equip an Accessory
+                if (bagent != null)
+                {
+                    bagent.StopBehavior();
+                }
                 DEBUG_EquipAccessory();
+            }
+            else if (Input.GetKeyDown(KeyCode.R))
+            {
+                if (bagent != null)
+                {
+                    bagent.StopBehavior();
+                }
+                bagent = new BehaviorAgent(IdleBehaviors.IdleWander(this));
+                bagent.StartBehavior();
             }
         }
     }

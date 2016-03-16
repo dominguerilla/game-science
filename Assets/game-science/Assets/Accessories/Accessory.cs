@@ -3,7 +3,18 @@ using System.Collections;
 using TreeSharpPlus;
 
 public abstract class Accessory : SmartObject {
-
+    /// <summary>
+    /// The enumerations for the equipment slots. These are passed to the EquipAccessory node to specify where the Accessory will appear on the Toy when equipped.
+    /// In the Inspector, under the Accessory Slots section of the Toy component, make sure that the proper bones of the model are assigned to their respective indices as outlined here.
+    /// </summary>
+    public enum EquipSlots
+    {
+        RightHand = 0,
+        LeftHand = 1,
+        TorsoBack = 2,
+        Head = 3,
+        None = 9
+    }
     /**
      * A simple function to rotate the Accessory while it is on the ground unequipped.
      */ 
@@ -21,6 +32,11 @@ public abstract class Accessory : SmartObject {
      * The model that will show up on the Toy who equips this Accessory, if any.
      */
     public abstract GameObject EquipModel { get; }
+
+    /**
+     * Specifies which equip slot this Accessory will appear if equippable.
+     */ 
+    public abstract EquipSlots EquipSlot { get; }
 
     /**
      * The subtree that happens when a Toy decides to 'use' the Accessory. Should only be called when the Toy is within 'use' range.
