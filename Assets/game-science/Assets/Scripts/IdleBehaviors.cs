@@ -19,12 +19,11 @@ public static class IdleBehaviors {
     {
         NavMeshAgent agent = toy.GetAgent;
 
-        //Debug.Log("Inside IdleWander");
+        Debug.Log("Inside IdleWander");
 
         return new DecoratorLoop(
             new Sequence(
-                // TODO possibly implement this later:
-                // toy.Simple_Node_Require(IsStanding),
+                toy.Simple_Node_Require(SimpleStateDef.IsStanding),
 
                 new WalkToRandomNewVector(agent, toy),
                 new LeafWait(2000)
