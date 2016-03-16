@@ -30,11 +30,11 @@ public class BehaviorTest : MonoBehaviour {
     {
         return new DecoratorLoop(
             new Sequence(
-                new WalkTo(agent, position1),
+                new WalkTo(agent, position1)/*,
                 new LeafWait(2000),
                 new WalkTo(agent, position2),
                 new LeafWait(2000)
-                )
+                */)
             );
     }
 
