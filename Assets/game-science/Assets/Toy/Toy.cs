@@ -166,6 +166,34 @@ public class Toy : SmartObject {
         return new LeafAssert(() => CheckStates(states));
     }
 
+    public Node Simple_Node_SetTrue(params SimpleStateDef[] states)
+    {
+        return new LeafInvoke(() => SetStatesToTrue(states));
+    }
+
+    public Node Simple_Node_SetFalse(params SimpleStateDef[] states)
+    {
+        return new LeafInvoke(() => SetStatesToFalse(states));
+    }
+
+    public void SetStatesToTrue(params SimpleStateDef[] states)
+    {
+        foreach (SimpleStateDef i in states)
+        {
+            Debug.Log("State '" + i + "' set to true");
+            this.states[(int)i] = true;
+        }
+    }
+
+    public void SetStatesToFalse(params SimpleStateDef[] states)
+    {
+        foreach (SimpleStateDef i in states)
+        {
+            //Debug.Log("State '" + i + "' set to false");
+            this.states[(int)i] = false;
+        }
+    }
+
     // Utility function: checks that all states are true for this toy
     public bool CheckStates(params SimpleStateDef[] states)
     {

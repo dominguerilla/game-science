@@ -19,7 +19,7 @@ public static class IdleBehaviors {
     {
         NavMeshAgent agent = toy.GetAgent;
 
-        Debug.Log("Inside IdleWander");
+        //Debug.Log("Inside IdleWander");
 
         return new DecoratorLoop(
             new Sequence(
