@@ -31,6 +31,9 @@ public class Toy : SmartObject {
     // The states for this toy
     private bool[] states;
 
+    //The light that appears when this Toy is selected
+    private GameObject light;
+
     #region setters
     // Right now, all states are initially set to true
     // Eventually, we should define which states are true inititially
@@ -59,7 +62,6 @@ public class Toy : SmartObject {
     }
     #endregion
 
-    // Use this for initialization
     void Start () {
         // Set all states to true for now
         this.SetInitialStates();
@@ -71,28 +73,43 @@ public class Toy : SmartObject {
         playerInControl = true;
         AvailableSlots = AccessorySlots.Length;
 
-        bagent = new BehaviorAgent(IdleBehaviors.StopBehaviorTest());
-        bagent.StartBehavior();
+        bagent = new BehaviorAgent(IdleBehaviors.IdleWander(this));
     }
 	
 	// Update is called once per frame
 	void Update () {
         anim.SetBool("Moving", agent.hasPath);
         
-        if (playerInControl)
-        {
-            if (Input.GetKeyDown(KeyCode.E))
-            {
-                bagent.StartBehavior();
-            }
-            else if (Input.GetKeyDown(KeyCode.R))
-            {
-                bagent.StopBehavior();
-            }
-        }
     }
 
-    
+    /// <summary>
+    /// The function called when this Toy is selected.
+    /// </summary>
+    public void OnSelect()
+    {
+        playerInControl = true;
+        light = new GameObject("Spotlight");
+        Light lightComp = light.AddComponent<Light>();
+        light.transform.parent = this.gameObject.transform;
+        lightComp.color = Color.green;
+        lightComp.type = LightType.Spot;
+        lightComp.intensity = 10;
+        light.transform.position = this.transform.position + new Vector3 (0, 2, 0);
+        light.transform.Rotate(90, 0, 0);
+
+        Debug.Log(gameObject.name + " is selected.");
+    }
+
+    /// <summary>
+    /// The function called when this Toy is deselected.
+    /// </summary>
+    public void OnDeselect()
+    {
+        playerInControl = false;
+        Debug.Log(gameObject.name + " is unselected.");
+        GameObject.Destroy(light);
+    }
+
 
     void OnTriggerEnter(Collider other)
     {
@@ -109,8 +126,8 @@ public class Toy : SmartObject {
             AccessoryInRange = null;
         }
     }
-    
 
+    
    
 
     #region Debugging Functions, that may or may not be called by our GUI
