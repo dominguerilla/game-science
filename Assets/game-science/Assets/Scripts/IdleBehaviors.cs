@@ -69,4 +69,18 @@ public static class IdleBehaviors {
                         )
                     );
     }
+
+    public static Node StopBehaviorTest()
+    {
+        return new DecoratorLoop(
+                new Sequence(
+                        new LeafTrace("Leaf 1"),
+                        new LeafWait(3000),
+                        new LeafTrace("Leaf 2"),
+                        new LeafWait(3000),
+                        new LeafTrace("Leaf 3"),
+                        new LeafWait(3000)
+                    )
+            );
+    }
 }

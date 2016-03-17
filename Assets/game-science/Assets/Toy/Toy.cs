@@ -70,30 +70,24 @@ public class Toy : SmartObject {
         anim.SetBool("isWalk", true);
         playerInControl = true;
         AvailableSlots = AccessorySlots.Length;
+
+        bagent = new BehaviorAgent(IdleBehaviors.StopBehaviorTest());
+        bagent.StartBehavior();
     }
 	
 	// Update is called once per frame
 	void Update () {
         anim.SetBool("Moving", agent.hasPath);
+        
         if (playerInControl)
         {
             if (Input.GetKeyDown(KeyCode.E))
             {
-                //Attempt to equip an Accessory
-                if (bagent != null)
-                {
-                    bagent.StopBehavior();
-                }
-                DEBUG_EquipAccessory();
+                bagent.StartBehavior();
             }
             else if (Input.GetKeyDown(KeyCode.R))
             {
-                if (bagent != null)
-                {
-                    bagent.StopBehavior();
-                }
-                bagent = new BehaviorAgent(IdleBehaviors.IdleWander(this));
-                bagent.StartBehavior();
+                bagent.StopBehavior();
             }
         }
     }
