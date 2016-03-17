@@ -186,7 +186,19 @@ public class UnityChanControlScriptWithRgidBody : MonoBehaviour
 		}
 	}
 
-	void OnGUI()
+    void OnTriggerEnter(Collider other)
+    {
+
+        //J. If it f's up anyone elses behaviors commit out this section and let me know on slack
+        if (other.gameObject.CompareTag("Speed"))
+        {
+            other.gameObject.SetActive(false);
+            forwardSpeed = 100f;
+
+        }
+    }
+
+    void OnGUI()
 	{
 		GUI.Box(new Rect(Screen.width -260, 10 ,250 ,150), "Interaction");
 		GUI.Label(new Rect(Screen.width -245,30,250,30),"Up/Down Arrow : Go Forwald/Go Back");

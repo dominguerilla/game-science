@@ -8,6 +8,9 @@ using System.Collections.Generic;
 /// </summary>
 public class Toy : SmartObject {
 
+    //J. A pretty basic implementation of stats. Only for speed now. Prob can add other stats like this too
+    public float forwardSpeed = 7f;
+
     private NavMeshAgent agent;
     private BehaviorAgent bagent;
     private SmartCharacter schar;
@@ -116,6 +119,14 @@ public class Toy : SmartObject {
         if(other.gameObject.GetComponent<Accessory>() != null)
         {
             AccessoryInRange = other.gameObject;
+        }
+
+        //J. If it f's up anyone elses behaviors commit out this section and let me know on slack
+        if (other.gameObject.CompareTag("Speed"))
+        {
+            other.gameObject.SetActive(false);
+            forwardSpeed = 12f;
+
         }
     }
 
