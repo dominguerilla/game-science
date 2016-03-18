@@ -7,6 +7,7 @@ public class PlaceToy : MonoBehaviour {
     public GameObject lumberjackPrefab;
     public GameObject skeletonPrefab;
     public GameObject unityChanPrefab;
+    public GameObject trollPrefab;
     public Dropdown toyDropdown;
 
     public void onClick()
@@ -21,6 +22,9 @@ public class PlaceToy : MonoBehaviour {
                 break;
             case 2:
                 Instantiate(unityChanPrefab);
+                break;
+            case 3:
+                Instantiate(trollPrefab);
                 break;
             default:
                 Instantiate(lumberjackPrefab);

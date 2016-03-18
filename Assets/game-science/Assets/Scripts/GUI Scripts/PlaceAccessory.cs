@@ -7,6 +7,7 @@ public class PlaceAccessory : MonoBehaviour {
     public GameObject axePrefab;
     public GameObject speedPotionPrefab;
     public GameObject woodBagPrefab;
+    public GameObject santaHatPrefab;
     public Dropdown accessoryDropdown;
 
     public void onClick()
@@ -21,6 +22,9 @@ public class PlaceAccessory : MonoBehaviour {
                 break;
             case 2:
                 Instantiate(woodBagPrefab);
+                break;
+            case 3:
+                Instantiate(santaHatPrefab);
                 break;
             default:
                 Instantiate(axePrefab);
