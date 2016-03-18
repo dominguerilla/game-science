@@ -23,7 +23,7 @@ public class SmartHold : Accessory
     {
         return new Sequence(
             new LeafAssert(() => { return IsEquippable; }),
-            new LeafAssert(() => { return toy.GetAvailableSlotCount() > 0; }),
+            //new LeafAssert(() => { return toy.GetAvailableSlotCount() > 0; }),
             new EquipAccessory(toy, this, EquipSlot),
             new LeafInvoke(() => { GameObject.Destroy(this); })
             );
@@ -33,37 +33,44 @@ public class SmartHold : Accessory
     // Character should wander around and try to give presents to people
     public override Node ToyUse(Toy toy)
     {
-        NavMeshAgent agent = toy.GetAgent;
+        NavMeshAgent agent = toy.GetAgent();
         RaycastHit hit;
-        GameObject[] dummies;
+        GameObject[] dummies = GameObject.FindGameObjectsWithTag("dummy");
 
-        return new Sequence(
-           new LeafInvoke(() =>
-           {
-
-               dummies = GameObject.FindGameObjectsWithTag("dummy");
-               Ray beam = new Ray(transform.position, toy.transform.forward);
-
-               Vector3 rayDir = dummies[0].transform.position - transform.position;
-
-               Vector3 fwd = transform.TransformDirection(Vector3.forward);
-               if (Physics.Raycast(transform.position, rayDir, out hit))
+       //if(dummies.length>0) For some reason length is causing errors?
+       //{
+            return new Sequence(
+               new LeafInvoke(() =>
                {
-                   if (hit.collider.tag == "dummy")
+
+                   //dummies = GameObject.FindGameObjectsWithTag("dummy");
+                   Ray beam = new Ray(transform.position, toy.transform.forward);
+
+                   Vector3 rayDir = dummies[0].transform.position - transform.position;
+
+                   Vector3 fwd = transform.TransformDirection(Vector3.forward);
+                   if (Physics.Raycast(transform.position, rayDir, out hit))
                    {
-                       hit.transform.gameObject.transform.position = transform.position;
+                       if (hit.collider.tag == "dummy")
+                       {
+                           hit.transform.gameObject.transform.position = transform.position;
+                       }
                    }
-               }
-           }),
-           new DecoratorLoop(
-               new SequenceParallel(
-                   new LeafInvoke(()=>
-                   {
-                       hit.transform.gameObject.transform.position = transform.position;
-                   })
+               }),
+               new DecoratorLoop(
+                   new SequenceParallel(
+                       new LeafInvoke(() =>
+                       {
+                           hit.transform.gameObject.transform.position = transform.position;
+                       })
+                   )
                )
-           )
-         );
+             );
+        //}
+        
+
+
+
     }
 
 }
