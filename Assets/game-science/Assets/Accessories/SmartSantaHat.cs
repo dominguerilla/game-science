@@ -24,7 +24,6 @@ public class SmartSantaHat : Accessory {
     {
         return new Sequence(
             new LeafAssert(() => { return IsEquippable; }),
-            new LeafAssert(() => { return toy.GetAvailableSlotCount() > 0; }),
             new EquipAccessory(toy, this, EquipSlot),
             new LeafInvoke(() => { GameObject.Destroy(this); })
             );
@@ -34,12 +33,12 @@ public class SmartSantaHat : Accessory {
     // Character should wander around and try to give presents to people
     public override Node ToyUse(Toy toy)
     {
-        NavMeshAgent agent = toy.GetAgent;
+        NavMeshAgent agent = toy.GetAgent();
 
         return new DecoratorLoop(
             new Sequence(
                 // Walk somewhere
-                new WalkToRandomNewVector(agent, toy),
+                new WalkToRandomNewVector(toy),
                 new Sequence(
                     // Check for a nearby character
                     new CheckForCharacterInRange(agent, 10f),

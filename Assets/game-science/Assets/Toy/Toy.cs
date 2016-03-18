@@ -13,7 +13,6 @@ public class Toy : SmartObject {
 
     private NavMeshAgent agent;
     private BehaviorAgent bagent;
-    private SmartCharacter schar;
     private Animator anim;
 
     //The current Accessory in range of use for this Toy.
@@ -37,6 +36,9 @@ public class Toy : SmartObject {
     //The light that appears when this Toy is selected
     private GameObject light;
 
+    //The current Accessory equipped by this Toy.
+    private Accessory currentAccessory;
+
     #region setters
     // Right now, all states are initially set to true
     // Eventually, we should define which states are true inititially
@@ -56,13 +58,13 @@ public class Toy : SmartObject {
     { get { return "Toy"; } }
 
     // Getter for behavior trees
-    public NavMeshAgent GetAgent
-    { get { return agent; } }
-
-    public int GetAvailableSlotCount()
+    public NavMeshAgent GetAgent()
     {
-        return AvailableSlots;
+        return agent;
     }
+
+
+
     #endregion
 
     void Start () {
@@ -70,9 +72,8 @@ public class Toy : SmartObject {
         this.SetInitialStates();
 
         agent = GetComponent<NavMeshAgent>();
-        schar = GetComponent<SmartCharacter>();
         anim = GetComponent<Animator>();
-        anim.SetBool("isWalk", true);
+        anim.SetBool("isWalk", false);
         playerInControl = true;
         AvailableSlots = AccessorySlots.Length;
 
@@ -84,6 +85,8 @@ public class Toy : SmartObject {
         anim.SetBool("Moving", agent.hasPath);
         
     }
+
+    #region Public interface functions
 
     /// <summary>
     /// The function called when this Toy is selected.
@@ -113,6 +116,24 @@ public class Toy : SmartObject {
         GameObject.Destroy(light);
     }
 
+    /// <summary>
+    /// Tells the Toy to move to this specific location.
+    /// </summary>
+    /// <param name="other"></param>
+    public void SetDestination(Vector3 position)
+    {
+        agent.SetDestination(position);
+    }
+
+    public void SetAccessory(Accessory acc)
+    {
+        this.currentAccessory = acc;
+    }
+    
+
+    #endregion
+
+    #region Private utility functions
 
     void OnTriggerEnter(Collider other)
     {
@@ -137,9 +158,9 @@ public class Toy : SmartObject {
             AccessoryInRange = null;
         }
     }
+    #endregion
 
-    
-   
+
 
     #region Debugging Functions, that may or may not be called by our GUI
     //Assuming that the Behavior Agent hasn't been initialized or started yet, will attempt to equip an Accessory within range.

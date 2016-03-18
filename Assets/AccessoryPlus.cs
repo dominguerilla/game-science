@@ -28,7 +28,6 @@ public class AccessoryPlus : Accessory
     {
         return new Sequence(
             new LeafAssert(() => { return IsEquippable; }),
-            new LeafAssert(() => { return toy.GetAvailableSlotCount() > 0; }),
             new EquipAccessory(toy, this, EquipSlot),
             new LeafInvoke(() => { GameObject.Destroy(this); })
             );

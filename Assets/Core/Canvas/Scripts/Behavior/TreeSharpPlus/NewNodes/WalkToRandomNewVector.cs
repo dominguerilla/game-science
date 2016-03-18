@@ -13,9 +13,9 @@ namespace TreeSharpPlus{
         NavMeshAgent agent;
         Toy toy;
 
-        public WalkToRandomNewVector(NavMeshAgent agent, Toy toy)
+        public WalkToRandomNewVector(Toy toy)
         {
-            this.agent = agent;
+            this.agent = toy.GetAgent();
             this.toy = toy;
         }
 
