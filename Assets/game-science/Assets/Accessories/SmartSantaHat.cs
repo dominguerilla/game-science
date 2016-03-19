@@ -25,7 +25,7 @@ public class SmartSantaHat : Accessory {
         return new Sequence(
             new LeafAssert(() => { return IsEquippable; }),
             new EquipAccessory(toy, this, EquipSlot),
-            new LeafInvoke(() => { GameObject.Destroy(this); })
+            new LeafInvoke(() => { gameObject.SetActive(false); })
             );
     }
 

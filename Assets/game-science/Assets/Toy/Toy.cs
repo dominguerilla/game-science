@@ -36,8 +36,11 @@ public class Toy : SmartObject {
     //The light that appears when this Toy is selected
     private GameObject light;
 
-    //The current Accessory equipped by this Toy.
-    private Accessory currentAccessory;
+    //The current ability given by the Accessory equipped by this Toy.
+    private List<Accessory> Inventory;
+
+    //A debug reference.
+    public GameObject targetAccessory;
 
     #region setters
     // Right now, all states are initially set to true
@@ -64,7 +67,6 @@ public class Toy : SmartObject {
     }
 
 
-
     #endregion
 
     void Start () {
@@ -76,14 +78,28 @@ public class Toy : SmartObject {
         anim.SetBool("isWalk", false);
         playerInControl = true;
         AvailableSlots = AccessorySlots.Length;
+        Inventory = new List<Accessory>();
 
-        bagent = new BehaviorAgent(IdleBehaviors.IdleWander(this));
+        //TEMPORARY DEBUGGING SECTION
+        if (targetAccessory != null)
+        {
+            Accessory acc = targetAccessory.GetComponent(typeof(Accessory)) as Accessory;
+            if (acc != null) IdleTreeRoot = IdleBehaviors.IdleStandDuringAction(IdleBehaviors.MoveAndEquipAccessory(this, acc));
+            else IdleTreeRoot = IdleBehaviors.IdleStand();
+        }
+        else
+        {
+            IdleTreeRoot = IdleBehaviors.IdleStand();
+        }
+
+        bagent = new BehaviorAgent(IdleTreeRoot);
+        bagent.StartBehavior();
+        //END TEMPORARY DEBUGGING SECTION
     }
 	
 	// Update is called once per frame
 	void Update () {
         anim.SetBool("Moving", agent.hasPath);
-        
     }
 
     #region Public interface functions
@@ -125,10 +141,39 @@ public class Toy : SmartObject {
         agent.SetDestination(position);
     }
 
-    public void SetAccessory(Accessory acc)
+    /// <summary>
+    /// Adds the given accessory to the Inventory of this Toy.
+    /// FUTURE WORK: Allow the Toy access to all the abilities of the Accessories equipped.
+    /// </summary>
+    /// <param name="acc"></param>
+    public void Equip(Accessory acc)
     {
-        this.currentAccessory = acc;
+        Inventory.Add(acc);
+        Debug.Log("Added " + acc.Archetype + " to " + this.Archetype + "'s inventory.");
     }
+
+    /// <summary>
+    /// Removes the specified Accessory from the Inventory of this Toy.
+    /// </summary>
+    /// <param name="acc"></param>
+    public void Unequip(Accessory acc)
+    {
+        Inventory.Remove(acc);
+        Debug.Log("Removed " + acc.Archetype + " from " + this.Archetype + "'s inventory.");
+    }
+
+    /// <summary>
+    /// Sets the idle behavior of this Toy to the given root node.
+    /// </summary>
+    /// <param name="root"></param>
+    public void SetIdleBehavior(Node root)
+    {
+        IdleTreeRoot = root;
+        bagent.StopBehavior();
+        bagent = new BehaviorAgent(IdleTreeRoot);
+        bagent.StartBehavior();
+    }
+   
     
 
     #endregion

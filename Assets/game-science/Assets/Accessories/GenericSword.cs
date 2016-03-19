@@ -2,12 +2,12 @@
 using System.Collections;
 using TreeSharpPlus;
 
-public class SmartAxe : Accessory {
+public class GenericSword : Accessory {
 
     public GameObject equipModel;
     public float RotateSpeed = 100.0f;
 
-    public override string Archetype { get { return "SmartAxe"; } }
+    public override string Archetype { get { return "GenericSword"; } }
     public override bool IsEquippable { get { return true; } }
     public override GameObject EquipModel { get { return equipModel; } }
     public override EquipSlots EquipSlot { get { return EquipSlots.RightHand; } }
@@ -16,12 +16,6 @@ public class SmartAxe : Accessory {
     {
         IdleRotate(transform, RotateSpeed);
     }
-
-    public override void IdleRotate(Transform obj, float speed)
-    {
-        obj.Rotate(Vector3.down * Time.deltaTime * speed);
-    }
-
 
     public override Node OnUse(Toy toy)
     {
@@ -36,5 +30,4 @@ public class SmartAxe : Accessory {
     {
         return IdleBehaviors.CountTo3();
     }
-
 }

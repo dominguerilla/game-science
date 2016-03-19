@@ -25,7 +25,7 @@ public class SmartHold : Accessory
             new LeafAssert(() => { return IsEquippable; }),
             //new LeafAssert(() => { return toy.GetAvailableSlotCount() > 0; }),
             new EquipAccessory(toy, this, EquipSlot),
-            new LeafInvoke(() => { GameObject.Destroy(this); })
+            new LeafInvoke(() => { gameObject.SetActive(false); })
             );
     }
 

@@ -2,15 +2,15 @@
 using System.Collections;
 using TreeSharpPlus;
 
-public class SmartAxe : Accessory {
+public class WoodBag : Accessory {
 
     public GameObject equipModel;
     public float RotateSpeed = 100.0f;
 
-    public override string Archetype { get { return "SmartAxe"; } }
+    public override string Archetype { get { return "WoodBag"; } }
     public override bool IsEquippable { get { return true; } }
     public override GameObject EquipModel { get { return equipModel; } }
-    public override EquipSlots EquipSlot { get { return EquipSlots.RightHand; } }
+    public override EquipSlots EquipSlot { get { return EquipSlots.LeftHand; } }
 
     void Update()
     {
@@ -19,6 +19,7 @@ public class SmartAxe : Accessory {
 
     public override void IdleRotate(Transform obj, float speed)
     {
+        //have to override this because of the prop's default orientation
         obj.Rotate(Vector3.down * Time.deltaTime * speed);
     }
 
@@ -34,7 +35,6 @@ public class SmartAxe : Accessory {
 
     public override Node ToyUse(Toy toy)
     {
-        return IdleBehaviors.CountTo3();
+        return IdleBehaviors.CountTo3(); 
     }
-
 }

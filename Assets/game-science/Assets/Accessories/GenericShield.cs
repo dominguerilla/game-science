@@ -2,12 +2,13 @@
 using System.Collections;
 using TreeSharpPlus;
 
-public class WoodBag : Accessory {
+public class GenericShield : Accessory
+{
 
     public GameObject equipModel;
     public float RotateSpeed = 100.0f;
 
-    public override string Archetype { get { return "WoodBag"; } }
+    public override string Archetype { get { return "GenericShield"; } }
     public override bool IsEquippable { get { return true; } }
     public override GameObject EquipModel { get { return equipModel; } }
     public override EquipSlots EquipSlot { get { return EquipSlots.LeftHand; } }
@@ -22,12 +23,12 @@ public class WoodBag : Accessory {
         return new Sequence(
             new LeafAssert(() => { return IsEquippable; }),
             new EquipAccessory(toy, this, EquipSlot),
-            new LeafInvoke(() => { GameObject.Destroy(this); })
+            new LeafInvoke(() => { gameObject.SetActive(false); })
             );
     }
 
     public override Node ToyUse(Toy toy)
     {
-        return null;
+        return IdleBehaviors.CountTo3();
     }
 }

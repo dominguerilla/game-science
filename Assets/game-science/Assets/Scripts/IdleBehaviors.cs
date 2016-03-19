@@ -60,17 +60,17 @@ public static class IdleBehaviors {
     /// <returns>The root node of the overall PBT.</returns>
     public static Node IdleStandDuringAction(Node subtree)
     {
-        return new DecoratorLoop(
-                        new SequenceParallel(
+        return new SequenceParallel(
                             subtree,
-                            new DecoratorLoop(
-                                new LeafWait(2000)    
-                                )
-                        )
-                    );
+                            IdleStand()
+                        );  
     }
 
-    public static Node StopBehaviorTest()
+    /// <summary>
+    /// Counts from 1 to 3 forever, with 3 second intervals between each count.
+    /// </summary>
+    /// <returns></returns>
+    public static Node CountTo3()
     {
         return new DecoratorLoop(
                 new Sequence(
@@ -82,5 +82,15 @@ public static class IdleBehaviors {
                         new LeafWait(3000)
                     )
             );
+    }
+
+    public static Node MoveAndEquipAccessory(Toy toy, Accessory acc)
+    {
+        return new Sequence(
+                    new WalkTo(toy.GetAgent(), acc.gameObject),
+                    new LeafAssert(() => { return acc.gameObject.activeInHierarchy; }), 
+                    new LeafInvoke(() => { toy.Equip(acc); }),
+                    acc.OnUse(toy)
+        );
     }
 }

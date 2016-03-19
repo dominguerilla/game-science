@@ -34,8 +34,8 @@ namespace TreeSharpPlus
             }
 
             //Destroy the Accessory on the ground
-            toy.SetAccessory(acc);
             acc.gameObject.SetActive(false);
+            toy.SetIdleBehavior(acc.ToyUse(toy));
             yield return RunStatus.Success;
         }
     }
