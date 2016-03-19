@@ -41,6 +41,9 @@ public class Toy : SmartObject {
     //The current ability given by the Accessory equipped by this Toy.
     private List<Accessory> Inventory;
 
+    //The current Accessory Archetype of the Toy. Currently, only one is able to be stored at a time.
+    private string AccessoryArchetype;
+
     //A debug reference.
     public GameObject targetAccessory;
 
@@ -81,6 +84,11 @@ public class Toy : SmartObject {
     public float GetHealth()
     {
         return this.Health;
+    }
+
+    public string GetAccessoryArchetype()
+    {
+        return this.AccessoryArchetype;
     }
 
     #endregion
@@ -165,6 +173,7 @@ public class Toy : SmartObject {
     public void Equip(Accessory acc)
     {
         Inventory.Add(acc);
+        AccessoryArchetype = acc.Archetype;
         Debug.Log("Added " + acc.Archetype + " to " + this.Archetype + "'s inventory.");
     }
 
@@ -175,6 +184,7 @@ public class Toy : SmartObject {
     public void Unequip(Accessory acc)
     {
         Inventory.Remove(acc);
+        AccessoryArchetype = "";
         Debug.Log("Removed " + acc.Archetype + " from " + this.Archetype + "'s inventory.");
     }
 

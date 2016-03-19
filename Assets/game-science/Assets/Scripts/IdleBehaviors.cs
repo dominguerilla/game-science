@@ -84,11 +84,16 @@ public static class IdleBehaviors {
             );
     }
 
+    /// <summary>
+    /// Moves the Toy to the position of the Accessory and then attempts to equip it.
+    /// </summary>
+    /// <param name="toy"></param>
+    /// <param name="acc"></param>
+    /// <returns></returns>
     public static Node MoveAndEquipAccessory(Toy toy, Accessory acc)
     {
         return new Sequence(
                     new WalkTo(toy.GetAgent(), acc.gameObject),
-                    new LeafTrace("Toy has reached the Accessory."),
                     new LeafAssert(() => { return acc.gameObject.activeInHierarchy; }), 
                     new LeafInvoke(() => { toy.Equip(acc); }),
                     acc.OnUse(toy)
