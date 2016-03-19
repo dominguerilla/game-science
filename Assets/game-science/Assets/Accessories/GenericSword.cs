@@ -32,8 +32,6 @@ public class GenericSword : Accessory {
 
         return new DecoratorLoop(
             new Sequence(
-                // Walk somewhere
-                new WalkToRandomNewVector(toy),
                 new Sequence(
                     // Check for a nearby character
                     new CheckForCharacterInRange(agent, 100f),
@@ -42,23 +40,27 @@ public class GenericSword : Accessory {
 
                     //assuming walktonearestcharacter will have the accessory face the target
                     //face and attack, use Core()
-                    new LeafInvoke(() => { Core(); })
+                    new LeafInvoke(() => { Core(toy); })
                     ),
+                new WalkToRandomNewVector(toy),
                 // Wait a bit
                 new LeafWait(2000)));
     }
 
-    public void Core() {
+    public void Core(Toy toy) {
         //play animation 
         //check for collision 
         //if collide, damage
         RaycastHit hit;
 
+        Animator anim = toy.GetAnimator();
         Vector3 rayDir = transform.forward ;
 
         Vector3 fwd = transform.TransformDirection(Vector3.forward);
         if (Physics.Raycast(transform.position, rayDir, out hit, 2.0f))
         {
+            Debug.Log("trigger");
+            anim.SetTrigger("Attack");
             if (hit.collider.tag == "toy")
             {
                 //apply damage to hit.transform.gameObject
