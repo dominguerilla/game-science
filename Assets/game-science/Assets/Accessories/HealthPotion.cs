@@ -23,7 +23,8 @@ public class HealthPotion : Accessory
         return new Sequence(
             new LeafAssert(() => { return IsEquippable; }),
             new EquipAccessory(toy, this, EquipSlot),
-            new LeafInvoke(() => { gameObject.SetActive(false); })
+            new LeafInvoke(() => { gameObject.SetActive(false); }),
+            new LeafInvoke(() => { toy.Health = toy.Health + 25; if (toy.Health > 100) { toy.Health = 100; } })
             );
     }
 
