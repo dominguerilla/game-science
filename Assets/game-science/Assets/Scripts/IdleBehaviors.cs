@@ -88,6 +88,7 @@ public static class IdleBehaviors {
     {
         return new Sequence(
                     new WalkTo(toy.GetAgent(), acc.gameObject),
+                    new LeafTrace("Toy has reached the Accessory."),
                     new LeafAssert(() => { return acc.gameObject.activeInHierarchy; }), 
                     new LeafInvoke(() => { toy.Equip(acc); }),
                     acc.OnUse(toy)

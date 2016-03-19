@@ -10,6 +10,8 @@ public class Toy : SmartObject {
 
     //J. A pretty basic implementation of stats. Only for speed now. Prob can add other stats like this too
     public float forwardSpeed = 7f;
+    public float Health = 100;
+    public float Attack = 10.0f;
 
     private NavMeshAgent agent;
     private BehaviorAgent bagent;
@@ -63,9 +65,23 @@ public class Toy : SmartObject {
     // Getter for behavior trees
     public NavMeshAgent GetAgent()
     {
-        return agent;
+        return this.agent;
     }
 
+    public Animator GetAnimator()
+    {
+        return this.anim;
+    }
+
+    public float GetAttack()
+    {
+        return this.Attack;
+    }
+
+    public float GetHealth()
+    {
+        return this.Health;
+    }
 
     #endregion
 
@@ -80,7 +96,7 @@ public class Toy : SmartObject {
         AvailableSlots = AccessorySlots.Length;
         Inventory = new List<Accessory>();
 
-        //TEMPORARY DEBUGGING SECTION
+        //TEMPORARY DEBUGGING SECTION   
         if (targetAccessory != null)
         {
             Accessory acc = targetAccessory.GetComponent(typeof(Accessory)) as Accessory;
@@ -162,6 +178,37 @@ public class Toy : SmartObject {
         Debug.Log("Removed " + acc.Archetype + " from " + this.Archetype + "'s inventory.");
     }
 
+    /// <summary>
+    /// Adds a flat float value bonus to this Toy's Attack stat. Can be positive or negative.
+    /// </summary>
+    /// <param name="attackBonus"></param>
+    public void ChangeAttack(float attackBonus)
+    {
+        if(this.Attack + attackBonus > 0) this.Attack += attackBonus;
+    }
+
+    /// <summary>
+    /// Change the Health of this Toy by the specified amount. Can be positive or negative.
+    /// If the new Health of the Toy is less than zero, calls the Die() function.
+    /// </summary>
+    /// <param name="healthChange"></param>
+    public void ChangeHealth(float healthChange)
+    {
+        Health += healthChange;
+        if (Health < 0)
+        {
+            Die();
+        }
+    }
+
+    /// <summary>
+    /// Called when this Toy's health becomes less than zero.
+    /// </summary>
+    private void Die()
+    {
+        Debug.Log(gameObject.name + " has died.");
+        gameObject.SetActive(false);
+    }
     /// <summary>
     /// Sets the idle behavior of this Toy to the given root node.
     /// </summary>
