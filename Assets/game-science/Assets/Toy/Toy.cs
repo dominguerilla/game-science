@@ -8,9 +8,9 @@ using System.Collections.Generic;
 /// </summary>
 public class Toy : SmartObject {
 
-    //J. A pretty basic implementation of stats. Only for speed now. Prob can add other stats like this too
+    //J. A pretty basic implementation of stats. 
     public float forwardSpeed = 7f;
-    public float Health = 100;
+    public float Health = 100f;
     public float Attack = 10.0f;
 
     private NavMeshAgent agent;
