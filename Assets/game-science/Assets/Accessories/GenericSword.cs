@@ -22,6 +22,7 @@ public class GenericSword : Accessory {
         return new Sequence(
             new LeafAssert(() => { return IsEquippable; }),
             new EquipAccessory(toy, this, EquipSlot),
+            new LeafInvoke(() => { toy.ChangeAttack(30); }),
             new LeafInvoke(() => { gameObject.SetActive(false); })
             );
     }
@@ -61,8 +62,9 @@ public class GenericSword : Accessory {
         {
             Debug.Log("trigger");
             anim.SetTrigger("Attack");
-            if (hit.collider.tag == "toy")
+            if (hit.transform.gameObject.GetComponent<Toy>() != null)
             {
+                (hit.transform.gameObject).GetComponent<Toy>().ChangeHealth(-toy.GetAttack());
                 //apply damage to hit.transform.gameObject
             }
         }
