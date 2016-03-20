@@ -18,21 +18,41 @@ namespace TreeSharpPlus{
 
         public override IEnumerable<RunStatus> Execute()
         {
+            // Get agent's location
             Vector3 agentPos = agent.transform.position;
-            Toy[] otherChars = agent.GetComponents<Toy>();
 
-            if(otherChars.Length < 1) {
+            // Get all other agents in scene
+            NavMeshAgent[] otherChars =
+               Object.FindObjectsOfType(typeof(NavMeshAgent)) as NavMeshAgent[];
+
+            // Must be at least one other character
+            if (otherChars.Length < 2)
+            {
+                // No chars besides this one
                 Debug.Log("No other characters found");
                 yield return RunStatus.Failure;
             }
 
+            // Put them in a list
+            List<NavMeshAgent> otherCharsList = new List<NavMeshAgent>(otherChars);
+
+            // Remove this character from the list
+            otherCharsList.Remove(agent);
+            foreach (NavMeshAgent a in otherCharsList)
+            {
+                Debug.Log("Toy found: " + a);
+            }
+
+            // Back to array
+            otherChars = otherCharsList.ToArray();
+
             // Find the nearest character
-            Toy nearestChar = otherChars[0];
+            NavMeshAgent nearestChar = otherChars[0];
             Vector3 vector = nearestChar.transform.position;
             float minDistance = Vector3.Distance(agentPos, vector);
             for (int i = 1; i < otherChars.Length; i++)
             {
-                Toy currentChar = otherChars[i];
+                NavMeshAgent currentChar = otherChars[i];
                 float newDistance = Vector3.Distance(agentPos, currentChar.transform.position);
                 if (newDistance < minDistance)
                 {

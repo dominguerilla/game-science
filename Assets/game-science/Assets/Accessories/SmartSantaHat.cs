@@ -7,8 +7,9 @@ public class SmartSantaHat : Accessory {
     // Unity inspector > Transform > set S: X,Y,Z fields to about 0.2
 
     public GameObject equipModel;
+    // The
+    public GameObject present;
     public float RotateSpeed = 50.0f;
-    public float ScaleFactor = 1f;
 
     public override string Archetype { get { return "SmartSantaHat"; } }
     public override bool IsEquippable { get { return true; } }
@@ -43,10 +44,9 @@ public class SmartSantaHat : Accessory {
                     // Check for a nearby character
                     new CheckForCharacterInRange(agent, 10f),
                     // Go to them, if they're nearby
-                    new WalkToNearestCharacter(agent)
-
-                    // TODO: Give them a present!
-                    // new GivePresent(agent)
+                    new WalkToNearestCharacter(agent),
+                    // Give them a present!
+                    new GivePresent(toy, present)
                     ),
                 // Wait a bit
                 new LeafWait(2000)));

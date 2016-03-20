@@ -6,6 +6,7 @@ public class SummoningSkull : Accessory
 {
 
     public GameObject equipModel;
+    public GameObject summonPrefab;
     public float RotateSpeed = 100.0f;
 
     public override string Archetype { get { return "SummoningSkull"; } }
@@ -29,6 +30,19 @@ public class SummoningSkull : Accessory
 
     public override Node ToyUse(Toy toy)
     {
-        return IdleBehaviors.CountTo3();
+        Debug.Log("Inside summon skull toyuse");
+
+        DecoratorLoop root = new DecoratorLoop(
+            // Do this for 5 skellies
+            5,
+            new Sequence(
+                // Walk to a nearby location
+                new WalkToRandomRange(toy, 6f),
+                // Summon a skelly warrior
+                new GivePresent(toy, summonPrefab)
+            )
+        );
+
+        return root;
     }
 }
