@@ -22,6 +22,7 @@ public class GenericSword : Accessory {
         return new Sequence(
             new LeafAssert(() => { return IsEquippable; }),
             new EquipAccessory(toy, this, EquipSlot),
+            new LeafInvoke(() => { toy.ChangeAttack(30); }),
             new LeafInvoke(() => { gameObject.SetActive(false); })
             );
     }
@@ -37,10 +38,12 @@ public class GenericSword : Accessory {
                     new CheckForCharacterInRange(agent, 100f),
                     // Go to them, if they're nearby
                     new WalkToNearestCharacter(agent),
+                    new LeafWait(2000),
 
                     //assuming walktonearestcharacter will have the accessory face the target
                     //face and attack, use Core()
-                    new LeafInvoke(() => { Core(toy); })
+                    new LeafInvoke(() => { Core(toy); }),
+                    new LeafWait(2000)
                     ),
                 new WalkToRandomNewVector(toy),
                 // Wait a bit
@@ -54,15 +57,19 @@ public class GenericSword : Accessory {
         RaycastHit hit;
 
         Animator anim = toy.GetAnimator();
-        Vector3 rayDir = transform.forward ;
+        Vector3 rayDir = toy.transform.forward ;
+
+        anim.SetTrigger("Attack");
+        Debug.Log("attack!");
 
         Vector3 fwd = transform.TransformDirection(Vector3.forward);
-        if (Physics.Raycast(transform.position, rayDir, out hit, 2.0f))
+        if (Physics.Raycast(toy.transform.position, rayDir, out hit, 3.0f))
         {
-            Debug.Log("trigger");
             anim.SetTrigger("Attack");
-            if (hit.collider.tag == "toy")
+            if (hit.transform.gameObject.GetComponent<Toy>() != null)
             {
+                Debug.Log("trigger");
+                (hit.transform.gameObject).GetComponent<Toy>().ChangeHealth(-toy.GetAttack());
                 //apply damage to hit.transform.gameObject
             }
         }
