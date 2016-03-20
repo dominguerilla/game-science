@@ -34,6 +34,6 @@ public class SheathedSword : Accessory
 
     public override Node ToyUse(Toy toy)
     {
-        return IdleBehaviors.IdleStandDuringAction(IdleBehaviors.AttackUntilDead(toy, toy.targetToy.GetComponent<Toy>()));
+        return IdleBehaviors.CountTo3();
     }
 }

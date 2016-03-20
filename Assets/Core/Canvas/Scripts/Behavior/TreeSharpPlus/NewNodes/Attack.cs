@@ -16,7 +16,7 @@ namespace TreeSharpPlus
         {
             this.Attacker = Attacker;
             this.Defender = Defender;
-            this.timeBetweenAttacks = 1000;
+            this.timeBetweenAttacks = 1333;
             this.stopwatch = new Stopwatch();
         }
 
@@ -40,17 +40,16 @@ namespace TreeSharpPlus
         public override IEnumerable<RunStatus> Execute()
         {
             Attacker.GetAnimator().SetTrigger("Attack");
-            //Defender.GetAnimator().SetTrigger("Hurt");
-            UnityEngine.Debug.Log(Attacker.gameObject.name + " attacks " + Defender.gameObject.name + " for " + Attacker.GetAttack() + " damage!");
-            Defender.ChangeHealth(Attacker.GetAttack() * -1);
-            UnityEngine.Debug.Log(Defender.gameObject.name + " now has " + Defender.GetHealth() + " HP.");
-
             while (true)
             {
                 // Count down the wait timer
                 // If we've waited long enough, succeed
                 if (this.stopwatch.ElapsedMilliseconds >= this.timeBetweenAttacks)
                 {
+                    //Defender.GetAnimator().SetTrigger("Hurt");
+                    UnityEngine.Debug.Log(Attacker.gameObject.name + " attacks " + Defender.gameObject.name + " for " + Attacker.GetAttack() + " damage!");
+                    Defender.ChangeHealth(Attacker.GetAttack() * -1);
+                    UnityEngine.Debug.Log(Defender.gameObject.name + " now has " + Defender.GetHealth() + " HP.");
                     yield return RunStatus.Success;
                     yield break;
                 }

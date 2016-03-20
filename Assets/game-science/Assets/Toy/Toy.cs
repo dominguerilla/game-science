@@ -206,7 +206,7 @@ public class Toy : SmartObject {
     public void ChangeHealth(float healthChange)
     {
         Health += healthChange;
-        if (Health < 0)
+        if (Health <= 0)
         {
             Die();
         }
@@ -219,7 +219,7 @@ public class Toy : SmartObject {
     {
         Debug.Log(gameObject.name + " has died.");
         bagent.StopBehavior();
-        //gameObject.SetActive(false);
+        gameObject.SetActive(false);
     }
 
     /// <summary>

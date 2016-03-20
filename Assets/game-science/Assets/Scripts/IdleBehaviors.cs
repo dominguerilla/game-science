@@ -96,16 +96,31 @@ public static class IdleBehaviors {
                     new WalkTo(toy.GetAgent(), acc.gameObject),
                     new LeafAssert(() => { return acc.gameObject.activeInHierarchy; }), 
                     new LeafInvoke(() => { toy.Equip(acc); }),
-                    new LeafWait(1000),
                     acc.OnUse(toy)
         );
     }
 
+    /// <summary>
+    /// Makes the Attacker move to the Defender and attack repeatedly until the defender is dead.
+    /// </summary>
+    /// <param name="attacker"></param>
+    /// <param name="defender"></param>
+    /// <returns> IdleStand() if either parameter is null.</returns>
     public static Node AttackUntilDead(Toy attacker, Toy defender)
     {
-        return new DecoratorInvert(
-            new Sequence(
-                new WalkTo(attacker.GetAgent(), defender.gameObject),
+        if (attacker == null)
+        {
+            Debug.Log("Invalid attacker.");
+            return IdleStand();
+        }
+
+        if (defender == null)
+        {
+            Debug.Log("Invalid or no target specified.");
+            return IdleStand();
+        }
+        
+        /*return new DecoratorInvert(
                 new SequenceParallel(
                             new DecoratorLoop(
                                 new DecoratorInvert(
@@ -113,9 +128,36 @@ public static class IdleBehaviors {
                                     )
                                 ),
                                 new DecoratorLoop(
-                                    new Attack(attacker, defender)
+                                    new Sequence(
+                                        new WalkTo(attacker.GetAgent(), defender.gameObject),
+                                        new Attack(attacker, defender)
+                                        )
                                     )
                     )
-            ));
+            );*/
+        return new DecoratorInvert(
+                new SequenceParallel(
+                    new DecoratorLoop(
+                        new LeafAssert(() => { return defender.GetHealth() > 0; })
+                    ),
+                    new DecoratorLoop(
+                            new DecoratorForceStatus(RunStatus.Success,
+                                new Sequence(
+                                    new LeafAssert(() => { return Vector3.Distance(attacker.transform.position, defender.transform.position) > attacker.GetAgent().stoppingDistance; }),
+                                    new WalkTo(attacker.GetAgent(), defender.gameObject)
+                                    )
+                                )
+                    ),
+                    new DecoratorLoop(
+                        new DecoratorForceStatus(RunStatus.Success,
+                            new Sequence(
+                                new LeafAssert(() => { return Vector3.Distance(attacker.transform.position, defender.transform.position) <= attacker.GetAgent().stoppingDistance; }),
+                                new Attack(attacker, defender)
+                                )
+                            )
+                    )
+
+                )
+            );
     }
 }

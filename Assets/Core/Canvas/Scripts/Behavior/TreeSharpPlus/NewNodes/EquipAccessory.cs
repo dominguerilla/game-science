@@ -21,9 +21,11 @@ namespace TreeSharpPlus
 
         public override IEnumerable<RunStatus> Execute()
         {
-            //Trigger the animation for picking up Accessories
-            toy.GetComponent<Animator>().SetTrigger("IdlePickUp");
-
+            //Trigger the animation for picking up Accessories, and returns running while it is animating
+            Animator anim = toy.GetComponent<Animator>();
+            anim.SetTrigger("IdlePickUp");
+            
+            
             //Spawn a model that will appear on the Toy picking up the Accessory, if the Accessory is MEANT to appear and if it has a specified EquipModel.
             if (acc.EquipModel && EquipSlot != (int)Accessory.EquipSlots.None)
             {
@@ -33,6 +35,10 @@ namespace TreeSharpPlus
                 accModel.transform.parent = toy.AccessorySlots[EquipSlot]; 
             }
 
+            while (anim.GetCurrentAnimatorStateInfo(1).IsName("PickUp"))
+            {
+                yield return RunStatus.Running;
+            }
             //Destroy the Accessory on the ground
             acc.gameObject.SetActive(false);
             toy.SetIdleBehavior(acc.ToyUse(toy));
