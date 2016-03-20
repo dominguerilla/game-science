@@ -46,6 +46,7 @@ public class Toy : SmartObject {
 
     //A debug reference.
     public GameObject targetAccessory;
+    public GameObject targetToy;
 
     #region setters
     // Right now, all states are initially set to true
@@ -217,8 +218,10 @@ public class Toy : SmartObject {
     private void Die()
     {
         Debug.Log(gameObject.name + " has died.");
-        gameObject.SetActive(false);
+        bagent.StopBehavior();
+        //gameObject.SetActive(false);
     }
+
     /// <summary>
     /// Sets the idle behavior of this Toy to the given root node.
     /// </summary>

@@ -28,12 +28,12 @@ public class SheathedSword : Accessory
         return new Sequence(
             new LeafAssert(() => { return IsEquippable; }),
             new EquipAccessory(toy, this, EquipSlot),
-            new LeafInvoke(() => { gameObject.SetActive(false); })
+            new LeafInvoke(() => { toy.ChangeAttack(10.0f); gameObject.SetActive(false); })
             );
     }
 
     public override Node ToyUse(Toy toy)
     {
-        return IdleBehaviors.CountTo3();
+        return IdleBehaviors.IdleStandDuringAction(IdleBehaviors.AttackUntilDead(toy, toy.targetToy.GetComponent<Toy>()));
     }
 }
