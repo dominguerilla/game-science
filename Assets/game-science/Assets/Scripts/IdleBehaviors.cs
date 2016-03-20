@@ -96,7 +96,26 @@ public static class IdleBehaviors {
                     new WalkTo(toy.GetAgent(), acc.gameObject),
                     new LeafAssert(() => { return acc.gameObject.activeInHierarchy; }), 
                     new LeafInvoke(() => { toy.Equip(acc); }),
+                    new LeafWait(1000),
                     acc.OnUse(toy)
         );
+    }
+
+    public static Node AttackUntilDead(Toy attacker, Toy defender)
+    {
+        return new DecoratorInvert(
+            new Sequence(
+                new WalkTo(attacker.GetAgent(), defender.gameObject),
+                new SequenceParallel(
+                            new DecoratorLoop(
+                                new DecoratorInvert(
+                                    new LeafAssert(() => { return defender.GetHealth() <= 0; })
+                                    )
+                                ),
+                                new DecoratorLoop(
+                                    new Attack(attacker, defender)
+                                    )
+                    )
+            ));
     }
 }
