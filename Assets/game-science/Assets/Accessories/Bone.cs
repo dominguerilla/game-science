@@ -29,6 +29,23 @@ public class Bone : Accessory
 
     public override Node ToyUse(Toy toy)
     {
+        foreach(var gameObj in GameObject.FindGameObjectsWithTag("Skelly"))
+        {
+            Debug.Log("We in");
+            if(toy.tag == "Skelly")
+            {
+                Debug.Log("Dream inside a Dream");
+                Debug.Log(gameObj);
+
+                //this return statement is the issue
+                //I need it to come back to Bone.cs to kill off the rest of the Skelly
+                return IdleBehaviors.IdleStandDuringAction(IdleBehaviors.AttackUntilDead(toy, gameObj.GetComponent<Toy>()));
+                Debug.Log("Another one");
+            }
+        }
+
+        Debug.Log("Why you wake up?");
         return IdleBehaviors.CountTo3();
+
     }
 }
