@@ -1,11 +1,26 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class SpawnToy : MonoBehaviour {
 
     [SerializeField]
-    public Toy toy;
-    public Accessory accessory;
+    public List<Toy> toys;
+    [SerializeField]
+    public List<Accessory> accessories;
+
+    private Toy toy;
+    private Accessory accessory;
+
+    public void setToy(Toy toy)
+    {
+        this.toy = toy;
+    }
+
+    public void setAccessory(Accessory acc)
+    {
+        this.accessory = acc;
+    }
 
 	// Use this for initialization
 	void Start () {
