@@ -4,10 +4,6 @@ using System.Collections.Generic;
 
 public class SpawnToy : MonoBehaviour {
 
-    [SerializeField]
-    public List<Toy> toys;
-    [SerializeField]
-    public List<Accessory> accessories;
 
     private Toy toy;
     private Accessory accessory;
