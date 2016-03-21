@@ -17,7 +17,7 @@ namespace TreeSharpPlus{
         public override IEnumerable<RunStatus> Execute()
         {
             
-            //Debug.Log("Heading to " + location.name);
+            Debug.Log("Heading to " + location.name);
 
             while (true)
             {
@@ -26,10 +26,10 @@ namespace TreeSharpPlus{
                 if( distance <= agent.stoppingDistance){
                     break;
                 }
-                //Debug.Log("Still en route to " + location.name + " with a distance of " + distance);
+                Debug.Log("Still en route to " + location.name + " with a distance of " + distance);
                 yield return RunStatus.Running;
             }
-            //Debug.Log("Arrived at " + location.name);
+            Debug.Log("Arrived at " + location.name);
             yield return RunStatus.Success;
         }
     }
