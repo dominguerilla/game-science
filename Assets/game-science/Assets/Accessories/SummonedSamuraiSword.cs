@@ -35,6 +35,51 @@ public class SummonedSamuraiSword : Accessory
 
     public override Node ToyUse(Toy toy)
     {
-        return IdleBehaviors.IdleStandDuringAction(IdleBehaviors.AttackUntilDead(toy, toy.targetToy.GetComponent<Toy>()));
+        //return IdleBehaviors.IdleStandDuringAction(IdleBehaviors.AttackUntilDead(toy, toy.targetToy.GetComponent<Toy>()));
+        NavMeshAgent agent = toy.GetAgent();
+
+        return new DecoratorLoop(
+            new Sequence(
+                new Sequence(
+            // Check for a nearby character
+                    new CheckForCharacterInRange(agent, 100f),
+            // Go to them, if they're nearby
+                    new WalkToNearestCharacter(agent),
+                    new LeafWait(2000),
+
+                    //assuming walktonearestcharacter will have the accessory face the target
+            //face and attack, use Core()
+                    new LeafInvoke(() => { Core(toy); }),
+                    new LeafWait(2000)
+                    ),
+                new WalkToRandomNewVector(toy),
+            // Wait a bit
+                new LeafWait(2000)));
+    }
+
+    public void Core(Toy toy)
+    {
+        //play animation 
+        //check for collision 
+        //if collide, damage
+        RaycastHit hit;
+
+        Animator anim = toy.GetAnimator();
+        Vector3 rayDir = toy.transform.forward;
+
+        anim.SetTrigger("Attack");
+        Debug.Log("attack!");
+
+        Vector3 fwd = transform.TransformDirection(Vector3.forward);
+        if (Physics.Raycast(toy.transform.position, rayDir, out hit, 3.0f))
+        {
+            anim.SetTrigger("Attack");
+            if (hit.transform.gameObject.GetComponent<Toy>() != null)
+            {
+                Debug.Log("trigger");
+                (hit.transform.gameObject).GetComponent<Toy>().ChangeHealth(-toy.GetAttack());
+                //apply damage to hit.transform.gameObject
+            }
+        }
     }
 }

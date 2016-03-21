@@ -43,6 +43,6 @@ public class SummoningSkull : Accessory
             )
         );
 
-        return root;
+        return IdleBehaviors.IdleStandDuringAction(root);
     }
 }
