@@ -60,6 +60,12 @@ public class Toy : SmartObject {
             states[i] = true;
         }
     }
+
+    // Set this Toy's target accessory
+    public void SetAccessory(GameObject targetAccessory)
+    {
+        this.targetAccessory = targetAccessory;
+    }
     #endregion
 
     #region getters
@@ -105,21 +111,51 @@ public class Toy : SmartObject {
         AvailableSlots = AccessorySlots.Length;
         Inventory = new List<Accessory>();
 
-        //TEMPORARY DEBUGGING SECTION   
+
+        // Option to start a toy with a target accessory
         if (targetAccessory != null)
         {
+            Debug.Log("Starting with target accessory: " + targetAccessory);
             Accessory acc = targetAccessory.GetComponent(typeof(Accessory)) as Accessory;
             if (acc != null) IdleTreeRoot = IdleBehaviors.IdleStandDuringAction(IdleBehaviors.MoveAndEquipAccessory(this, acc));
             else IdleTreeRoot = IdleBehaviors.IdleStand();
         }
+        // Otherwise, look for a random accessory
         else
         {
-            IdleTreeRoot = IdleBehaviors.IdleStand();
+            // Look for accessory
+            //Debug.Log("Looking for accessory...");
+
+            GameObject[] accessoriesInScene =
+                GameObject.FindGameObjectsWithTag("Accessory");
+
+            if (accessoriesInScene == null)
+            {
+                Debug.Log("No accessories in scene");
+            }
+            else
+            {
+                // Choose a random accessory from the ones in the scene
+                System.Random rand = new System.Random();
+                GameObject chosenAccessory =
+                    accessoriesInScene[rand.Next(0, accessoriesInScene.Length)];
+
+                // Have this accessory be this toy's target accessory
+                SetAccessory(chosenAccessory);
+            }
+
+            // Start new behavior with the accessory
+            if (targetAccessory != null)
+            { 
+                //Debug.Log(targetAccessory + " is target for " + this);
+                Accessory acc = targetAccessory.GetComponent(typeof(Accessory)) as Accessory;
+                if (acc != null) IdleTreeRoot = IdleBehaviors.IdleStandDuringAction(IdleBehaviors.MoveAndEquipAccessory(this, acc));
+                else IdleTreeRoot = IdleBehaviors.IdleStand();
+            }
         }
 
         bagent = new BehaviorAgent(IdleTreeRoot);
         bagent.StartBehavior();
-        //END TEMPORARY DEBUGGING SECTION
     }
 	
 	// Update is called once per frame
