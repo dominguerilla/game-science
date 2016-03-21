@@ -8,10 +8,11 @@ public class PlaceToy : MonoBehaviour {
     public GameObject skeletonPrefab;
     public GameObject unityChanPrefab;
     public GameObject trollPrefab;
+    public GameObject samuraiPrefab;
     public Dropdown toyDropdown;
 
     int toycurrent = 0;
-    int totalToys = 3; //total-1 since we start at 0
+    int totalToys = 4; //total-1 since we start at 0
 
     public void onClick()
     {
@@ -29,6 +30,9 @@ public class PlaceToy : MonoBehaviour {
             case 3:
                 Instantiate(trollPrefab);
                 break;
+            case 4:
+                Instantiate(samuraiPrefab);
+                break;
             default:
                 Instantiate(lumberjackPrefab);
                 break;
@@ -37,6 +41,10 @@ public class PlaceToy : MonoBehaviour {
     }
 
 
+    // REMOVING CLICK-TO-PLACE FUNCTIONALITY (BELOW)
+    // for demo, since it doesn't work properly right now
+
+    /*
     void Update()
     {
 
@@ -63,6 +71,7 @@ public class PlaceToy : MonoBehaviour {
             }
         }
 
+        // NOTE: THIS WAS COMMENTED OUT IN ORGINAL
         /*if (Input.GetKeyDown("1"))
         {
             toycurrent = 0;
@@ -78,7 +87,7 @@ public class PlaceToy : MonoBehaviour {
         else if (Input.GetKeyDown("4"))
         {
             toycurrent = 3;
-        }*/
+        }***** /
 
 
         toyDropdown.value = toycurrent;
@@ -102,12 +111,15 @@ public class PlaceToy : MonoBehaviour {
                 case 3:
                     Instantiate(trollPrefab, new Vector3(point.x, point.y, point.z), Quaternion.identity);
                     break;
+                case 4:
+                    Instantiate(samuraiPrefab, new Vector3(point.x, point.y, point.z), Quaternion.identity);
+                    break;
                 default:
                     Instantiate(lumberjackPrefab, new Vector3(point.x, point.y, point.z), Quaternion.identity);
                     break;
             }
         }
-    }
+    }*/
 
 
 

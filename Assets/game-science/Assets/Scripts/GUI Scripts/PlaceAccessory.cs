@@ -4,13 +4,21 @@ using System.Collections;
 
 public class PlaceAccessory : MonoBehaviour {
 
-    public GameObject axePrefab;
+    public GameObject genericSwordPrefab;
     public GameObject speedPotionPrefab;
-    public GameObject woodBagPrefab;
+    public GameObject summoningSkullPrefab;
     public GameObject santaHatPrefab;
+    public GameObject bonePrefab;
+    public GameObject heroSwordPrefab;
+    public GameObject sheathedSwordPrefab;
+    public GameObject breadPrefab;
+    public GameObject cheesePrefab;
+    public GameObject applePrefab;
+    public GameObject healthPotionPrefab;
+
     public Dropdown accessoryDropdown;
 
-    int end = 3; //number of accessories
+    int end = 10; //number of accessories
     int current = 0;
 
     public void onClick()
@@ -18,24 +26,49 @@ public class PlaceAccessory : MonoBehaviour {
         switch (accessoryDropdown.value)
         {
             case 0:
-                Instantiate(axePrefab);
+                Instantiate(genericSwordPrefab);
                 break;
             case 1:
                 Instantiate(speedPotionPrefab);
                 break;
             case 2:
-                Instantiate(woodBagPrefab);
+                Instantiate(summoningSkullPrefab);
                 break;
             case 3:
                 Instantiate(santaHatPrefab);
                 break;
+            case 4:
+                Instantiate(bonePrefab);
+                break;
+            case 5:
+                Instantiate(heroSwordPrefab);
+                break;
+            case 6:
+                Instantiate(sheathedSwordPrefab);
+                break;
+            case 7:
+                Instantiate(breadPrefab);
+                break;
+            case 8:
+                Instantiate(cheesePrefab);
+                break;
+            case 9:
+                Instantiate(applePrefab);
+                break;
+            case 10:
+                Instantiate(healthPotionPrefab);
+                break;
             default:
-                Instantiate(axePrefab);
+                Instantiate(genericSwordPrefab);
                 break;
         }
     }
 
-    void Update()
+
+    // REMOVING CLICK-TO-PLACE FUNCTIONALITY (BELOW)
+    // for demo, since it doesn't work properly right now
+
+    /*void Update()
     {
 
         //switching accessories with scroll wheel
@@ -72,22 +105,43 @@ public class PlaceAccessory : MonoBehaviour {
             switch (accessoryDropdown.value)
             {
                 case 0:
-                    Instantiate(axePrefab, new Vector3(point.x, point.y, point.z), Quaternion.identity);
+                    Instantiate(genericSwordPrefab, new Vector3(point.x, point.y, point.z), Quaternion.identity);
                     break;
                 case 1:
                     Instantiate(speedPotionPrefab, new Vector3(point.x, point.y, point.z), Quaternion.identity);
                     break;
                 case 2:
-                    Instantiate(woodBagPrefab, new Vector3(point.x, point.y, point.z), Quaternion.identity);
+                    Instantiate(summoningSkullPrefab, new Vector3(point.x, point.y, point.z), Quaternion.identity);
                     break;
                 case 3:
                     Instantiate(santaHatPrefab, new Vector3(point.x, point.y, point.z), Quaternion.identity);
                     break;
+                case 4:
+                    Instantiate(bonePrefab, new Vector3(point.x, point.y, point.z), Quaternion.identity);
+                    break;
+                case 5:
+                    Instantiate(heroSwordPrefab, new Vector3(point.x, point.y, point.z), Quaternion.identity);
+                    break;
+                case 6:
+                    Instantiate(sheathedSwordPrefab, new Vector3(point.x, point.y, point.z), Quaternion.identity);
+                    break;
+                case 7:
+                    Instantiate(breadPrefab, new Vector3(point.x, point.y, point.z), Quaternion.identity);
+                    break;
+                case 8:
+                    Instantiate(cheesePrefab, new Vector3(point.x, point.y, point.z), Quaternion.identity);
+                    break;
+                case 9:
+                    Instantiate(applePrefab, new Vector3(point.x, point.y, point.z), Quaternion.identity);
+                    break;
+                case 10:
+                    Instantiate(healthPotionPrefab, new Vector3(point.x, point.y, point.z), Quaternion.identity);
+                    break;
                 default:
-                    Instantiate(axePrefab, new Vector3(point.x, point.y, point.z), Quaternion.identity);
+                    Instantiate(genericSwordPrefab, new Vector3(point.x, point.y, point.z), Quaternion.identity);
                     break;
             }
         }
-    }
+    }*/
 
 }
