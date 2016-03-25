@@ -29,7 +29,7 @@ public class InputManager : MonoBehaviour
 
     public static InputManager instance; // instance reference
     private Vector2 panAxis = Vector2.zero;
-    private Toy currentToy;
+	private Toy CurrentFocusedToy;
 
     void Awake()
     {
@@ -38,7 +38,7 @@ public class InputManager : MonoBehaviour
 
     void Update()
     {
-        //Toy selection
+        //Upon Left Click
         if(Input.GetMouseButtonDown(0))
         {
             RaycastHit hit;
@@ -46,32 +46,50 @@ public class InputManager : MonoBehaviour
             if (Physics.Raycast(ray, out hit))
             {
                 Toy newToy = hit.collider.gameObject.GetComponent<Toy>();
-                if (newToy != null)
-                {
-                    //If we select a new Toy
-                    if (currentToy && currentToy != newToy)
-                    {
-                        currentToy.OnDeselect();
-                        newToy.OnSelect();
-                        currentToy = newToy;
-                    }
-                    else if(currentToy != newToy)
-                    {
-                        newToy.OnSelect();
-                        currentToy = newToy;
-                        camera.thePlayer = currentToy.gameObject;
-                    }
-                }
+				//If there was a Toy in the GameObject hit
+				if (newToy != null) {
+					if (CurrentFocusedToy != newToy) {
+						//If we select a new Toy after already having selected some other Toy
+						if (CurrentFocusedToy) {
+							CurrentFocusedToy = newToy;
+							camera.thePlayer = CurrentFocusedToy.gameObject;
+							ToyController.SelectToy (newToy, CurrentFocusedToy);
+						}
+						//If we select a different Toy from the one currently equipped
+						else {
+							CurrentFocusedToy = newToy;
+							camera.thePlayer = CurrentFocusedToy.gameObject;
+							ToyController.SelectToy (newToy);
+						}
+					}
+				} else {
+					//Deselects the CurrentFocusedToy, if there is any.
+					if (CurrentFocusedToy)
+					{
+						CurrentFocusedToy = null;
+						camera.thePlayer = camera.focusPoint;
+						ToyController.DeselectToy ();
+					}
+				}
             }
-        }
+        }//Upon Right Click
         else if (Input.GetMouseButtonDown(1))
         {
-            if (currentToy)
-            {
-                currentToy.OnDeselect();
-                camera.thePlayer = camera.focusPoint;
-                currentToy = null;
-            }
+			RaycastHit hit;
+			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+			if (Physics.Raycast(ray, out hit))
+			{
+				if (CurrentFocusedToy) 
+				{
+					Accessory acc = hit.collider.gameObject.GetComponent (typeof(Accessory)) as Accessory;
+					if (acc) {
+						ToyController.EquipAccessory (acc);
+					} else {
+						ToyController.MoveTo (hit.point);
+					}
+				}
+			}
+            
         }
         UpdatePanAxis();
     }

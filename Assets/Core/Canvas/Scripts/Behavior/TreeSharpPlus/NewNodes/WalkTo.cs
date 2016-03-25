@@ -5,31 +5,31 @@ namespace TreeSharpPlus{
 
     public class WalkTo : Node {
 
-        GameObject location;
-        NavMeshAgent agent;
 
-        public WalkTo(NavMeshAgent agent, GameObject location)
+		Toy toy;
+        Vector3 location;
+
+		public WalkTo(Toy toy, Vector3 location)
         {
-            this.agent = agent;
+			this.toy = toy;
             this.location = location;
         }
 
         public override IEnumerable<RunStatus> Execute()
         {
             
-            Debug.Log("Heading to " + location.name);
 
             while (true)
             {
-                agent.SetDestination(location.transform.position);
-                float distance = Vector3.Distance(agent.transform.position, location.transform.position);
-                if( distance <= agent.stoppingDistance){
+				toy.GetAgent().SetDestination(location);
+                float distance = Vector3.Distance(toy.transform.position, location);
+				if( distance <= toy.GetAgent().stoppingDistance){
                     break;
                 }
-                Debug.Log("Still en route to " + location.name + " with a distance of " + distance);
+
                 yield return RunStatus.Running;
             }
-            Debug.Log("Arrived at " + location.name);
+
             yield return RunStatus.Success;
         }
     }

@@ -33,13 +33,11 @@ public static class IdleBehaviors {
     //[Affordance]
     public static Node WalkBackAndForth(Toy toy, GameObject position1, GameObject position2)
     {
-        NavMeshAgent agent = toy.GetAgent();
-
         return new DecoratorLoop(
             new Sequence(
-                new WalkTo(agent, position1),
+				new WalkTo(toy, position1.transform.position),
                 new LeafWait(2000),
-                new WalkTo(agent, position2),
+				new WalkTo(toy, position2.transform.position),
                 new LeafWait(2000)
                 )
             );
@@ -93,7 +91,7 @@ public static class IdleBehaviors {
     public static Node MoveAndEquipAccessory(Toy toy, Accessory acc)
     {
         return new Sequence(
-                    new WalkTo(toy.GetAgent(), acc.gameObject),
+			new WalkTo(toy, acc.gameObject.transform.position),
                     new LeafAssert(() => { return acc.gameObject.activeInHierarchy; }), 
                     new LeafInvoke(() => { toy.Equip(acc); }),
                     acc.OnUse(toy)
@@ -144,7 +142,7 @@ public static class IdleBehaviors {
                             new DecoratorForceStatus(RunStatus.Success,
                                 new Sequence(
                                     new LeafAssert(() => { return Vector3.Distance(attacker.transform.position, defender.transform.position) > attacker.GetAgent().stoppingDistance; }),
-                                    new WalkTo(attacker.GetAgent(), defender.gameObject)
+									new WalkTo(attacker, defender.transform.position)
                                     )
                                 )
                     ),

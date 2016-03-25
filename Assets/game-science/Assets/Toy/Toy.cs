@@ -17,9 +17,6 @@ public class Toy : SmartObject {
     private BehaviorAgent bagent;
     private Animator anim;
 
-    //The current Accessory in range of use for this Toy.
-    private GameObject AccessoryInRange;
-
     //This is used to specify where equipped Accessories will show up on the Toy.
     public Transform[] AccessorySlots = new Transform[10];
     
@@ -180,7 +177,7 @@ public class Toy : SmartObject {
         light.transform.position = this.transform.position + new Vector3 (0, 2, 0);
         light.transform.Rotate(90, 0, 0);
 
-        Debug.Log(gameObject.name + " is selected.");
+        //Debug.Log(gameObject.name + " is selected.");
     }
 
     /// <summary>
@@ -189,7 +186,7 @@ public class Toy : SmartObject {
     public void OnDeselect()
     {
         playerInControl = false;
-        Debug.Log(gameObject.name + " is unselected.");
+        //Debug.Log(gameObject.name + " is unselected.");
         GameObject.Destroy(light);
     }
 
@@ -276,52 +273,13 @@ public class Toy : SmartObject {
 
     #region Private utility functions
 
-    void OnTriggerEnter(Collider other)
-    {
-        if(other.gameObject.GetComponent<Accessory>() != null)
-        {
-            AccessoryInRange = other.gameObject;
-        }
 
-        //J. If it f's up anyone elses behaviors commit out this section and let me know on slack
-        if (other.gameObject.CompareTag("Speed"))
-        {
-            other.gameObject.SetActive(false);
-            forwardSpeed = 12f;
-
-        }
-    }
-
-    void OnTriggerExit(Collider other)
-    {
-        if (other.gameObject == AccessoryInRange)
-        {
-            AccessoryInRange = null;
-        }
-    }
     #endregion
 
 
 
     #region Debugging Functions, that may or may not be called by our GUI
-    //Assuming that the Behavior Agent hasn't been initialized or started yet, will attempt to equip an Accessory within range.
-    bool DEBUG_EquipAccessory()
-    {
-        if (AccessoryInRange != null && AccessoryInRange.activeInHierarchy)
-        {
-            Accessory acc = AccessoryInRange.GetComponent<Accessory>();
-            Node OnUse = acc.OnUse(this);
-            bagent = new BehaviorAgent(IdleBehaviors.IdleStandDuringAction(OnUse));
-            //Node AccessoryAbility = acc.ToyUse(this);
-            bagent.StartBehavior();
-            return true;
-        }
-        else
-        {
-            Debug.Log("No Accessory within range.");
-            return false;
-        }
-    }
+   
     public void DEBUG_SetIdleRootAsIdleStand()
     {
         IdleTreeRoot = IdleBehaviors.IdleStand();
