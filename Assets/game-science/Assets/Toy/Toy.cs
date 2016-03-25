@@ -36,7 +36,7 @@ public class Toy : SmartObject {
     private GameObject light;
 
     //The current ability given by the Accessory equipped by this Toy.
-    private List<Accessory> Inventory;
+	private Accessory equippedAccessory;
 
     //The current Accessory Archetype of the Toy. Currently, only one is able to be stored at a time.
     private string AccessoryArchetype;
@@ -44,6 +44,7 @@ public class Toy : SmartObject {
     //A debug reference.
     public GameObject targetAccessory;
     public GameObject targetToy;
+
 
     #region setters
     // Right now, all states are initially set to true
@@ -95,6 +96,11 @@ public class Toy : SmartObject {
         return this.AccessoryArchetype;
     }
 
+	public Accessory GetEquippedAccessory()
+	{
+		return this.equippedAccessory;
+	}
+
     #endregion
 
     void Start () {
@@ -106,7 +112,6 @@ public class Toy : SmartObject {
         anim.SetBool("isWalk", false);
         playerInControl = true;
         AvailableSlots = AccessorySlots.Length;
-        Inventory = new List<Accessory>();
 
 
         // Option to start a toy with a target accessory
@@ -122,13 +127,14 @@ public class Toy : SmartObject {
         {
             // Look for accessory
             //Debug.Log("Looking for accessory...");
-
+			/*
             GameObject[] accessoriesInScene =
                 GameObject.FindGameObjectsWithTag("Accessory");
 
-            if (accessoriesInScene == null)
+			if (accessoriesInScene.Length == 0)
             {
                 Debug.Log("No accessories in scene");
+				IdleTreeRoot = IdleBehaviors.IdleStand ();
             }
             else
             {
@@ -139,18 +145,9 @@ public class Toy : SmartObject {
 
                 // Have this accessory be this toy's target accessory
                 SetAccessory(chosenAccessory);
-            }
-
-            // Start new behavior with the accessory
-            if (targetAccessory != null)
-            { 
-                //Debug.Log(targetAccessory + " is target for " + this);
-                Accessory acc = targetAccessory.GetComponent(typeof(Accessory)) as Accessory;
-                if (acc != null) IdleTreeRoot = IdleBehaviors.IdleStandDuringAction(IdleBehaviors.MoveAndEquipAccessory(this, acc));
-                else IdleTreeRoot = IdleBehaviors.IdleStand();
-            }
+            }*/
+			IdleTreeRoot = IdleBehaviors.IdleStand ();
         }
-
         bagent = new BehaviorAgent(IdleTreeRoot);
         bagent.StartBehavior();
     }
@@ -206,7 +203,7 @@ public class Toy : SmartObject {
     /// <param name="acc"></param>
     public void Equip(Accessory acc)
     {
-        Inventory.Add(acc);
+		equippedAccessory = acc;
         AccessoryArchetype = acc.Archetype;
         Debug.Log("Added " + acc.Archetype + " to " + this.Archetype + "'s inventory.");
     }
@@ -215,11 +212,11 @@ public class Toy : SmartObject {
     /// Removes the specified Accessory from the Inventory of this Toy.
     /// </summary>
     /// <param name="acc"></param>
-    public void Unequip(Accessory acc)
+    public void Unequip()
     {
-        Inventory.Remove(acc);
-        AccessoryArchetype = "";
-        Debug.Log("Removed " + acc.Archetype + " from " + this.Archetype + "'s inventory.");
+		Debug.Log("Removing " + equippedAccessory.Archetype + " from inventory.");
+		equippedAccessory = null;
+		AccessoryArchetype = "";
     }
 
     /// <summary>

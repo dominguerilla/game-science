@@ -73,4 +73,19 @@ public static class ToyController {
 			CurrentToy.SetIdleBehavior (IdleBehaviors.IdleStandDuringAction(new WalkTo(CurrentToy, location)));
 		}
 	}
+
+	/// <summary>
+	/// Activates the Core function of whatever Accessory the Toy has equipped.
+	/// </summary>
+	public static void ActivateCore(params Toy[] targets)
+	{
+		if (CurrentToy) 
+		{
+			Accessory acc = CurrentToy.GetEquippedAccessory ();
+			if (acc != null) 
+			{
+				acc.Core (CurrentToy, targets);
+			}
+		}
+	}
 }

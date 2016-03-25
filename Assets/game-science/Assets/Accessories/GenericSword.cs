@@ -50,7 +50,7 @@ public class GenericSword : Accessory {
                 new LeafWait(2000)));
     }
 
-    public void Core(Toy toy) {
+	public override void Core(Toy toy, params Toy[] targets) {
         //play animation 
         //check for collision 
         //if collide, damage

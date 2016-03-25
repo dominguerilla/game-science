@@ -49,4 +49,14 @@ public class HeroSword : Accessory
 
         return IdleBehaviors.IdleStandDuringAction(root);
     }
+
+	public override void Core(Toy toy, params Toy[] targets)
+	{
+		// Play attack animation
+		toy.GetAnimator().SetTrigger("Attack");
+		// Give present
+		UnityEngine.Object.Instantiate(summonPrefab,
+			toy.transform.position,
+			new Quaternion(0,0,0,0));
+	}
 }

@@ -39,13 +39,11 @@ public class InputManager : MonoBehaviour
     void Update()
     {
         //Upon Left Click
-        if(Input.GetMouseButtonDown(0))
-        {
-            RaycastHit hit;
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(ray, out hit))
-            {
-                Toy newToy = hit.collider.gameObject.GetComponent<Toy>();
+		if (Input.GetMouseButtonDown (0)) {
+			RaycastHit hit;
+			Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
+			if (Physics.Raycast (ray, out hit)) {
+				Toy newToy = hit.collider.gameObject.GetComponent<Toy> ();
 				//If there was a Toy in the GameObject hit
 				if (newToy != null) {
 					if (CurrentFocusedToy != newToy) {
@@ -64,33 +62,32 @@ public class InputManager : MonoBehaviour
 					}
 				} else {
 					//Deselects the CurrentFocusedToy, if there is any.
-					if (CurrentFocusedToy)
-					{
+					if (CurrentFocusedToy) {
 						CurrentFocusedToy = null;
 						camera.thePlayer = camera.focusPoint;
 						ToyController.DeselectToy ();
 					}
 				}
-            }
-        }//Upon Right Click
-        else if (Input.GetMouseButtonDown(1))
-        {
+			}
+		}//Upon Right Click
+        else if (Input.GetMouseButtonDown (1)) {
 			RaycastHit hit;
-			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-			if (Physics.Raycast(ray, out hit))
-			{
-				if (CurrentFocusedToy) 
-				{
+			Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
+			if (Physics.Raycast (ray, out hit)) {
+				if (CurrentFocusedToy) {
 					Accessory acc = hit.collider.gameObject.GetComponent (typeof(Accessory)) as Accessory;
+					Toy other = hit.collider.gameObject.GetComponent<Toy> ();
 					if (acc) {
 						ToyController.EquipAccessory (acc);
 					} else {
-						ToyController.MoveTo (hit.point);
+						if (CurrentFocusedToy.GetEquippedAccessory () != null && other)
+							ToyController.ActivateCore (other);
+						else ToyController.MoveTo (hit.point);
 					}
 				}
 			}
             
-        }
+		} 
         UpdatePanAxis();
     }
 

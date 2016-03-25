@@ -17,7 +17,7 @@ namespace TreeSharpPlus
 
         public override IEnumerable<RunStatus> Execute()
         {
-            Debug.Log("Inside givePresent");
+            //Debug.Log("Inside givePresent");
 
             // Play attack animation
             gifter.GetAnimator().SetTrigger("Attack");

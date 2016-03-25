@@ -13,6 +13,10 @@ public class KeepGlobalY : MonoBehaviour {
 
     public float yValue;
 
+	void Start(){
+		if (yValue == 0f) yValue = gameObject.transform.position.y;
+	}
+
 	void Update () {
         gameObject.transform.position = new Vector3() {
             x = gameObject.transform.position.x,

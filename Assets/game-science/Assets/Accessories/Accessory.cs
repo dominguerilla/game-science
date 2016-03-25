@@ -53,5 +53,13 @@ public abstract class Accessory : SmartObject {
      */ 
     public abstract Node ToyUse(Toy toy);
 
+	/// <summary>
+	/// The Core function that this Accessory makes available to the player.
+	/// </summary>
+	public virtual void Core(Toy toy, params Toy[] targets)
+	{
+		Debug.Log ("Core function executed.");
+		return;
+	}
     
 }
