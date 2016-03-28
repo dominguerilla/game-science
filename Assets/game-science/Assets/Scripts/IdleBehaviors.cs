@@ -142,7 +142,7 @@ public static class IdleBehaviors {
                             new DecoratorForceStatus(RunStatus.Success,
                                 new Sequence(
                                     new LeafAssert(() => { return Vector3.Distance(attacker.transform.position, defender.transform.position) > attacker.GetAgent().stoppingDistance; }),
-									new WalkTo(attacker, defender.transform.position)
+									new WalkTo(attacker, defender)
                                     )
                                 )
                     ),

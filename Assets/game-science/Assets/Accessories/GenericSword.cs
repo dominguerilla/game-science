@@ -6,6 +6,7 @@ public class GenericSword : Accessory {
 
     public GameObject equipModel;
     public float RotateSpeed = 100.0f;
+	public float AttackDamage = 10.0f;
 
     public override string Archetype { get { return "GenericSword"; } }
     public override bool IsEquippable { get { return true; } }
@@ -60,7 +61,7 @@ public class GenericSword : Accessory {
         Vector3 rayDir = toy.transform.forward ;
 
         anim.SetTrigger("Attack");
-        Debug.Log("attack!");
+        //Debug.Log("attack!");
 
         Vector3 fwd = transform.TransformDirection(Vector3.forward);
         if (Physics.Raycast(toy.transform.position, rayDir, out hit, 3.0f))
@@ -68,8 +69,8 @@ public class GenericSword : Accessory {
             anim.SetTrigger("Attack");
             if (hit.transform.gameObject.GetComponent<Toy>() != null)
             {
-                Debug.Log("trigger");
-                (hit.transform.gameObject).GetComponent<Toy>().ChangeHealth(-toy.GetAttack());
+                Debug.Log("Found hit");
+                (hit.transform.gameObject).GetComponent<Toy>().ChangeHealth(-AttackDamage);
                 //apply damage to hit.transform.gameObject
             }
         }

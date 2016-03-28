@@ -32,6 +32,7 @@ public class MyCamera : MonoBehaviour
     public float rotateAroundSpeed = 50.0f;
     // follow
     public float followSmoothSpeed = 5.0f; // used to lerp the follow
+	private int recompile;
 
     #endregion
 

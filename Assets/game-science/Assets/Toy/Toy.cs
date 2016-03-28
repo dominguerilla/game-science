@@ -110,7 +110,7 @@ public class Toy : SmartObject {
         agent = GetComponent<NavMeshAgent>();
         anim = GetComponent<Animator>();
         anim.SetBool("isWalk", false);
-        playerInControl = true;
+        //playerInControl = true;
         AvailableSlots = AccessorySlots.Length;
 
 
@@ -119,11 +119,14 @@ public class Toy : SmartObject {
         {
             Debug.Log("Starting with target accessory: " + targetAccessory);
             Accessory acc = targetAccessory.GetComponent(typeof(Accessory)) as Accessory;
-            if (acc != null) IdleTreeRoot = IdleBehaviors.IdleStandDuringAction(IdleBehaviors.MoveAndEquipAccessory(this, acc));
+			if (acc != null) {
+				Debug.Log ("Accessory found in " + targetAccessory);																														
+				IdleTreeRoot = IdleBehaviors.IdleStandDuringAction(IdleBehaviors.MoveAndEquipAccessory (this, acc));
+
+			}
             else IdleTreeRoot = IdleBehaviors.IdleStand();
         }
-        // Otherwise, look for a random accessory
-        else
+		else // Otherwise, look for a random accessory
         {
             // Look for accessory
             //Debug.Log("Looking for accessory...");
@@ -148,8 +151,6 @@ public class Toy : SmartObject {
             }*/
 			IdleTreeRoot = IdleBehaviors.IdleStand ();
         }
-        bagent = new BehaviorAgent(IdleTreeRoot);
-        bagent.StartBehavior();
     }
 	
 	// Update is called once per frame
@@ -248,7 +249,7 @@ public class Toy : SmartObject {
     private void Die()
     {
         Debug.Log(gameObject.name + " has died.");
-        bagent.StopBehavior();
+		if (bagent != null) bagent.StopBehavior();
         gameObject.SetActive(false);
     }
 
@@ -293,6 +294,12 @@ public class Toy : SmartObject {
             bagent.StartBehavior();
         }
     }
+	public void DEBUG_StopBehavior()
+	{
+		if (bagent != null) {
+			bagent.StopBehavior ();
+		}
+	}
     #endregion
 
 

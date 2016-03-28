@@ -61,5 +61,9 @@ public abstract class Accessory : SmartObject {
 		Debug.Log ("Core function executed.");
 		return;
 	}
-    
+
+	public virtual bool Equals(Accessory acc1, Accessory acc2){
+		return acc1.Archetype.Equals (acc2.Archetype);
+	}
+
 }
