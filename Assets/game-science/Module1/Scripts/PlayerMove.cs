@@ -97,6 +97,10 @@ public class PlayerMove : MonoBehaviour {
 		}
         }
 
+	void TakeInput(){
+
+	}
+
 	void OnTriggerEnter(Collider other){
 		Accessory acc = other.GetComponent (typeof(Accessory)) as Accessory;
 		if (acc && !acc.Equals(AccessoryInRange)) {

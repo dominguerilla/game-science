@@ -5,16 +5,32 @@ using TreeSharpPlus;
 /// <summary>
 /// The interface the Player uses to control a Toy.
 /// </summary>
-public static class ToyController {
+public class ToyController : MonoBehaviour{
 
-	public static Toy CurrentToy;
-	private static Node CurrentToyTree;
+	/// <summary>
+	/// The current toy selected by the player. Null if no Toy is selected.
+	/// </summary>
+	public Toy CurrentToy;
+
+
+	/// <summary>
+	/// The current PBT associated with the current Toy. Used for pausing and resuming a behavior tree.
+	/// </summary>
+	private Node CurrentToyTree;
+
+	void Start(){
+
+	}
+
+	void Update(){
+
+	}
 
 	/// <summary>
 	/// Selects the Toy given to be the focus of the controller.
 	/// </summary>
 	/// <param name="toy">Toy to focus on.</param>
-	public static void SelectToy(Toy toy)
+	public void SelectToy(Toy toy)
 	{
 		CurrentToy = toy;
 		CurrentToyTree = toy.IdleTreeRoot;
@@ -26,7 +42,7 @@ public static class ToyController {
 	/// </summary>
 	/// <param name="newToy">New Toy to focus on.</param>
 	/// <param name="oldToy">Old Toy to deselect.</param>
-	public static void SelectToy(Toy newToy, Toy oldToy)
+	public void SelectToy(Toy newToy, Toy oldToy)
 	{
 		CurrentToy = newToy;
 		CurrentToyTree = newToy.IdleTreeRoot;
@@ -37,7 +53,7 @@ public static class ToyController {
 	/// <summary>
 	/// Deselects the currently selected toy.
 	/// </summary>
-	public static void DeselectToy()
+	public void DeselectToy()
 	{
 		if (CurrentToy != null) 
 		{
@@ -52,7 +68,7 @@ public static class ToyController {
 	/// Makes the CurrentToy (if any) stop its current behavior, equip the given Accessory, and then execute whatever behavior that Accessory dictates.
 	/// </summary>
 	/// <param name="acc">Acc.</param>
-	public static void EquipAccessory(Accessory acc)
+	public void EquipAccessory(Accessory acc)
 	{
 		if (CurrentToy) 
 		{
@@ -65,7 +81,7 @@ public static class ToyController {
 	/// Makes the Toy walk to the specified location and then stand there.
 	/// </summary>
 	/// <param name="location">Location.</param>
-	public static void MoveTo(Vector3 location)
+	public void MoveTo(Vector3 location)
 	{
 		if (CurrentToy) 
 		{
@@ -77,7 +93,7 @@ public static class ToyController {
 	/// <summary>
 	/// Activates the Core function of whatever Accessory the Toy has equipped.
 	/// </summary>
-	public static void ActivateCore(params Toy[] targets)
+	public void ActivateCore(params Toy[] targets)
 	{
 		if (CurrentToy) 
 		{
@@ -87,5 +103,13 @@ public static class ToyController {
 				acc.Core (CurrentToy, targets);
 			}
 		}
+	}
+
+	/// <summary>
+	/// Enter third-person control scheme on the currently selected toy, given a GameObject Controller.
+	/// Makes the 
+	/// </summary>
+	public  void EnterTPControl(GameObject TPController){
+
 	}
 }

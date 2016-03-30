@@ -51,13 +51,13 @@ public class InputManager : MonoBehaviour
 						if (CurrentFocusedToy) {
 							CurrentFocusedToy = newToy;
 							camera.thePlayer = CurrentFocusedToy.gameObject;
-							ToyController.SelectToy (newToy, CurrentFocusedToy);
+							//ToyController.SelectToy (newToy, CurrentFocusedToy);
 						}
 						//If we select a different Toy from the one currently equipped
 						else {
 							CurrentFocusedToy = newToy;
 							camera.thePlayer = CurrentFocusedToy.gameObject;
-							ToyController.SelectToy (newToy);
+							//ToyController.SelectToy (newToy);
 						}
 					}
 				} else {
@@ -65,7 +65,7 @@ public class InputManager : MonoBehaviour
 					if (CurrentFocusedToy) {
 						CurrentFocusedToy = null;
 						camera.thePlayer = camera.focusPoint;
-						ToyController.DeselectToy ();
+						//ToyController.DeselectToy ();
 					}
 				}
 			}
@@ -78,17 +78,18 @@ public class InputManager : MonoBehaviour
 					Accessory acc = hit.collider.gameObject.GetComponent (typeof(Accessory)) as Accessory;
 					Toy other = hit.collider.gameObject.GetComponent<Toy> ();
 					if (acc) {
-						ToyController.EquipAccessory (acc);
+						//ToyController.EquipAccessory (acc);
 					} else {
-						if (CurrentFocusedToy.GetEquippedAccessory () != null && other)
-							ToyController.ActivateCore (other);
-						else ToyController.MoveTo (hit.point);
+						if (CurrentFocusedToy.GetEquippedAccessory () != null && other) {
+						}
+							//ToyController.ActivateCore (other);
+						//else ToyController.MoveTo (hit.point);
 					}
 				}
 			}
             
 		} 
-        UpdatePanAxis();
+        //UpdatePanAxis();
     }
 
     private void UpdatePanAxis()
