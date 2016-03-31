@@ -61,6 +61,9 @@ namespace FlyingCamera
         private bool m_Jumping;
         private AudioSource m_AudioSource;
 
+		[Header("Toy Management")]
+		public GameObject ThirdPersonController;
+
         // Use this for initialization
         private void Start()
         {
@@ -78,8 +81,26 @@ namespace FlyingCamera
         private void Update()
         {
             RotateView();
-            
+			DEBUG_ClickToControl ();
         }
+
+		/// <summary>
+		/// Will take Third Person control of the Toy clicked on.
+		/// </summary>
+		private void DEBUG_ClickToControl(){
+			if (Input.GetMouseButtonDown (0)) {
+				RaycastHit hit;
+				Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
+				if (Physics.Raycast (ray, out hit)) {
+					Toy toy = hit.collider.gameObject.GetComponent<Toy> ();
+					if (toy) {
+						GameObject newObject = Instantiate (ThirdPersonController);
+						toy.gameObject.transform.parent = newObject.transform;
+						newObject.GetComponent<PlayerMove> ().Initialize();
+					}
+				}
+			}
+		}
 
 
         private void PlayLandingSound()

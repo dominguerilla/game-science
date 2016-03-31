@@ -28,24 +28,29 @@ public class PlayerMove : MonoBehaviour {
 	private Accessory AccessoryInRange;
 
 
-    public GameObject Player;
     public bool clickMode = false;
 
 	void Start () {
-        anim = model.GetComponent<Animator>();
-		if (!clickMode) {
-			NavMeshAgent agent = model.GetComponent<NavMeshAgent> ();
-			if (agent)
-				agent.enabled = false;
-		}
-		ModelToy = model.GetComponent<Toy> ();
-		ModelToy.Equip (acc);
+        
 	}
-	
+
+	public void Initialize(){
+		ModelToy = GetComponentInChildren<Toy>();
+		if (ModelToy) {
+			model = ModelToy.gameObject;
+			anim = model.GetComponent<Animator>();
+			NavMeshAgent agent = model.GetComponent<NavMeshAgent> ();
+			if (agent) agent.enabled = false;
+			//ModelToy.Equip (acc);
+		} else {
+			Debug.Log ("Error! No Toy Component found in any children of TPS Controller!");
+		}
+	}
+
 	// Update is called once per frame
 	void Update () {
         //For controlling the character directly
-		if (!Player.activeInHierarchy) {
+		if (!model.activeInHierarchy) {
 			ToyIsAlive = false;
 		}
         //Movement animation
@@ -96,10 +101,7 @@ public class PlayerMove : MonoBehaviour {
 			controller.Move(moveDirection * Time.deltaTime);
 		}
         }
-
-	void TakeInput(){
-
-	}
+		
 
 	void OnTriggerEnter(Collider other){
 		Accessory acc = other.GetComponent (typeof(Accessory)) as Accessory;

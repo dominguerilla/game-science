@@ -58,7 +58,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 175446}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: 0}
+  m_LocalPosition: {x: 1.833, y: 1.302, z: -92.444}
   m_LocalScale: {x: 0.0041841003, y: 0.0041841003, z: 0.0041841003}
   m_Children:
   - {fileID: 402300}
@@ -284,6 +284,8 @@ MonoBehaviour:
   m_FootstepSounds: []
   m_JumpSound: {fileID: 0}
   m_LandSound: {fileID: 0}
+  ThirdPersonController: {fileID: 174356, guid: 14602ed41cc22804985dfcb55c3937af,
+    type: 2}
 --- !u!124 &12492250
 Behaviour:
   m_ObjectHideFlags: 1
