@@ -15,6 +15,7 @@ public class ExampleDragDropSurface : MonoBehaviour
 {
 	public bool rotatePlacedObject = false;
 
+
 	//void OnDrop (GameObject go)
 	//{
 	//    ExampleDragDropItem ddo = go.GetComponent<ExampleDragDropItem>();
