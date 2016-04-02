@@ -86,24 +86,27 @@ public class PlayerMove : MonoBehaviour {
 		anim.SetFloat("RunFWD", Math.Abs(FWD));
 		anim.SetFloat("RunSIDE", Math.Abs(SIDE));
 
-		Vector3 direction = new Vector3(FWD * XInvert, 0, SIDE * ZInvert);
-		Vector3 newDir = Vector3.RotateTowards(model.transform.forward, direction, 1000, 0.0F);
-		model.transform.rotation = Quaternion.LookRotation(newDir);
+		//Vector3 direction = new Vector3(FWD * XInvert, 0, SIDE * ZInvert);
+		//Vector3 newDir = Vector3.RotateTowards(model.transform.forward, direction, 1000, 0.0F);
+		//model.transform.rotation = Quaternion.LookRotation(newDir);
 
-		/*Vector3 InputVector = Vector3.Normalize (new Vector3(FWD, 0, SIDE));
-		model.transform.forward = model.transform.position - InputVector;*/
 
 		//Character Movement
 		CharacterController controller = GetComponent<CharacterController>();
 		if (controller.isGrounded)
 		{
 			anim.SetBool("isMidair", false);
-			if (flipAxis)
+			/*if (flipAxis)
 				moveDirection = new Vector3 (FWD, 0, SIDE);
 			else
 				moveDirection = new Vector3 (SIDE, 0, FWD);
+			
 			moveDirection = transform.TransformDirection(moveDirection);
+			*/
 
+			moveDirection = new Vector3 (FWD, 0, SIDE);
+			moveDirection = camera.transform.TransformDirection(moveDirection);
+			if(moveDirection != new Vector3(0, 0, 0)) model.transform.rotation = Quaternion.LookRotation (moveDirection);
 			if (!isWalk) moveDirection *= RunSpeed;
 			else moveDirection *= WalkSpeed;
 			if (Input.GetButton ("Jump")) {
