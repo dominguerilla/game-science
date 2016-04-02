@@ -6,6 +6,10 @@ namespace TreeSharpPlus
     // This Node should only be called when it has been verified that:
     // 1. The Accessory is equippable by the Toy and
     // 2. The Toy has enough free equip slots to equip the Accessory.
+	/// <summary>
+	/// Makes the Toy equip the specified Accessory, but does NOT make it walk to it.
+	/// After the Accessory is equipped, the Toy's behavior is changed to the one specified by the Accessory's ToyUse() function.
+	/// </summary>
     public class EquipAccessory : Node
     {
         private Toy toy;
@@ -29,10 +33,10 @@ namespace TreeSharpPlus
             //Spawn a model that will appear on the Toy picking up the Accessory, if the Accessory is MEANT to appear and if it has a specified EquipModel.
             if (acc.EquipModel && EquipSlot != (int)Accessory.EquipSlots.None)
             {
-                GameObject accModel = (GameObject)GameObject.Instantiate(acc.EquipModel, toy.AccessorySlots[EquipSlot].transform.position, Quaternion.identity);
+				GameObject accModel = (GameObject)GameObject.Instantiate(acc.EquipModel, toy.GetAccessoryEquipSlot(EquipSlot).transform.position, Quaternion.identity);
 
                 //Make the model a child of the bones of the Toy model
-                accModel.transform.parent = toy.AccessorySlots[EquipSlot]; 
+				accModel.transform.parent = toy.GetAccessoryEquipSlot(EquipSlot); 
             }
 
             while (anim.GetCurrentAnimatorStateInfo(1).IsName("PickUp"))

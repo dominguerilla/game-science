@@ -9,25 +9,33 @@ using System.Collections.Generic;
 public class Toy : SmartObject {
 
     //J. A pretty basic implementation of stats. 
-    public float forwardSpeed = 7f;
-    public float Health = 100f;
-    public float Attack = 10.0f;
+	[SerializeField]
+    private float forwardSpeed = 7f;
+
+	[SerializeField]
+    private float Health = 100f;
+
+	[SerializeField]
+    private float Attack = 10.0f;
 
     private NavMeshAgent agent;
     private BehaviorAgent bagent;
     private Animator anim;
 
     //This is used to specify where equipped Accessories will show up on the Toy.
-    public Transform[] AccessorySlots = new Transform[10];
+	[SerializeField]
+    private Transform[] AccessorySlots = new Transform[10];
     
     //The current number of available Accessory slots on the Toy.
     private int AvailableSlots;
 
     //Specifies if the player is currently in control of this Toy.
-    public bool playerInControl;
+	[SerializeField]
+    private bool playerInControl;
 
     //The node of the Behavior Tree that defines the Toy's idle behavior.
-    public Node IdleTreeRoot;
+	[SerializeField]
+    private Node IdleTreeRoot;
 
     // The states for this toy
     private bool[] states;
@@ -42,8 +50,10 @@ public class Toy : SmartObject {
     private string AccessoryArchetype;
 
     //A debug reference.
-    public GameObject targetAccessory;
-    public GameObject targetToy;
+	[SerializeField]
+	private GameObject targetAccessory;
+	[SerializeField]
+	private GameObject targetToy;
 
 
     #region setters
@@ -59,10 +69,20 @@ public class Toy : SmartObject {
         }
     }
 
-    // Set this Toy's target accessory
+    /// <summary>
+    /// Makes this Toy equip an Accessory on the target GameObject.
+    /// </summary>
+    /// <param name="targetAccessory">Target accessory.</param>
     public void SetAccessory(GameObject targetAccessory)
     {
-        this.targetAccessory = targetAccessory;
+		Accessory acc = targetAccessory.GetComponent (typeof(Accessory)) as Accessory;
+		if (acc) {
+			this.targetAccessory = targetAccessory;
+			this.bagent.StopBehavior ();
+			this.IdleTreeRoot = IdleBehaviors.IdleStandDuringAction (IdleBehaviors.MoveAndEquipAccessory (this, acc));
+		} else {
+			Debug.Log ("No Accessory found in given Game Object!");
+		}
     }
     #endregion
 
@@ -70,7 +90,7 @@ public class Toy : SmartObject {
     public override string Archetype
     { get { return "Toy"; } }
 
-    // Getter for behavior trees
+    
     public NavMeshAgent GetAgent()
     {
         return this.agent;
@@ -99,6 +119,27 @@ public class Toy : SmartObject {
 	public Accessory GetEquippedAccessory()
 	{
 		return this.equippedAccessory;
+	}
+
+	public Node GetIdleTreeRoot(){
+		return this.IdleTreeRoot;
+	}
+
+	/// <summary>
+	/// Gets the Transform equip slot stored in the AccessorySlots array. Returns null if the index is invalid or if there is no equip slot specified in that position.
+	/// </summary>
+	/// <returns>The accessory equip slot.</returns>
+	/// <param name="index">Index.</param>
+	public Transform GetAccessoryEquipSlot(int index){
+		if (index >= AccessorySlots.Length || index < 0) {
+			Debug.Log ("Invalid index!");
+			return null;
+		} else if (AccessorySlots [index] != null) {
+			return AccessorySlots [index];
+		} else {
+			Debug.Log ("No equip slot found in that index.");
+			return null;
+		}
 	}
 
     #endregion
@@ -259,10 +300,14 @@ public class Toy : SmartObject {
     /// <param name="root"></param>
     public void SetIdleBehavior(Node root)
     {
-        IdleTreeRoot = root;
-        bagent.StopBehavior();
-        bagent = new BehaviorAgent(IdleTreeRoot);
-        bagent.StartBehavior();
+		if (root != null) {
+			IdleTreeRoot = root;
+			bagent.StopBehavior ();
+			bagent = new BehaviorAgent (IdleTreeRoot);
+			bagent.StartBehavior ();
+		} else {
+			Debug.Log ("No ");
+		}
     }
    
     

@@ -3,7 +3,7 @@ using System.Collections;
 using TreeSharpPlus;
 
 /// <summary>
-/// The interface the Player uses to control a Toy.
+/// An interface for controlling a Toy, meant to be used by keyboard and mouse input handlers.
 /// </summary>
 public class ToyController : MonoBehaviour{
 
@@ -12,6 +12,10 @@ public class ToyController : MonoBehaviour{
 	/// </summary>
 	public Toy CurrentToy;
 
+	/// <summary>
+	/// The GameObject prefab that handles the third person control of Toys.
+	/// </summary>
+	public GameObject TPSController;
 
 	/// <summary>
 	/// The current PBT associated with the current Toy. Used for pausing and resuming a behavior tree.
@@ -33,7 +37,7 @@ public class ToyController : MonoBehaviour{
 	public void SelectToy(Toy toy)
 	{
 		CurrentToy = toy;
-		CurrentToyTree = toy.IdleTreeRoot;
+		CurrentToyTree = toy.GetIdleTreeRoot();
 		toy.OnSelect ();
 	}
 
@@ -45,7 +49,7 @@ public class ToyController : MonoBehaviour{
 	public void SelectToy(Toy newToy, Toy oldToy)
 	{
 		CurrentToy = newToy;
-		CurrentToyTree = newToy.IdleTreeRoot;
+		CurrentToyTree = newToy.GetIdleTreeRoot();
 		oldToy.OnDeselect ();
 		newToy.OnSelect ();
 	}
@@ -72,7 +76,7 @@ public class ToyController : MonoBehaviour{
 	{
 		if (CurrentToy) 
 		{
-			CurrentToyTree = CurrentToy.IdleTreeRoot;
+			CurrentToyTree = CurrentToy.GetIdleTreeRoot();
 			CurrentToy.SetIdleBehavior (IdleBehaviors.IdleStandDuringAction(IdleBehaviors.MoveAndEquipAccessory(CurrentToy,acc)));
 		}
 	}
@@ -85,7 +89,7 @@ public class ToyController : MonoBehaviour{
 	{
 		if (CurrentToy) 
 		{
-			CurrentToyTree = CurrentToy.IdleTreeRoot;
+			CurrentToyTree = CurrentToy.GetIdleTreeRoot();
 			CurrentToy.SetIdleBehavior (IdleBehaviors.IdleStandDuringAction(new WalkTo(CurrentToy, location)));
 		}
 	}
@@ -106,10 +110,16 @@ public class ToyController : MonoBehaviour{
 	}
 
 	/// <summary>
-	/// Enter third-person control scheme on the currently selected toy, given a GameObject Controller.
+	/// Enter third-person control scheme on the toy specified, if a third person controller has been specified.
 	/// Makes the 
 	/// </summary>
-	public  void EnterTPControl(GameObject TPController){
-
+	public void EnterTPControl(Toy toy){
+		if (TPSController) {
+			GameObject newObject = (GameObject)Instantiate (TPSController, toy.transform.position, toy.transform.localRotation);
+			toy.gameObject.transform.parent = newObject.transform;
+			newObject.GetComponent<PlayerMove> ().Initialize ();
+		} else {
+			Debug.Log ("Error! No TPSController specified.");
+		}
 	}
 }

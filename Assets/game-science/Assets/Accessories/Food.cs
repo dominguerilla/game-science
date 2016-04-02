@@ -24,7 +24,7 @@ public class Food : Accessory
             new LeafAssert(() => { return IsEquippable; }),
             new EquipAccessory(toy, this, EquipSlot),
             new LeafInvoke(() => { gameObject.SetActive(false); }),
-            new LeafInvoke(() => { toy.Health = toy.Health + 10; if (toy.Health > 100) { toy.Health = 100; } })
+			new LeafInvoke(() => { toy.ChangeHealth(10); })
             );
     }
 

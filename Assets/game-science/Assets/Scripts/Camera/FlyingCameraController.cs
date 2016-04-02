@@ -9,6 +9,7 @@ namespace FlyingCamera
 {
     //[RequireComponent(typeof(CharacterController))]
     [RequireComponent(typeof(AudioSource))]
+	[RequireComponent(typeof(ToyController))]
     public class FlyingCameraController : MonoBehaviour
     {
         [SerializeField]
@@ -61,8 +62,8 @@ namespace FlyingCamera
         private bool m_Jumping;
         private AudioSource m_AudioSource;
 
-		[Header("Toy Management")]
-		public GameObject ThirdPersonController;
+		//[Header("Toy Management")]
+		private ToyController ToyControl;
 
         // Use this for initialization
         private void Start()
@@ -74,6 +75,8 @@ namespace FlyingCamera
             m_StepCycle = 0f;
             m_NextStep = m_StepCycle / 2f;
             m_MouseLook.Init(transform, m_Camera.transform);
+
+			ToyControl = GetComponent<ToyController> ();
         }
 
 
@@ -94,9 +97,8 @@ namespace FlyingCamera
 				if (Physics.Raycast (ray, out hit)) {
 					Toy toy = hit.collider.gameObject.GetComponent<Toy> ();
 					if (toy) {
-						GameObject newObject = Instantiate (ThirdPersonController);
-						toy.gameObject.transform.parent = newObject.transform;
-						newObject.GetComponent<PlayerMove> ().Initialize();
+						ToyControl.EnterTPControl(toy);
+						this.gameObject.SetActive (false);
 					}
 				}
 			}
