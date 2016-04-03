@@ -15,6 +15,7 @@ public class SwitchController : MonoBehaviour
         i = 0;
         main = Camera.main;
         RTS = GameObject.Find("RTSCam").GetComponent<Camera>();
+        enableMain();
     }
 
     // Update is called once per frame
@@ -53,6 +54,7 @@ public class SwitchController : MonoBehaviour
     {
 
         main.enabled = true;
+        RTS.enabled = false;
         GetComponent<FlyingCameraController>().enabled = true;
         GetComponent<RTSController>().enabled = false;
     }
@@ -61,6 +63,7 @@ public class SwitchController : MonoBehaviour
     {
 
         RTS.enabled = true;
+        main.enabled = false;
         GetComponent<FlyingCameraController>().enabled = false;
         GetComponent<RTSController>().enabled = true;
     }
