@@ -25,6 +25,8 @@ namespace TreeSharpPlus
 
         public override IEnumerable<RunStatus> Execute()
         {
+            Debug.Log("Executing EquipAccessory");
+
             //Trigger the animation for picking up Accessories, and returns running while it is animating
             Animator anim = toy.GetComponent<Animator>();
             anim.SetTrigger("IdlePickUp");

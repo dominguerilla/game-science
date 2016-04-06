@@ -57,8 +57,7 @@ public class Toy : SmartObject {
 
 
     #region setters
-    // Right now, all states are initially set to true
-    // Eventually, we should define which states are true inititially
+    // All states are initially set to true
     private void SetInitialStates()
     {
         states = new bool[(int)SimpleStateDef.NUMSTATES];
@@ -67,6 +66,10 @@ public class Toy : SmartObject {
         {
             states[i] = true;
         }
+
+        // Set TPSMode to false
+        SetStatesToFalse(SimpleStateDef.TPSMode);
+        // TODO: Need to set it back to false when we exit TPControl
     }
 
     /// <summary>
@@ -75,11 +78,21 @@ public class Toy : SmartObject {
     /// <param name="targetAccessory">Target accessory.</param>
     public void SetAccessory(GameObject targetAccessory)
     {
-		Accessory acc = targetAccessory.GetComponent (typeof(Accessory)) as Accessory;
+        Debug.Log("SetAccessory: " + targetAccessory);
+        Accessory acc = targetAccessory.GetComponent (typeof(Accessory)) as Accessory;
 		if (acc) {
 			this.targetAccessory = targetAccessory;
-			this.bagent.StopBehavior ();
-			this.IdleTreeRoot = IdleBehaviors.IdleStandDuringAction (IdleBehaviors.MoveAndEquipAccessory (this, acc));
+            if (playerInControl)
+            {   // Equip the accessory directly
+                DEBUG_EquipAccessoryDirectly(acc);
+            }
+            else
+            {   // New behavior: pick up the accessory
+                SetIdleBehavior(IdleBehaviors.IdleStandDuringAction(IdleBehaviors.MoveAndEquipAccessory(this, acc)));
+            }
+
+            // Depending on implementation, may want to do this too
+            // Equip(acc);
 		} else {
 			Debug.Log ("No Accessory found in given Game Object!");
 		}
@@ -197,6 +210,15 @@ public class Toy : SmartObject {
 	// Update is called once per frame
 	void Update () {
         anim.SetBool("Moving", agent.hasPath);
+
+        // If Toy is in range of an accessory, is in the "wantsAccessory" state,
+        // and is in TPSMode, then have the it automatically equip the accessory
+        // Note: possible that we don't want to call this every frame
+        if (CheckStates(SimpleStateDef.WantsAccessories,
+            SimpleStateDef.TPSMode))
+        {
+            EquipAccessoriesInRange();
+        }
     }
 
     #region Public interface functions
@@ -206,6 +228,9 @@ public class Toy : SmartObject {
     /// </summary>
     public void OnSelect()
     {
+        // Depending on implementation, may want to do this as well:
+        // SetStatesToTrue(SimpleStateDef.TPSMode);
+
         playerInControl = true;
         light = new GameObject("Spotlight");
         Light lightComp = light.AddComponent<Light>();
@@ -224,6 +249,9 @@ public class Toy : SmartObject {
     /// </summary>
     public void OnDeselect()
     {
+        // Depending on implementation, may want to do this as well:
+        // SetStatesToFalse(SimpleStateDef.TPSMode);
+
         playerInControl = false;
         //Debug.Log(gameObject.name + " is unselected.");
         GameObject.Destroy(light);
@@ -302,19 +330,73 @@ public class Toy : SmartObject {
     {
 		if (root != null) {
 			IdleTreeRoot = root;
-			bagent.StopBehavior ();
-			bagent = new BehaviorAgent (IdleTreeRoot);
-			bagent.StartBehavior ();
+			if (bagent != null) bagent.StopBehavior();
+			bagent = new BehaviorAgent(IdleTreeRoot);
+			bagent.StartBehavior();
 		} else {
-			Debug.Log ("No ");
+			Debug.Log ("Toy.SetIdleBehavior given null input");
 		}
     }
-   
-    
+
+
 
     #endregion
 
     #region Private utility functions
+
+    /// <summary>
+    /// If Toy "WantsAccessories," automatically equip an accessory if it's in range
+    /// </summary>
+    private void EquipAccessoriesInRange()
+    {
+        // Attempt to improve performance: not sure if this works
+        new WaitForSeconds(1);
+
+        // Check objects in range 2 or less
+        Collider[] objectsInRange =
+            Physics.OverlapSphere(this.transform.position, 2);
+
+        foreach(Collider c in objectsInRange)
+        {
+            if (c.tag == "Accessory")
+            {
+                // Have this accessory be this toy's target accessory
+                SetAccessory(c.gameObject);
+            }
+        }
+        
+    }
+
+    /// <summary>
+    /// Equip this accessory to the Toy directly, without animation
+    /// Used in TPS mode if player gets within range of accessory
+    /// </summary>
+    /// <param name="acc"></param>
+    private void DEBUG_EquipAccessoryDirectly(Accessory acc)
+    {
+        // Code copied and modified from "EquipAccessory"
+        int EquipSlot = (int)acc.EquipSlot;
+
+        if (acc.EquipModel &&
+            EquipSlot != (int)Accessory.EquipSlots.None)
+        {
+            GameObject accModel = (GameObject)GameObject.Instantiate(acc.EquipModel,
+                this.GetAccessoryEquipSlot(EquipSlot).transform.position,
+                Quaternion.identity);
+
+            // Make the model a child of the bones of the Toy model
+            accModel.transform.parent = this.GetAccessoryEquipSlot(EquipSlot);
+        }
+
+        // Destroy the Accessory on the ground
+        acc.gameObject.SetActive(false);
+
+        // Set this Toy's idle behavior to be accessory.ToyUse
+        Debug.Log("Toy.DEBUG_EquipAccessoryDirectly: setting idle behavior to "
+            + acc
+            + " ToyUse method");
+        SetIdleBehavior(acc.ToyUse(this));
+    }
 
 
     #endregion
@@ -322,7 +404,7 @@ public class Toy : SmartObject {
 
 
     #region Debugging Functions, that may or may not be called by our GUI
-   
+
     public void DEBUG_SetIdleRootAsIdleStand()
     {
         IdleTreeRoot = IdleBehaviors.IdleStand();

@@ -23,8 +23,6 @@ public static class IdleBehaviors {
 
         return new DecoratorLoop(
             new Sequence(
-                toy.Simple_Node_Require(SimpleStateDef.IsStanding),
-
                 new WalkToRandomNewVector(toy),
                 new LeafWait(2000)
         ));
