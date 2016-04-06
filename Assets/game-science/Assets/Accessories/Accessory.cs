@@ -3,6 +3,21 @@ using System.Collections;
 using TreeSharpPlus;
 
 public abstract class Accessory : SmartObject {
+    /**
+    * Data Logging Functionality
+    */
+
+    // The Data Logger in the scene
+    private DataLogger logger;
+
+    void Start()
+    {
+        // When accessory is placed in the scene, log it
+        GameObject logObject = GameObject.FindGameObjectWithTag("Logger");
+        logger = logObject.GetComponent(typeof(DataLogger)) as DataLogger;
+        logger.LogNewItem(this);
+    }
+
     /// <summary>
     /// The enumerations for the equipment slots. These are passed to the EquipAccessory node to specify where the Accessory will appear on the Toy when equipped.
     /// In the Inspector, under the Accessory Slots section of the Toy component, make sure that the proper bones of the model are assigned to their respective indices as outlined here.

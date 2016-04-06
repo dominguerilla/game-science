@@ -55,6 +55,8 @@ public class Toy : SmartObject {
 	[SerializeField]
 	private GameObject targetToy;
 
+    // The Data Logger in the scene
+    private DataLogger logger;
 
     #region setters
     // All states are initially set to true
@@ -160,7 +162,12 @@ public class Toy : SmartObject {
     #endregion
 
     void Start () {
-        // Set all states to true for now
+        // Log this Toy for our data logging
+        GameObject logObject = GameObject.FindGameObjectWithTag("Logger");
+        logger = logObject.GetComponent(typeof(DataLogger)) as DataLogger;
+        logger.LogNewItem(this);
+
+        // Set state booleans
         this.SetInitialStates();
 
         agent = GetComponent<NavMeshAgent>();
@@ -388,6 +395,12 @@ public class Toy : SmartObject {
 
             // Make the model a child of the bones of the Toy model
             accModel.transform.parent = this.GetAccessoryEquipSlot(EquipSlot);
+        }
+        else
+        {
+            // Otherwise, just exit
+            Debug.Log("Toy.DEBUG_EquipAccessoryDirectly: couldn't equip " + acc);
+            return;
         }
 
         // Destroy the Accessory on the ground
