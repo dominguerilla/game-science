@@ -69,7 +69,9 @@ public class Toy : SmartObject {
 
         // Set TPSMode to false
         SetStatesToFalse(SimpleStateDef.TPSMode);
-        // TODO: Need to set it back to false when we exit TPControl
+
+        // Should set it *back* to false when we exit TPControl
+        // This is currently done in PlayerMove.ExitControl
     }
 
     /// <summary>

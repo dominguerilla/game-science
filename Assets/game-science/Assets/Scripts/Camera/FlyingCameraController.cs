@@ -98,7 +98,9 @@ namespace FlyingCamera
 					Toy toy = hit.collider.gameObject.GetComponent<Toy> ();
 					if (toy) {
 						ToyControl.EnterTPControl(toy);
-						this.gameObject.SetActive (false);
+
+                        // Going to try commenting this out
+						// this.gameObject.SetActive (false);
 					}
 				}
 			}

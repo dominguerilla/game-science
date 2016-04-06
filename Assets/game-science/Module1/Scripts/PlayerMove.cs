@@ -74,7 +74,7 @@ public class PlayerMove : MonoBehaviour {
 		else anim.SetBool("Moving", false);
 
 		if (Input.GetKeyUp (KeyCode.Escape)) {
-
+            ExitControl();
 		}
 		//Toggling the walking animation
 		if (Input.GetKeyUp(KeyCode.CapsLock)) isWalk = !isWalk;
@@ -134,7 +134,12 @@ public class PlayerMove : MonoBehaviour {
 	void ExitControl(){
 		model.gameObject.transform.parent = null;
 		GameObject.Destroy (this.gameObject);
-		//TODO Have a better way of re-enabling the flying camera controller!
+        //TODO Have a better way of re-enabling the flying camera controller!
+
+        // Note: currently flying camera controller is just not deactivated
+
+        // Once we exit TPS, tell the Toy that it's not in TPS anymore
+        ModelToy.SetStatesToFalse(SimpleStateDef.TPSMode);
 	}
 		
 
