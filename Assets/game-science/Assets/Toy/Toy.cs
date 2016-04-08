@@ -103,8 +103,8 @@ public class Toy : SmartObject {
                 SetIdleBehavior(IdleBehaviors.IdleStandDuringAction(IdleBehaviors.MoveAndEquipAccessory(this, acc)));
             }
 
-            // Depending on implementation, may want to do this too
-            // Equip(acc);
+            // NOTE: Depending on implementation, may want to do this too
+            Equip(acc);
 		} else {
 			Debug.Log ("No Accessory found in given Game Object!");
 		}
@@ -181,7 +181,7 @@ public class Toy : SmartObject {
         agent = GetComponent<NavMeshAgent>();
         anim = GetComponent<Animator>();
         anim.SetBool("isWalk", false);
-        //playerInControl = true;
+        playerInControl = false;
         AvailableSlots = AccessorySlots.Length;
 
 
@@ -194,6 +194,8 @@ public class Toy : SmartObject {
 				Debug.Log ("Accessory found in " + targetAccessory);																														
 				IdleTreeRoot = IdleBehaviors.IdleStandDuringAction(IdleBehaviors.MoveAndEquipAccessory (this, acc));
 
+                // Adding this so Toys with targetAccessories pick them up
+                SetIdleBehavior(IdleTreeRoot);
 			}
             else IdleTreeRoot = IdleBehaviors.IdleStand();
         }
@@ -359,7 +361,8 @@ public class Toy : SmartObject {
     }
 
     /// <summary>
-    /// Called by Playzone.cs when it detects this Toy
+    /// Tell the Toy it's in a Playzone
+    /// Currently called by Playzone.cs when it detects this Toy
     /// </summary>
     /// <param name="zone"></param>
     public void OnPlayzoneEnter(Playzone zone)
@@ -368,11 +371,50 @@ public class Toy : SmartObject {
     }
 
     /// <summary>
+    /// Tell the Toy it's no longer in a Playzone
     /// (Should be) called by Playzone.cs when this Toy exits
     /// </summary>
     /// <param name="zone"></param>
     public void OnPlayzoneExit(Playzone zone) { }
 
+    /// <summary>
+    /// Tell the Toy that it's in TPS Mode
+    /// Currently done in ToyController.EnterTPControl()
+    /// </summary>
+    public void OnTPSEnter()
+    {
+        SetStatesToTrue(SimpleStateDef.TPSMode);
+
+        // Depending on implementation, we may want to do this too:
+        // playerInControl = true;
+    }
+
+    /// <summary>
+    /// Tell the Toy that it's no longer in TPS Mode
+    /// Currently done in PlayerMove.ExitControl()
+    /// </summary>
+    public void OnTPSExit()
+    {
+        SetStatesToFalse(SimpleStateDef.TPSMode);
+
+        // Depending on implementation, we may want to do this too:
+        // playerInControl = false;
+    }
+
+    /// <summary>
+    /// Run Core function of current Toy accessory
+    /// </summary>
+    public void DEBUG_RunEquippedAccessoryCore()
+    {
+        if(equippedAccessory == null)
+        {
+            print("Toy.ActivateCore: no accessory equipped");
+        }
+        else
+        {
+            equippedAccessory.Core(this);
+        }
+    }
 
     #endregion
 
@@ -441,8 +483,6 @@ public class Toy : SmartObject {
 
     #endregion
 
-
-
     #region Debugging Functions, that may or may not be called by our GUI
 
     public void DEBUG_SetIdleRootAsIdleStand()
@@ -468,7 +508,6 @@ public class Toy : SmartObject {
 		}
 	}
     #endregion
-
 
     #region Node Functions
     /// <summary>

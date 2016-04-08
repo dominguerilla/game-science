@@ -87,6 +87,7 @@ namespace FlyingCamera
 			DEBUG_ClickToControl ();
         }
 
+
 		/// <summary>
 		/// Will take Third Person control of the Toy clicked on.
 		/// </summary>
@@ -100,7 +101,7 @@ namespace FlyingCamera
 						ToyControl.EnterTPControl(toy);
 
                         // Going to try commenting this out
-						// this.gameObject.SetActive (false);
+                        // this.gameObject.SetActive (false);
 					}
 				}
 			}

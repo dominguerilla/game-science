@@ -111,13 +111,13 @@ public class ToyController : MonoBehaviour{
 
 	/// <summary>
 	/// Enter third-person control scheme on the toy specified, if a third person controller has been specified.
-	/// Makes the 
 	/// </summary>
 	public void EnterTPControl(Toy toy){
 		if (TPSController) {
             // Tell the Toy that it's in TPS mode
-            // TODO: Need to set it back to false when we exit TPControl
-            toy.SetStatesToTrue(SimpleStateDef.TPSMode);
+            // NOTE: Need to set it back to false when we exit TPControl
+            // Currently this is done in PlayerMove
+            toy.OnTPSEnter();
 
 			GameObject newObject = (GameObject)Instantiate (TPSController, toy.transform.position, toy.transform.localRotation);
 			toy.gameObject.transform.parent = newObject.transform;

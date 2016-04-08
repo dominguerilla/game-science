@@ -74,6 +74,7 @@ public class PlayerMove : MonoBehaviour {
 		else anim.SetBool("Moving", false);
 
 		if (Input.GetKeyUp (KeyCode.Escape)) {
+            // Exit control, exit TPS mode
             ExitControl();
 		}
 		//Toggling the walking animation
@@ -123,9 +124,20 @@ public class PlayerMove : MonoBehaviour {
 	void MouseInput(){
 		//Attack
 		if (Input.GetMouseButtonDown (0)) {
-			if (acc)
-				acc.Core (ModelToy);
-		}
+            // Toy should know which accessory it has equipped
+            ModelToy.DEBUG_RunEquippedAccessoryCore();
+
+            // Note: Should probably use ToyController rather than talk
+            // to Toy directly? (See Below code)
+
+            // Activate Core without any targets on Mouse Click
+            // ToyController tc = ModelToy.GetComponent<ToyController>();
+            // if(tc != null) { tc.ActivateCore(); }
+
+
+            // if (acc)
+            // acc.Core (ModelToy);
+        }
 			
 		//Camera orbitiing
 		camera.transform.RotateAround (model.transform.position, Vector3.up, Input.GetAxis("Mouse X") * 1.0f);
@@ -136,10 +148,10 @@ public class PlayerMove : MonoBehaviour {
 		GameObject.Destroy (this.gameObject);
         //TODO Have a better way of re-enabling the flying camera controller!
 
-        // Note: currently flying camera controller is just not deactivated
+        // Note: currently flying camera controller is simply not deactivated
 
         // Once we exit TPS, tell the Toy that it's not in TPS anymore
-        ModelToy.SetStatesToFalse(SimpleStateDef.TPSMode);
+        ModelToy.OnTPSExit();
 	}
 		
 

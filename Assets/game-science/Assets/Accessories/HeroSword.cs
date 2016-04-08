@@ -52,6 +52,7 @@ public class HeroSword : Accessory
 
 	public override void Core(Toy toy, params Toy[] targets)
 	{
+        print("DEBUG: Inside Core function of HeroSword");
 		// Play attack animation
 		toy.GetAnimator().SetTrigger("Attack");
 		// Give present

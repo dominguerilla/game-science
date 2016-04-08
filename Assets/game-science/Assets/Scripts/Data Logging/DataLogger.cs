@@ -13,12 +13,21 @@ public class DataLogger : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         LogMessage("Game Started");
+
+        print("DataLogger.Start: turning off all audio listeners in DataLogger.Update");
 	}
 	
 	// Update is called once per frame
 	void Update ()
     {
         time += Time.deltaTime;
+
+        // Bonus: make the console stop printing audio listener warnings
+        AudioListener[] listeners = FindObjectsOfType<AudioListener>();
+        foreach(AudioListener al in listeners)
+        {
+            al.enabled = false;
+        }
     }
 
     // Record final time
