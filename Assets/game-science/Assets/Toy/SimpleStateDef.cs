@@ -16,6 +16,6 @@ public enum SimpleStateDef
     // Toy is being controlled by the player
     TPSMode,
 
-    // This one should always go at the end, it's just for indexing
-    NUMSTATES
+    // Toy is inside a Playzone
+    IsInPlayzone,
 }

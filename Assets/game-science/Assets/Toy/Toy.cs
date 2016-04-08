@@ -2,6 +2,7 @@
 using TreeSharpPlus;
 using UnityEngine;
 using System.Collections.Generic;
+using System;
 
 /// <summary>
 /// Toy class is our implementation of SmartCharacter
@@ -38,7 +39,7 @@ public class Toy : SmartObject {
     private Node IdleTreeRoot;
 
     // The states for this toy
-    private bool[] states;
+    private bool[] states = new bool[Enum.GetNames(typeof(SimpleStateDef)).Length];
 
     //The light that appears when this Toy is selected
     private GameObject light;
@@ -62,18 +63,25 @@ public class Toy : SmartObject {
     // All states are initially set to true
     private void SetInitialStates()
     {
-        states = new bool[(int)SimpleStateDef.NUMSTATES];
-
+        // (1) Set everything to be true
         for(int i = 0; i < states.Length; i++)
         {
             states[i] = true;
         }
 
-        // Set TPSMode to false
-        SetStatesToFalse(SimpleStateDef.TPSMode);
+        // (2) Then set these states to be false
+        SetStatesToFalse(SimpleStateDef.TPSMode,
+            SimpleStateDef.IsInPlayzone);
 
-        // Should set it *back* to false when we exit TPControl
-        // This is currently done in PlayerMove.ExitControl
+        #region Notes On States
+        /** Should set TPSMode *back* to false when we exit TPControl
+        * This is currently done in PlayerMove.ExitControl
+
+        * Should set IsInPlayzone *back* to false when Toy exits a
+        * playzone.
+        * This is currently unimplemented
+        */
+        #endregion
     }
 
     /// <summary>
@@ -165,7 +173,7 @@ public class Toy : SmartObject {
         // Log this Toy for our data logging
         GameObject logObject = GameObject.FindGameObjectWithTag("Logger");
         logger = logObject.GetComponent(typeof(DataLogger)) as DataLogger;
-        logger.LogNewItem(this);
+        if (logger != null) { logger.LogNewItem(this); }
 
         // Set state booleans
         this.SetInitialStates();
@@ -221,13 +229,16 @@ public class Toy : SmartObject {
         anim.SetBool("Moving", agent.hasPath);
 
         // If Toy is in range of an accessory, is in the "wantsAccessory" state,
-        // and is in TPSMode, then have the it automatically equip the accessory
+        // and is in TPSMode, then have it automatically equip the accessory
         // Note: possible that we don't want to call this every frame
         if (CheckStates(SimpleStateDef.WantsAccessories,
             SimpleStateDef.TPSMode))
         {
             EquipAccessoriesInRange();
         }
+
+        // If Toy is inside of a Playzone, we may want to do something to it here
+        // if(CheckStates(SimpleStateDef.IsInPlayzone)){ }
     }
 
     #region Public interface functions
@@ -347,6 +358,20 @@ public class Toy : SmartObject {
 		}
     }
 
+    /// <summary>
+    /// Called by Playzone.cs when it detects this Toy
+    /// </summary>
+    /// <param name="zone"></param>
+    public void OnPlayzoneEnter(Playzone zone)
+    {
+        SetStatesToTrue(SimpleStateDef.IsInPlayzone);
+    }
+
+    /// <summary>
+    /// (Should be) called by Playzone.cs when this Toy exits
+    /// </summary>
+    /// <param name="zone"></param>
+    public void OnPlayzoneExit(Playzone zone) { }
 
 
     #endregion
@@ -468,7 +493,6 @@ public class Toy : SmartObject {
     {
         foreach (SimpleStateDef i in states)
         {
-            Debug.Log("State '" + i + "' set to true");
             this.states[(int)i] = true;
         }
     }
@@ -477,7 +501,6 @@ public class Toy : SmartObject {
     {
         foreach (SimpleStateDef i in states)
         {
-            //Debug.Log("State '" + i + "' set to false");
             this.states[(int)i] = false;
         }
     }
@@ -498,22 +521,3 @@ public class Toy : SmartObject {
     #endregion
 
 }
-
-#region additional comments
-/*
-See https://docs.google.com/document/d/11rvpzzHWuOlMyPGsaNj5fZhYVhoGgwgKTClkwYhpMic/edit
-SmartCharacters have:
-
-State: condition a SmartObject is in at a specific time
-    -Ex: HoldingWeapon, HoldingBall
-    -See StateDefs.cs
-Affordance: a tuple:
-    <[Participants], State Requirements, State Effects>
-    -Changes the state of its participants according to State Effects
-    -Can do this iff participants match State Requirements
-Idle Behavior Tree:
-    -Standard idle behavior for this character
-    (-Would be nice, for now, if it wandered around looking for items to pick up)
-
-*/
-#endregion

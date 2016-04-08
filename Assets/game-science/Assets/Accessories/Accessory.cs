@@ -15,7 +15,7 @@ public abstract class Accessory : SmartObject {
         // When accessory is placed in the scene, log it
         GameObject logObject = GameObject.FindGameObjectWithTag("Logger");
         logger = logObject.GetComponent(typeof(DataLogger)) as DataLogger;
-        logger.LogNewItem(this);
+        if (logger != null) { logger.LogNewItem(this); }
     }
 
     /// <summary>
