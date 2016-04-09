@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.EventSystems;
 
 public class SpawnToy : MonoBehaviour {
 
@@ -25,6 +26,23 @@ public class SpawnToy : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+
+        //if anything goes wrong completely delete everything from update
+        //Same issue as before. Even on GUI mouse clicks register. Need to fix
+            //fix is not to use mouse. seems like a problem with unity in general. THere are fixes for unity's gui but can't find one for NGUI
+        //find a way to scroll through lists with a key press or scroll wheel
+
+        if (Input.GetKeyDown("1"))
+        {
+            //if (!EventSystem.current.IsPointerOverGameObject())
+                Spawn();
+        }
+
+        if (Input.GetKeyDown("2"))
+        {
+            //if (!EventSystem.current.IsPointerOverGameObject())
+                SpawnA();
+        }
 	    
 	}
 
