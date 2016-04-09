@@ -352,7 +352,7 @@ public class Toy : SmartObject {
     {
 		if (root != null) {
 			IdleTreeRoot = root;
-			if (bagent != null) bagent.StopBehavior();
+            if (bagent != null) { bagent.StopBehavior(); }
 			bagent = new BehaviorAgent(IdleTreeRoot);
 			bagent.StartBehavior();
 		} else {
@@ -384,9 +384,7 @@ public class Toy : SmartObject {
     public void OnTPSEnter()
     {
         SetStatesToTrue(SimpleStateDef.TPSMode);
-
-        // Depending on implementation, we may want to do this too:
-        // playerInControl = true;
+        playerInControl = true;
     }
 
     /// <summary>
@@ -396,9 +394,10 @@ public class Toy : SmartObject {
     public void OnTPSExit()
     {
         SetStatesToFalse(SimpleStateDef.TPSMode);
+        playerInControl = false;
 
-        // Depending on implementation, we may want to do this too:
-        // playerInControl = false;
+        // When we exit TPS mode, tell the Toy to perform its idle behavior
+        SetIdleBehavior(IdleTreeRoot);
     }
 
     /// <summary>

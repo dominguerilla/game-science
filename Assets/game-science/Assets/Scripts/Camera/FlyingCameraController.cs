@@ -65,6 +65,10 @@ namespace FlyingCamera
 		//[Header("Toy Management")]
 		private ToyController ToyControl;
 
+        // The starting location and rotation of the camera
+        private Vector3 startPosition;
+        private Quaternion startRotation;
+
         // Use this for initialization
         private void Start()
         {
@@ -76,6 +80,10 @@ namespace FlyingCamera
             m_NextStep = m_StepCycle / 2f;
             m_MouseLook.Init(transform, m_Camera.transform);
 
+            // Record starting location of camera
+            startPosition = m_Camera.transform.position;
+            startRotation = m_Camera.transform.rotation;
+
 			ToyControl = GetComponent<ToyController> ();
         }
 
@@ -85,6 +93,15 @@ namespace FlyingCamera
         {
             RotateView();
 			DEBUG_ClickToControl ();
+        }
+
+        /// <summary>
+        /// Put the camera back where it started the scene
+        /// </summary>
+        public void ResetToDefaultPosition()
+        {
+            transform.position = startPosition;
+            transform.rotation = startRotation;
         }
 
 

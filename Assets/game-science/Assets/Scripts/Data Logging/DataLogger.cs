@@ -15,10 +15,10 @@ public class DataLogger : MonoBehaviour {
         LogMessage("Game Started");
 
         print("DataLogger.Start: turning off all audio listeners in DataLogger.Update");
-	}
-	
-	// Update is called once per frame
-	void Update ()
+    }
+
+    // Update is called once per frame
+    void Update ()
     {
         time += Time.deltaTime;
 

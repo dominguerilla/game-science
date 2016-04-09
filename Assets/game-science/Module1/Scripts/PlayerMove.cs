@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System;
 using System.Collections;
+using FlyingCamera;
 
 /// <summary>
 /// The script in charge of handling the third-person shooter control scheme for individual toys.
@@ -147,8 +148,15 @@ public class PlayerMove : MonoBehaviour {
 		model.gameObject.transform.parent = null;
 		GameObject.Destroy (this.gameObject);
         //TODO Have a better way of re-enabling the flying camera controller!
-
         // Note: currently flying camera controller is simply not deactivated
+
+        // Reset Flying Camera Controller to its starting position
+        GameObject flyingcam = GameObject.Find("FlyingPlayer");
+        if (flyingcam)
+        {
+            FlyingCameraController fcc = flyingcam.GetComponent<FlyingCameraController>();
+            if (fcc) { fcc.ResetToDefaultPosition(); }
+        }
 
         // Once we exit TPS, tell the Toy that it's not in TPS anymore
         ModelToy.OnTPSExit();
