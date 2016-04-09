@@ -9,6 +9,10 @@ public class HandleGUIList : MonoBehaviour {
     [SerializeField]
     public List<Accessory> accessories;
 
+    /*private int current = 0;
+    private int end = 4; //need to manually enter this for now
+    */
+
     // Use this for initialization
     void Start () {
 	
@@ -16,13 +20,41 @@ public class HandleGUIList : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-	
-	}
+        /*
+        if (Input.GetAxis("Mouse ScrollWheel") < 0)
+        {
+            if (current > 0)
+            {
+                current--;
+            }
+            else
+            {
+                current = end;
+            }
+        }
+        else if (Input.GetAxis("Mouse ScrollWheel") > 0)
+        {
+            if (current < end)
+            {
+                current++;
+            }
+            else
+            {
+                //Debug.LogError("we in");
+                //Debug.LogError(end);
+                current = 0;
+            }
+        }
+
+        Debug.LogError(current);
+        */
+    }
 
     public void setToy()
     {
 
         GameObject.Find("Toy Button").GetComponent<SpawnToy>().setToy(toys[UIPopupList.current.items.IndexOf(UIPopupList.current.value)]);
+
         /*
         if (UIPopupList.current.value.Equals("Samurai")){
             GameObject.Find("Toy Button").GetComponent<SpawnToy>().setToy(toys[0]);
