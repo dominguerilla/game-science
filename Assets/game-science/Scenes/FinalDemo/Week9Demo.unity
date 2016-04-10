@@ -3774,7 +3774,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 11420332, guid: f744b448febe42c478e03b427c97d46b, type: 2}
       propertyPath: items.Array.size
-      value: 8
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 11488930, guid: f744b448febe42c478e03b427c97d46b, type: 2}
       propertyPath: accessories.Array.size
@@ -3828,55 +3828,55 @@ Prefab:
         type: 2}
     - target: {fileID: 463714, guid: f744b448febe42c478e03b427c97d46b, type: 2}
       propertyPath: m_LocalPosition.x
-      value: -261
+      value: -339.5
       objectReference: {fileID: 0}
     - target: {fileID: 481324, guid: f744b448febe42c478e03b427c97d46b, type: 2}
       propertyPath: m_LocalPosition.x
-      value: -262
+      value: -340.5
       objectReference: {fileID: 0}
     - target: {fileID: 464180, guid: f744b448febe42c478e03b427c97d46b, type: 2}
       propertyPath: m_LocalPosition.x
-      value: -323
+      value: -480.00003
       objectReference: {fileID: 0}
     - target: {fileID: 464180, guid: f744b448febe42c478e03b427c97d46b, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 125
+      value: 161.5
       objectReference: {fileID: 0}
     - target: {fileID: 400244, guid: f744b448febe42c478e03b427c97d46b, type: 2}
       propertyPath: m_LocalPosition.x
-      value: -323
+      value: -480.00003
       objectReference: {fileID: 0}
     - target: {fileID: 483330, guid: f744b448febe42c478e03b427c97d46b, type: 2}
       propertyPath: m_LocalScale.x
-      value: 0.0051282053
+      value: 0.0043196543
       objectReference: {fileID: 0}
     - target: {fileID: 483330, guid: f744b448febe42c478e03b427c97d46b, type: 2}
       propertyPath: m_LocalScale.y
-      value: 0.0051282053
+      value: 0.0043196543
       objectReference: {fileID: 0}
     - target: {fileID: 483330, guid: f744b448febe42c478e03b427c97d46b, type: 2}
       propertyPath: m_LocalScale.z
-      value: 0.0051282053
+      value: 0.0043196543
       objectReference: {fileID: 0}
     - target: {fileID: 476194, guid: f744b448febe42c478e03b427c97d46b, type: 2}
       propertyPath: m_LocalPosition.x
-      value: -177
+      value: -255.50002
       objectReference: {fileID: 0}
     - target: {fileID: 476194, guid: f744b448febe42c478e03b427c97d46b, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 120
+      value: 156.5
       objectReference: {fileID: 0}
     - target: {fileID: 6547374, guid: f744b448febe42c478e03b427c97d46b, type: 2}
       propertyPath: m_Size.x
-      value: 10
+      value: 53
       objectReference: {fileID: 0}
     - target: {fileID: 447050, guid: f744b448febe42c478e03b427c97d46b, type: 2}
       propertyPath: m_LocalPosition.x
-      value: -177
+      value: -255.50002
       objectReference: {fileID: 0}
     - target: {fileID: 6513232, guid: f744b448febe42c478e03b427c97d46b, type: 2}
       propertyPath: m_Size.x
-      value: 10
+      value: 53
       objectReference: {fileID: 0}
     - target: {fileID: 11488064, guid: f744b448febe42c478e03b427c97d46b, type: 2}
       propertyPath: mWidth
@@ -4055,7 +4055,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 11420332, guid: f744b448febe42c478e03b427c97d46b, type: 2}
       propertyPath: items.Array.data[8]
-      value: Summoning Skull
+      value: Heart
       objectReference: {fileID: 0}
     - target: {fileID: 11488930, guid: f744b448febe42c478e03b427c97d46b, type: 2}
       propertyPath: accessories.Array.data[0]
@@ -4095,7 +4095,7 @@ Prefab:
     - target: {fileID: 11488930, guid: f744b448febe42c478e03b427c97d46b, type: 2}
       propertyPath: accessories.Array.data[8]
       value: 
-      objectReference: {fileID: 11480638, guid: e2a7bd6b1bb85054fac9969a2f8b2943,
+      objectReference: {fileID: 11492780, guid: 85bc4715a5c411e4f83fe844a267d480,
         type: 2}
     - target: {fileID: 11488930, guid: f744b448febe42c478e03b427c97d46b, type: 2}
       propertyPath: accessories.Array.data[7]
