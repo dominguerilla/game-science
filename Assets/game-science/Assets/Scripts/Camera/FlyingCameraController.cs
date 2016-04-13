@@ -69,6 +69,9 @@ namespace FlyingCamera
         private Vector3 startPosition;
         private Quaternion startRotation;
 
+        // Boolean for locking/unlocking cursor
+        private bool localCursorLock = false;
+
         // Use this for initialization
         private void Start()
         {
@@ -159,6 +162,35 @@ namespace FlyingCamera
             {
 
                 transform.position = transform.position + (m_Camera.transform.right * speed * Time.deltaTime);
+            }
+
+            // Show/hide the cursor
+            if (Input.GetKeyUp(KeyCode.Z))
+            {
+                if (localCursorLock)
+                {
+                    m_MouseLook.SetCursorLock(true);
+                }
+                else
+                {
+                    m_MouseLook.SetCursorLock(false);
+                }
+                localCursorLock = !localCursorLock;
+            }
+
+            // Lock/unlock the cursor
+            if (Input.GetKeyUp(KeyCode.X))
+            {
+                if (m_MouseLook.XSensitivity == 2f)
+                {
+                    m_MouseLook.XSensitivity = 0f;
+                    m_MouseLook.YSensitivity = 0f;
+                }
+                else
+                {
+                    m_MouseLook.XSensitivity = 2f;
+                    m_MouseLook.YSensitivity = 2f;
+                }
             }
 
             m_MouseLook.UpdateCursorLock();

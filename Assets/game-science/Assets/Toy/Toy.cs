@@ -250,10 +250,9 @@ public class Toy : SmartObject {
     /// </summary>
     public void OnSelect()
     {
-        // Depending on implementation, may want to do this as well:
-        // SetStatesToTrue(SimpleStateDef.TPSMode);
-
+        SetStatesToTrue(SimpleStateDef.TPSMode);
         playerInControl = true;
+
         light = new GameObject("Spotlight");
         Light lightComp = light.AddComponent<Light>();
         light.transform.parent = this.gameObject.transform;
@@ -271,12 +270,13 @@ public class Toy : SmartObject {
     /// </summary>
     public void OnDeselect()
     {
-        // Depending on implementation, may want to do this as well:
-        // SetStatesToFalse(SimpleStateDef.TPSMode);
-
+        SetStatesToFalse(SimpleStateDef.TPSMode);
         playerInControl = false;
         //Debug.Log(gameObject.name + " is unselected.");
         GameObject.Destroy(light);
+
+        // When we exit TPS mode, tell the Toy to perform its idle behavior
+        SetIdleBehavior(IdleTreeRoot);
     }
 
     /// <summary>
@@ -298,6 +298,9 @@ public class Toy : SmartObject {
 		equippedAccessory = acc;
         AccessoryArchetype = acc.Archetype;
         Debug.Log("Added " + acc.Archetype + " to " + this.Archetype + "'s inventory.");
+
+        // Set the Accessory's OnUse to be this Toy's IdleRoot
+        IdleTreeRoot = acc.OnUse(this);
     }
 
     /// <summary>
@@ -376,29 +379,6 @@ public class Toy : SmartObject {
     /// </summary>
     /// <param name="zone"></param>
     public void OnPlayzoneExit(Playzone zone) { }
-
-    /// <summary>
-    /// Tell the Toy that it's in TPS Mode
-    /// Currently done in ToyController.EnterTPControl()
-    /// </summary>
-    public void OnTPSEnter()
-    {
-        SetStatesToTrue(SimpleStateDef.TPSMode);
-        playerInControl = true;
-    }
-
-    /// <summary>
-    /// Tell the Toy that it's no longer in TPS Mode
-    /// Currently done in PlayerMove.ExitControl()
-    /// </summary>
-    public void OnTPSExit()
-    {
-        SetStatesToFalse(SimpleStateDef.TPSMode);
-        playerInControl = false;
-
-        // When we exit TPS mode, tell the Toy to perform its idle behavior
-        SetIdleBehavior(IdleTreeRoot);
-    }
 
     /// <summary>
     /// Run Core function of current Toy accessory

@@ -159,7 +159,7 @@ public class PlayerMove : MonoBehaviour {
         }
 
         // Once we exit TPS, tell the Toy that it's not in TPS anymore
-        ModelToy.OnTPSExit();
+        ModelToy.OnDeselect();
 	}
 		
 
