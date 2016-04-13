@@ -72,6 +72,12 @@ namespace FlyingCamera
         // Boolean for locking/unlocking cursor
         private bool localCursorLock = false;
 
+        // Boolean for starting/stopping Toys
+        private bool playButton = false;
+
+        // The Input Controller for the scene
+        private InputController inputController;
+
         // Use this for initialization
         private void Start()
         {
@@ -88,6 +94,9 @@ namespace FlyingCamera
             startRotation = m_Camera.transform.rotation;
 
 			ToyControl = GetComponent<ToyController> ();
+
+            inputController = FindObjectOfType<InputController>();
+            if(inputController == null) { print("Warning: No input controller found in scene"); }
         }
 
 
@@ -162,6 +171,22 @@ namespace FlyingCamera
             {
 
                 transform.position = transform.position + (m_Camera.transform.right * speed * Time.deltaTime);
+            }
+
+            // Tell all Toys in scene to start/stop their behaviors
+            if (Input.GetKeyUp(KeyCode.C) && inputController != null)
+            {
+                if (playButton)
+                {   // Pause
+                    print("FlyingCameraController: Pausing...");
+                    inputController.Pause();
+                }
+                else
+                {   // Play
+                    print("FlyingCameraController: Playing...");
+                    inputController.Play();
+                }
+                playButton = !playButton;
             }
 
             // Show/hide the cursor

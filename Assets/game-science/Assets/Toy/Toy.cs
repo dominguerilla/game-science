@@ -184,7 +184,6 @@ public class Toy : SmartObject {
         playerInControl = false;
         AvailableSlots = AccessorySlots.Length;
 
-
         // Option to start a toy with a target accessory
         if (targetAccessory != null)
         {
@@ -203,7 +202,7 @@ public class Toy : SmartObject {
         {
             // Look for accessory
             //Debug.Log("Looking for accessory...");
-			/*
+            /*
             GameObject[] accessoriesInScene =
                 GameObject.FindGameObjectsWithTag("Accessory");
 
@@ -222,7 +221,10 @@ public class Toy : SmartObject {
                 // Have this accessory be this toy's target accessory
                 SetAccessory(chosenAccessory);
             }*/
-			IdleTreeRoot = IdleBehaviors.IdleStand ();
+
+            // Testing with IdleWander
+            print("Toy.Start: Setting behavior to IdleWander");
+            IdleTreeRoot = IdleBehaviors.IdleWander(this);
         }
     }
 	
@@ -244,6 +246,21 @@ public class Toy : SmartObject {
     }
 
     #region Public interface functions
+    /// <summary>
+    /// Called when user Pauses
+    /// </summary>
+    public void OnPause()
+    {
+        DEBUG_StopBehavior();
+    }
+
+    /// <summary>
+    /// Called when user hits Play
+    /// </summary>
+    public void OnPlay()
+    {
+        DEBUG_StartBehavior();
+    }
 
     /// <summary>
     /// The function called when this Toy is selected.
@@ -479,13 +496,22 @@ public class Toy : SmartObject {
             bagent = new BehaviorAgent(IdleTreeRoot);
             bagent.StartBehavior();
         }
+        else
+        {
+            print("DEBUG_StartBehavior: IdleTreeRoot is null");
+        }
     }
 	public void DEBUG_StopBehavior()
 	{
-		if (bagent != null) {
-			bagent.StopBehavior ();
-		}
-	}
+		if (bagent != null)
+        {
+            bagent.StopBehavior ();
+        }
+        else
+        {
+            print("DEBUG_StopBehavior: bagent is null");
+        }
+    }
     #endregion
 
     #region Node Functions
