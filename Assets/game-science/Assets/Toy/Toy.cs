@@ -59,6 +59,9 @@ public class Toy : SmartObject {
     // The Data Logger in the scene
     private DataLogger logger;
 
+    // The team number for this Toy
+    private int team { get; set; }
+
     #region setters
     // All states are initially set to true
     private void SetInitialStates()
@@ -221,6 +224,8 @@ public class Toy : SmartObject {
                 // Have this accessory be this toy's target accessory
                 SetAccessory(chosenAccessory);
             }*/
+
+            // DEBUG_SetIdleRootAsIdleStand();
 
             // Testing with IdleWander
             print("Toy.Start: Setting behavior to IdleWander");
@@ -405,6 +410,16 @@ public class Toy : SmartObject {
     /// </summary>
     /// <param name="zone"></param>
     public void OnPlayzoneExit(Playzone zone) { }
+
+    /// <summary>
+    /// Tell the Toy it's on this team
+    /// </summary>
+    /// <param name="newTeam"></param>
+    public void OnTeamSet(int newTeam)
+    {
+        team = newTeam;
+        print(this + " Toy.OnTeamChange: team is now " + team);
+    }
 
     /// <summary>
     /// Run Core function of current Toy accessory

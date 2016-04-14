@@ -5,33 +5,33 @@ using System.Collections.Generic;
 /// <summary>
 /// Controller for player inputs
 /// </summary>
+[RequireComponent (typeof(ToyController))]
 public class InputController : MonoBehaviour {
+
+    // The ToyController in the scene
+    public ToyController toyController;
 
     // Objects in scene
     Toy[] toysInScene;
     Accessory[] accessoriesInScene;
 
-    // Current scene state (playing, paused, or stopped)
-    SceneState currentState = SceneState.paused;
+    // Current scene state
+    private enum SceneState { playing, paused, stopped }
 
-    private enum SceneState
-    {
-        playing,
-        paused,
-        stopped
-    }
+    // For now, assume it starts out as paused
+    SceneState currentState = SceneState.paused;
 
     void Start () {
         UpdateToys();
 	}
 	
 	void Update () {
-        CheckForInput();
+        // CheckForInput();
     }
 
     private void CheckForInput() { }
 
-    #region GUI Methods
+    #region GUI Functions
     // Play all Toys
     public void Play()
     {
@@ -77,6 +77,19 @@ public class InputController : MonoBehaviour {
         }
 
         currentState = SceneState.stopped;
+    }
+
+    // Assign current Toy to a team
+    public void AssignTeam()
+    {
+        // TODO: Get team number from GUI element
+        int teamToAssign = -1;
+
+        /* NOTE: Currently uses ToyController to figure out which 
+        * Toy is currently selected. There may be a better way to do this
+        * which doesn't involve going through so many layers.
+        */
+        toyController.SetTeam(teamToAssign);
     }
     #endregion
 

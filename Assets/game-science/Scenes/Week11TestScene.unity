@@ -2722,6 +2722,10 @@ Prefab:
       propertyPath: m_RootOrder
       value: 15
       objectReference: {fileID: 0}
+    - target: {fileID: 11441782, guid: 78fe688eab02bcf4eb80aca406bbb3b0, type: 2}
+      propertyPath: toyController
+      value: 
+      objectReference: {fileID: 1319678883}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 78fe688eab02bcf4eb80aca406bbb3b0, type: 2}
   m_IsPrefabParent: 0
@@ -2835,6 +2839,12 @@ Transform:
   - {fileID: 355088354}
   m_Father: {fileID: 0}
   m_RootOrder: 7
+--- !u!114 &1319678883 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 11465472, guid: 98d8d1bba181a6d41a447552b946c6a0,
+    type: 2}
+  m_PrefabInternal: {fileID: 808290511}
+  m_Script: {fileID: 11500000, guid: 5727d4a90b616cd4dbd489ce678ed008, type: 3}
 --- !u!1001 &1400948731
 Prefab:
   m_ObjectHideFlags: 0

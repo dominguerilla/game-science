@@ -78,6 +78,16 @@ public class PlayerMove : MonoBehaviour {
             // Exit control, exit TPS mode
             ExitControl();
 		}
+
+        // DEBUG: Testing changing teams
+        if (Input.GetKeyUp(KeyCode.Z))
+        {
+            print("DEBUG PlayerMove.KeyboardInput: Z key pressed");
+            InputController ic = FindObjectOfType<InputController>();
+            if (ic) { ic.AssignTeam(); }
+            else { print("No InputController found"); }
+        }
+
 		//Toggling the walking animation
 		if (Input.GetKeyUp(KeyCode.CapsLock)) isWalk = !isWalk;
 		anim.SetBool("isWalk", isWalk);
