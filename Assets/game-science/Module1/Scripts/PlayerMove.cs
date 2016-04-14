@@ -82,9 +82,15 @@ public class PlayerMove : MonoBehaviour {
         // DEBUG: Testing changing teams
         if (Input.GetKeyUp(KeyCode.Z))
         {
-            print("DEBUG PlayerMove.KeyboardInput: Z key pressed");
+            print("PlayerMove.KeyboardInput: Z key pressed");
             InputController ic = FindObjectOfType<InputController>();
-            if (ic) { ic.AssignTeam(); }
+            if (ic)
+            {
+                ic.AssignTeam();
+                ic.AssignSpeed();
+                ic.AssignHealth();
+                ic.AssignAccessory();
+            }
             else { print("No InputController found"); }
         }
 

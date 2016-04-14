@@ -138,4 +138,40 @@ public class ToyController : MonoBehaviour{
             CurrentToy.OnTeamSet(teamNum);
         }
     }
+
+    /// <summary>
+    /// Set the accessory for the currently controlled Toy
+    /// </summary>
+    /// <param name="acc"></param>
+    public void SetAccessory(Accessory acc)
+    {
+        if (CurrentToy)
+        {
+            CurrentToy.Equip(acc);
+        }
+    }
+
+    /// <summary>
+    /// Set the accessory for the currently controlled Toy
+    /// </summary>
+    /// <param name="healthVal"></param>
+    public void SetHealth(float healthVal)
+    {
+        if (CurrentToy)
+        {
+            CurrentToy.ChangeHealth(healthVal);
+        }
+    }
+
+    /// <summary>
+    /// Set the accessory for the currently controlled Toy
+    /// </summary>
+    /// <param name="speedVal"></param>
+    public void SetSpeed(float speedVal)
+    {
+        if (CurrentToy)
+        {
+            CurrentToy.SetSpeed(speedVal);
+        }
+    }
 }

@@ -8,28 +8,29 @@ using System.Collections.Generic;
 [RequireComponent (typeof(ToyController))]
 public class InputController : MonoBehaviour {
 
+    // GUI fields
+    public int Team_Number;
+    public float Health_Value;
+    public float Speed_Value;
+    public Accessory Accessory_ToEquip;
+
     // The ToyController in the scene
     public ToyController toyController;
 
     // Objects in scene
-    Toy[] toysInScene;
-    Accessory[] accessoriesInScene;
+    private Toy[] toysInScene;
+    private Accessory[] accessoriesInScene;
 
     // Current scene state
     private enum SceneState { playing, paused, stopped }
 
     // For now, assume it starts out as paused
-    SceneState currentState = SceneState.paused;
+    private SceneState currentState = SceneState.paused;
 
-    void Start () {
+    void Start ()
+    {
         UpdateToys();
 	}
-	
-	void Update () {
-        // CheckForInput();
-    }
-
-    private void CheckForInput() { }
 
     #region GUI Functions
     // Play all Toys
@@ -79,17 +80,44 @@ public class InputController : MonoBehaviour {
         currentState = SceneState.stopped;
     }
 
+    /* NOTE: The functions below use ToyController to figure out which 
+    * Toy is currently selected.
+    * They need to grab values from the GUI elements */
+
     // Assign current Toy to a team
     public void AssignTeam()
     {
-        // TODO: Get team number from GUI element
-        int teamToAssign = -1;
+        if (Team_Number != default(int))
+        {
+            toyController.SetTeam(Team_Number);
+        }
+    }
 
-        /* NOTE: Currently uses ToyController to figure out which 
-        * Toy is currently selected. There may be a better way to do this
-        * which doesn't involve going through so many layers.
-        */
-        toyController.SetTeam(teamToAssign);
+    // Assign an accessory to current Toy
+    public void AssignAccessory()
+    {
+        if (Accessory_ToEquip)
+        {
+            toyController.SetAccessory(Accessory_ToEquip);
+        }
+    }
+
+    // Change health of current Toy
+    public void AssignHealth()
+    {
+        if (Health_Value != default(float))
+        {
+            toyController.SetHealth(Health_Value);
+        }
+    }
+
+    // Change speed of current Toy
+    public void AssignSpeed()
+    {
+        if (Speed_Value != default(float))
+        {
+            toyController.SetSpeed(Speed_Value);
+        }
     }
     #endregion
 

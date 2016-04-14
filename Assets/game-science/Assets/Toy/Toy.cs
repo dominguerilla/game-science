@@ -311,6 +311,32 @@ public class Toy : SmartObject {
     }
 
     /// <summary>
+    /// Set health directly
+    /// </summary>
+    /// <param name="newHealth"></param>
+    public void SetHealth(float newHealth)
+    {
+        Health = newHealth;
+        print(this + " Toy.SetHealth: Health set to " + Health);
+        if (Health <= 0)
+        {
+            Die();
+        }
+    }
+
+    /// <summary>
+    /// Set speed directly
+    /// </summary>
+    /// <param name="newSpeed"></param>
+    public void SetSpeed(float newSpeed)
+    {
+        forwardSpeed = newSpeed;
+        agent.speed = forwardSpeed;
+
+        print(this + " Toy.SetSpeed: Speed set to " + forwardSpeed);
+    }
+
+    /// <summary>
     /// Tells the Toy to move to this specific location.
     /// </summary>
     /// <param name="other"></param>
@@ -331,7 +357,7 @@ public class Toy : SmartObject {
         Debug.Log("Added " + acc.Archetype + " to " + this.Archetype + "'s inventory.");
 
         // Set the Accessory's OnUse to be this Toy's IdleRoot
-        IdleTreeRoot = acc.OnUse(this);
+        // IdleTreeRoot = acc.OnUse(this);
     }
 
     /// <summary>
@@ -419,6 +445,7 @@ public class Toy : SmartObject {
     {
         team = newTeam;
         print(this + " Toy.OnTeamChange: team is now " + team);
+
     }
 
     /// <summary>
