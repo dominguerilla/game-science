@@ -507,18 +507,22 @@ public class Toy : SmartObject {
         }
         else
         {
-            print("DEBUG_StartBehavior: IdleTreeRoot is null");
+            print("Toy.DEBUG_StartBehavior: IdleTreeRoot is null");
         }
     }
 	public void DEBUG_StopBehavior()
 	{
-		if (bagent != null)
+        if (bagent != null)
         {
-            bagent.StopBehavior ();
+            bagent.StopBehavior();
+
+            // Hack: To stop behavior right now, just flicker the Toy
+            this.gameObject.SetActive(false);
+            this.gameObject.SetActive(true);
         }
         else
         {
-            print("DEBUG_StopBehavior: bagent is null");
+            print("Toy.DEBUG_StopBehavior: bagent is null");
         }
     }
     #endregion

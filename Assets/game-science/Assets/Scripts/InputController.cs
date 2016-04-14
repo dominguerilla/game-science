@@ -7,8 +7,19 @@ using System.Collections.Generic;
 /// </summary>
 public class InputController : MonoBehaviour {
 
+    // Objects in scene
     Toy[] toysInScene;
     Accessory[] accessoriesInScene;
+
+    // Current scene state (playing, paused, or stopped)
+    SceneState currentState = SceneState.paused;
+
+    private enum SceneState
+    {
+        playing,
+        paused,
+        stopped
+    }
 
     void Start () {
         UpdateToys();
@@ -24,22 +35,31 @@ public class InputController : MonoBehaviour {
     // Play all Toys
     public void Play()
     {
+        // Alreading playing
+        if(currentState == SceneState.playing) { return; }
+
         UpdateToys();
         foreach (Toy toy in toysInScene)
         {
             toy.OnPlay();
         }
+
+        currentState = SceneState.playing;
     }
 
     // Pause all Toys
     public void Pause()
     {
+        // Already paused
+        if (currentState == SceneState.paused) { return; }
+
         UpdateToys();
         foreach (Toy toy in toysInScene)
         {
             toy.OnPause();
         }
 
+        currentState = SceneState.paused;
     }
 
     // Stop the scene (kill all Toys & Accessories)
@@ -55,6 +75,8 @@ public class InputController : MonoBehaviour {
         {
             acc.OnStop();
         }
+
+        currentState = SceneState.stopped;
     }
     #endregion
 
