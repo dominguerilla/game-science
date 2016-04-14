@@ -189,6 +189,13 @@ namespace FlyingCamera
                 playButton = !playButton;
             }
 
+            // Kill everything
+            if (Input.GetKeyUp(KeyCode.V) && inputController != null)
+            {
+                print("FlyingCameraController: Stopping...");
+                inputController.Stop();
+            }
+
             // Show/hide the cursor
             if (Input.GetKeyUp(KeyCode.Z))
             {

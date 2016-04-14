@@ -7,34 +7,20 @@ using System.Collections.Generic;
 /// </summary>
 public class InputController : MonoBehaviour {
 
-    // The Toys in this scene
     Toy[] toysInScene;
+    Accessory[] accessoriesInScene;
 
-	// Use this for initialization
-	void Start () {
+    void Start () {
         UpdateToys();
 	}
 	
-	// Update is called once per frame
 	void Update () {
         CheckForInput();
-
-        // Could do this if we don't care about performance
-        // UpdateToys();	
-    }
-
-    /// <summary>
-    /// Before doing something that will affect all Toys,
-    /// update the list of Toys in the scene
-    /// </summary>
-    private void UpdateToys()
-    {
-        toysInScene = FindObjectsOfType<Toy>();
     }
 
     private void CheckForInput() { }
 
-    #region Debug Methods
+    #region GUI Methods
     // Play all Toys
     public void Play()
     {
@@ -54,6 +40,41 @@ public class InputController : MonoBehaviour {
             toy.OnPause();
         }
 
+    }
+
+    // Stop the scene (kill all Toys & Accessories)
+    public void Stop()
+    {
+        UpdateToys();
+        UpdateAccessories();
+        foreach (Toy toy in toysInScene)
+        {
+            toy.OnStop();
+        }
+        foreach (Accessory acc in accessoriesInScene)
+        {
+            acc.OnStop();
+        }
+    }
+    #endregion
+
+    #region Utility Functions
+    /// <summary>
+    /// Before doing something that will affect all Toys,
+    /// update the list of Toys in the scene
+    /// </summary>
+    private void UpdateToys()
+    {
+        toysInScene = FindObjectsOfType<Toy>();
+    }
+
+    /// <summary>
+    /// Before doing something that will affect all Accessories,
+    /// update the list of Accessories in the scene
+    /// </summary>
+    private void UpdateAccessories()
+    {
+        accessoriesInScene = FindObjectsOfType<Accessory>();
     }
     #endregion
 

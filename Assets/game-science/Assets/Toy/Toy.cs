@@ -263,6 +263,15 @@ public class Toy : SmartObject {
     }
 
     /// <summary>
+    /// Called when user hits Stop
+    /// </summary>
+    public void OnStop()
+    {
+        this.gameObject.SetActive(false);
+        Destroy(this.gameObject);
+    }
+
+    /// <summary>
     /// The function called when this Toy is selected.
     /// </summary>
     public void OnSelect()
