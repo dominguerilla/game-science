@@ -21,6 +21,9 @@ public class InputController : MonoBehaviour {
     private Toy[] toysInScene;
     private Accessory[] accessoriesInScene;
 
+    // The currently selected Toy
+    private Toy currentToy;
+
     // Current scene state
     private enum SceneState { playing, paused, stopped }
 
@@ -87,41 +90,33 @@ public class InputController : MonoBehaviour {
     // Assign current Toy to a team
     public void AssignTeam()
     {
-        if (Team_Number != default(int))
-        {
-            toyController.SetTeam(Team_Number);
-        }
+        currentToy = GetCurrentToy();
+        if (currentToy) { currentToy.OnTeamSet(Team_Number); }
     }
 
     // Assign an accessory to current Toy
     public void AssignAccessory()
     {
-        if (Accessory_ToEquip)
-        {
-            toyController.SetAccessory(Accessory_ToEquip);
-        }
+        currentToy = GetCurrentToy();
+        if (currentToy) { currentToy.Equip(Accessory_ToEquip); }
     }
 
     // Change health of current Toy
     public void AssignHealth()
     {
-        if (Health_Value != default(float))
-        {
-            toyController.SetHealth(Health_Value);
-        }
+        currentToy = GetCurrentToy();
+        if (currentToy) { currentToy.SetHealth(Health_Value); }
     }
 
     // Change speed of current Toy
     public void AssignSpeed()
     {
-        if (Speed_Value != default(float))
-        {
-            toyController.SetSpeed(Speed_Value);
-        }
+        currentToy = GetCurrentToy();
+        if (currentToy) { currentToy.SetSpeed(Speed_Value); }
     }
     #endregion
 
-    #region Utility Functions
+    #region Private Utility Functions
     /// <summary>
     /// Before doing something that will affect all Toys,
     /// update the list of Toys in the scene
@@ -138,6 +133,15 @@ public class InputController : MonoBehaviour {
     private void UpdateAccessories()
     {
         accessoriesInScene = FindObjectsOfType<Accessory>();
+    }
+
+    /// <summary>
+    /// Gets the Toy Controller's Current Toy
+    /// </summary>
+    /// <returns></returns>
+    private Toy GetCurrentToy()
+    {
+        return toyController.CurrentToy;
     }
     #endregion
 
