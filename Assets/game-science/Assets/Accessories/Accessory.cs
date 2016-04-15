@@ -81,4 +81,13 @@ public abstract class Accessory : SmartObject {
 		return acc1.Archetype.Equals (acc2.Archetype);
 	}
 
+    /// <summary>
+    /// Called when User hits the Stop button
+    /// </summary>
+    public void OnStop()
+    {
+        this.gameObject.SetActive(false);
+        Destroy(this.gameObject);
+    }
+
 }

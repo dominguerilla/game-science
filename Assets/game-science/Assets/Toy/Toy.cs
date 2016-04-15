@@ -59,6 +59,9 @@ public class Toy : SmartObject {
     // The Data Logger in the scene
     private DataLogger logger;
 
+    // The team number for this Toy
+    private int team { get; set; }
+
     #region setters
     // All states are initially set to true
     private void SetInitialStates()
@@ -184,7 +187,6 @@ public class Toy : SmartObject {
         playerInControl = false;
         AvailableSlots = AccessorySlots.Length;
 
-
         // Option to start a toy with a target accessory
         if (targetAccessory != null)
         {
@@ -203,7 +205,7 @@ public class Toy : SmartObject {
         {
             // Look for accessory
             //Debug.Log("Looking for accessory...");
-			/*
+            /*
             GameObject[] accessoriesInScene =
                 GameObject.FindGameObjectsWithTag("Accessory");
 
@@ -222,7 +224,12 @@ public class Toy : SmartObject {
                 // Have this accessory be this toy's target accessory
                 SetAccessory(chosenAccessory);
             }*/
-			IdleTreeRoot = IdleBehaviors.IdleStand ();
+
+            // DEBUG_SetIdleRootAsIdleStand();
+
+            // Testing with IdleWander
+            print("Toy.Start: Setting behavior to IdleWander");
+            IdleTreeRoot = IdleBehaviors.IdleWander(this);
         }
     }
 	
@@ -244,16 +251,39 @@ public class Toy : SmartObject {
     }
 
     #region Public interface functions
+    /// <summary>
+    /// Called when user Pauses
+    /// </summary>
+    public void OnPause()
+    {
+        DEBUG_StopBehavior();
+    }
+
+    /// <summary>
+    /// Called when user hits Play
+    /// </summary>
+    public void OnPlay()
+    {
+        DEBUG_StartBehavior();
+    }
+
+    /// <summary>
+    /// Called when user hits Stop
+    /// </summary>
+    public void OnStop()
+    {
+        this.gameObject.SetActive(false);
+        Destroy(this.gameObject);
+    }
 
     /// <summary>
     /// The function called when this Toy is selected.
     /// </summary>
     public void OnSelect()
     {
-        // Depending on implementation, may want to do this as well:
-        // SetStatesToTrue(SimpleStateDef.TPSMode);
-
+        SetStatesToTrue(SimpleStateDef.TPSMode);
         playerInControl = true;
+
         light = new GameObject("Spotlight");
         Light lightComp = light.AddComponent<Light>();
         light.transform.parent = this.gameObject.transform;
@@ -271,12 +301,39 @@ public class Toy : SmartObject {
     /// </summary>
     public void OnDeselect()
     {
-        // Depending on implementation, may want to do this as well:
-        // SetStatesToFalse(SimpleStateDef.TPSMode);
-
+        SetStatesToFalse(SimpleStateDef.TPSMode);
         playerInControl = false;
         //Debug.Log(gameObject.name + " is unselected.");
         GameObject.Destroy(light);
+
+        // When we exit TPS mode, tell the Toy to perform its idle behavior
+        SetIdleBehavior(IdleTreeRoot);
+    }
+
+    /// <summary>
+    /// Set health directly
+    /// </summary>
+    /// <param name="newHealth"></param>
+    public void SetHealth(float newHealth)
+    {
+        Health = newHealth;
+        print(this + " Toy.SetHealth: Health set to " + Health);
+        if (Health <= 0)
+        {
+            Die();
+        }
+    }
+
+    /// <summary>
+    /// Set speed directly
+    /// </summary>
+    /// <param name="newSpeed"></param>
+    public void SetSpeed(float newSpeed)
+    {
+        forwardSpeed = newSpeed;
+        agent.speed = forwardSpeed;
+
+        print(this + " Toy.SetSpeed: Speed set to " + forwardSpeed);
     }
 
     /// <summary>
@@ -298,6 +355,9 @@ public class Toy : SmartObject {
 		equippedAccessory = acc;
         AccessoryArchetype = acc.Archetype;
         Debug.Log("Added " + acc.Archetype + " to " + this.Archetype + "'s inventory.");
+
+        // Set the Accessory's OnUse to be this Toy's IdleRoot
+        // IdleTreeRoot = acc.OnUse(this);
     }
 
     /// <summary>
@@ -378,26 +438,14 @@ public class Toy : SmartObject {
     public void OnPlayzoneExit(Playzone zone) { }
 
     /// <summary>
-    /// Tell the Toy that it's in TPS Mode
-    /// Currently done in ToyController.EnterTPControl()
+    /// Tell the Toy it's on this team
     /// </summary>
-    public void OnTPSEnter()
+    /// <param name="newTeam"></param>
+    public void OnTeamSet(int newTeam)
     {
-        SetStatesToTrue(SimpleStateDef.TPSMode);
-        playerInControl = true;
-    }
+        team = newTeam;
+        print(this + " Toy.OnTeamChange: team is now " + team);
 
-    /// <summary>
-    /// Tell the Toy that it's no longer in TPS Mode
-    /// Currently done in PlayerMove.ExitControl()
-    /// </summary>
-    public void OnTPSExit()
-    {
-        SetStatesToFalse(SimpleStateDef.TPSMode);
-        playerInControl = false;
-
-        // When we exit TPS mode, tell the Toy to perform its idle behavior
-        SetIdleBehavior(IdleTreeRoot);
     }
 
     /// <summary>
@@ -499,13 +547,26 @@ public class Toy : SmartObject {
             bagent = new BehaviorAgent(IdleTreeRoot);
             bagent.StartBehavior();
         }
+        else
+        {
+            print("Toy.DEBUG_StartBehavior: IdleTreeRoot is null");
+        }
     }
 	public void DEBUG_StopBehavior()
 	{
-		if (bagent != null) {
-			bagent.StopBehavior ();
-		}
-	}
+        if (bagent != null)
+        {
+            bagent.StopBehavior();
+
+            // Hack: To stop behavior right now, just flicker the Toy
+            this.gameObject.SetActive(false);
+            this.gameObject.SetActive(true);
+        }
+        else
+        {
+            print("Toy.DEBUG_StopBehavior: bagent is null");
+        }
+    }
     #endregion
 
     #region Node Functions

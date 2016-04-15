@@ -78,6 +78,22 @@ public class PlayerMove : MonoBehaviour {
             // Exit control, exit TPS mode
             ExitControl();
 		}
+
+        // DEBUG: Testing changing teams
+        if (Input.GetKeyUp(KeyCode.Z))
+        {
+            print("PlayerMove.KeyboardInput: Z key pressed");
+            InputController ic = FindObjectOfType<InputController>();
+            if (ic)
+            {
+                ic.AssignTeam();
+                ic.AssignSpeed();
+                ic.AssignHealth();
+                ic.AssignAccessory();
+            }
+            else { print("No InputController found"); }
+        }
+
 		//Toggling the walking animation
 		if (Input.GetKeyUp(KeyCode.CapsLock)) isWalk = !isWalk;
 		anim.SetBool("isWalk", isWalk);
@@ -151,15 +167,11 @@ public class PlayerMove : MonoBehaviour {
         // Note: currently flying camera controller is simply not deactivated
 
         // Reset Flying Camera Controller to its starting position
-        GameObject flyingcam = GameObject.Find("FlyingPlayer");
-        if (flyingcam)
-        {
-            FlyingCameraController fcc = flyingcam.GetComponent<FlyingCameraController>();
-            if (fcc) { fcc.ResetToDefaultPosition(); }
-        }
+        FlyingCameraController fcc = FindObjectOfType<FlyingCameraController>();
+        if (fcc) { fcc.ResetToDefaultPosition(); }
 
         // Once we exit TPS, tell the Toy that it's not in TPS anymore
-        ModelToy.OnTPSExit();
+        ModelToy.OnDeselect();
 	}
 		
 

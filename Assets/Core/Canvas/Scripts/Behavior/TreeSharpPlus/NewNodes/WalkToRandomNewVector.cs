@@ -26,7 +26,7 @@ namespace TreeSharpPlus{
             Vector3 vector = Utils.GetNewRandomPosition(pos);
 
             agent.SetDestination(vector);
-            //Debug.Log("Heading to " + vector);
+            // Debug.Log("Heading to " + vector);
 
 
             // Hack: if character can't reach vector in 50 iterations, send them near the origin
@@ -40,7 +40,7 @@ namespace TreeSharpPlus{
                 if( distance <= 3f){
                     break;
                 }
-                //Debug.Log("Still en route to " + vector + " with a distance of " + distance);
+                // Debug.Log("Still en route to " + vector + " with a distance of " + distance);
                 yield return RunStatus.Running;
 
                 maxIterations--;
@@ -52,7 +52,7 @@ namespace TreeSharpPlus{
                 }
 
             }
-            //Debug.Log("Arrived at " + vector);
+            // Debug.Log("Arrived at " + vector);
             yield return RunStatus.Success;
         }
     }

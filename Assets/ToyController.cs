@@ -117,7 +117,7 @@ public class ToyController : MonoBehaviour{
             // Tell the Toy that it's in TPS mode
             // NOTE: Need to set it back to false when we exit TPControl
             // Currently this is done in PlayerMove
-            toy.OnTPSEnter();
+            SelectToy(toy);
 
 			GameObject newObject = (GameObject)Instantiate (TPSController, toy.transform.position, toy.transform.localRotation);
 			toy.gameObject.transform.parent = newObject.transform;

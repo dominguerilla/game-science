@@ -69,6 +69,15 @@ namespace FlyingCamera
         private Vector3 startPosition;
         private Quaternion startRotation;
 
+        // Boolean for locking/unlocking cursor
+        private bool localCursorLock = false;
+
+        // Boolean for starting/stopping Toys
+        private bool playButton = false;
+
+        // The Input Controller for the scene
+        private InputController inputController;
+
         // Use this for initialization
         private void Start()
         {
@@ -85,6 +94,9 @@ namespace FlyingCamera
             startRotation = m_Camera.transform.rotation;
 
 			ToyControl = GetComponent<ToyController> ();
+
+            inputController = FindObjectOfType<InputController>();
+            if(inputController == null) { print("Warning: No input controller found in scene"); }
         }
 
 
@@ -159,6 +171,58 @@ namespace FlyingCamera
             {
 
                 transform.position = transform.position + (m_Camera.transform.right * speed * Time.deltaTime);
+            }
+
+            // Tell all Toys in scene to start/stop their behaviors
+            if (Input.GetKeyUp(KeyCode.C) && inputController != null)
+            {
+                if (playButton)
+                {   // Pause
+                    print("FlyingCameraController: Pausing...");
+                    inputController.Pause();
+                }
+                else
+                {   // Play
+                    print("FlyingCameraController: Playing...");
+                    inputController.Play();
+                }
+                playButton = !playButton;
+            }
+
+            // Kill everything
+            if (Input.GetKeyUp(KeyCode.V) && inputController != null)
+            {
+                print("FlyingCameraController: Stopping...");
+                inputController.Stop();
+            }
+
+            // Show/hide the cursor
+            if (Input.GetKeyUp(KeyCode.Z))
+            {
+                if (localCursorLock)
+                {
+                    m_MouseLook.SetCursorLock(true);
+                }
+                else
+                {
+                    m_MouseLook.SetCursorLock(false);
+                }
+                localCursorLock = !localCursorLock;
+            }
+
+            // Lock/unlock the cursor
+            if (Input.GetKeyUp(KeyCode.X))
+            {
+                if (m_MouseLook.XSensitivity == 2f)
+                {
+                    m_MouseLook.XSensitivity = 0f;
+                    m_MouseLook.YSensitivity = 0f;
+                }
+                else
+                {
+                    m_MouseLook.XSensitivity = 2f;
+                    m_MouseLook.YSensitivity = 2f;
+                }
             }
 
             m_MouseLook.UpdateCursorLock();
