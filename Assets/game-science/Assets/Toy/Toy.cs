@@ -38,6 +38,14 @@ public class Toy : SmartObject {
 	[SerializeField]
     private Node IdleTreeRoot;
 
+    #region Playzone Fields
+    // The previous node of this Toy's idle behavior
+    private Node PrevIdleTreeRoot;
+
+    // The number of Playzones this Toy is in
+    private int numPlayzones = 0;
+    #endregion
+
     // The states for this toy
     private bool[] states = new bool[Enum.GetNames(typeof(SimpleStateDef)).Length];
 
@@ -60,7 +68,7 @@ public class Toy : SmartObject {
     private DataLogger logger;
 
     // The team number for this Toy
-    private int team { get; set; }
+    public int team;
 
     #region setters
     // All states are initially set to true
@@ -152,6 +160,11 @@ public class Toy : SmartObject {
 	public Node GetIdleTreeRoot(){
 		return this.IdleTreeRoot;
 	}
+
+    public int GetTeam()
+    {
+        return this.team;
+    }
 
 	/// <summary>
 	/// Gets the Transform equip slot stored in the AccessorySlots array. Returns null if the index is invalid or if there is no equip slot specified in that position.
@@ -428,14 +441,33 @@ public class Toy : SmartObject {
     public void OnPlayzoneEnter(Playzone zone)
     {
         SetStatesToTrue(SimpleStateDef.IsInPlayzone);
+        numPlayzones++;
+
+        if (numPlayzones == 1)
+        {
+            // Change this Toy's Idle Behavior to the Playzone Node
+            PrevIdleTreeRoot = IdleTreeRoot;
+            SetIdleBehavior(zone.GetPlayzoneNode(this));
+        }
+
+        // TODO: Need to think about possibility of multiple Playzones
     }
 
     /// <summary>
     /// Tell the Toy it's no longer in a Playzone
-    /// (Should be) called by Playzone.cs when this Toy exits
+    /// Called by Playzone.cs when this Toy exits
     /// </summary>
     /// <param name="zone"></param>
-    public void OnPlayzoneExit(Playzone zone) { }
+    public void OnPlayzoneExit(Playzone zone)
+    {
+        numPlayzones--;
+
+        if(numPlayzones < 1)
+        {
+            SetStatesToFalse(SimpleStateDef.IsInPlayzone);
+            SetIdleBehavior(PrevIdleTreeRoot);
+        }
+    }
 
     /// <summary>
     /// Tell the Toy it's on this team
