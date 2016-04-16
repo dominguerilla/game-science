@@ -83,7 +83,7 @@ public class ToyGUI : MonoBehaviour {
                 Debug.Log("Update Spawn");
                 if(Physics.Raycast(ray, out hit))
                 {
-                    Instantiate(selected, hit.point, Quaternion.identity);
+                   Instantiate(selected, hit.point, Quaternion.identity);
                 }
 
             }else
@@ -169,7 +169,6 @@ public class ToyGUI : MonoBehaviour {
 
 
     public GameObject selected;
-
 
     public void Spawn()
     {
