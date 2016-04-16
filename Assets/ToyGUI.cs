@@ -78,26 +78,43 @@ public class ToyGUI : MonoBehaviour {
 		if (Input.GetMouseButtonDown (0)) {
 			RaycastHit hit;
 			Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
-			if (Physics.Raycast (ray, out hit)) {
-				Toy toy = hit.collider.gameObject.GetComponent<Toy> ();
-				Accessory acc = hit.collider.gameObject.GetComponent (typeof(Accessory)) as Accessory;
-                if (toy) {
-                    SelectedToy = toy;
-					SelectedAccessory = null;
-					CurrentGUIState = GUIStates.EDIT_MODE;
-					Debug.Log ("Entered EDIT_MODE.");
-				} else if (acc) {
-					SelectedToy = null;
-					SelectedAccessory = acc;
-					CurrentGUIState = GUIStates.EDIT_MODE;
-					Debug.Log ("Entered EDIT_MODE.");
-				}
-			}
-		} else if (Input.GetMouseButtonDown (1)) {
-			SelectedToy = null;
-			SelectedAccessory = null;
-			CurrentGUIState = GUIStates.NO_MODE;
-			Debug.Log ("Entered NO_MODE.");
+            if (CurrentGUIState.Equals(GUIStates.SPAWN_MODE))
+            {
+                Debug.Log("Update Spawn");
+                if(Physics.Raycast(ray, out hit))
+                {
+                    Instantiate(selected, hit.point, Quaternion.identity);
+                }
+
+            }else
+            {
+                if (Physics.Raycast(ray, out hit))
+                {
+                    Toy toy = hit.collider.gameObject.GetComponent<Toy>();
+                    Accessory acc = hit.collider.gameObject.GetComponent(typeof(Accessory)) as Accessory;
+                    if (toy)
+                    {
+                        SelectedToy = toy;
+                        SelectedAccessory = null;
+                        CurrentGUIState = GUIStates.EDIT_MODE;
+                        Debug.Log("Entered EDIT_MODE.");
+                    }
+                    else if (acc)
+                    {
+                        SelectedToy = null;
+                        SelectedAccessory = acc;
+                        CurrentGUIState = GUIStates.EDIT_MODE;
+                        Debug.Log("Entered EDIT_MODE.");
+                    }
+                }
+            }
+
+			
+		    } else if (Input.GetMouseButtonDown (1)) {
+			    SelectedToy = null;
+			    SelectedAccessory = null;
+			    CurrentGUIState = GUIStates.NO_MODE;
+			    Debug.Log ("Entered NO_MODE.");
 		}
 
 
@@ -157,6 +174,8 @@ public class ToyGUI : MonoBehaviour {
     public void Spawn()
     {
         Debug.Log("We in deeper");
+        EnterSPAWN_MODE();
+        /*
         RaycastHit hit;
         Vector3 rayDir = Camera.main.transform.forward;
         if (Physics.Raycast(Camera.main.transform.position, rayDir, out hit))
@@ -165,7 +184,8 @@ public class ToyGUI : MonoBehaviour {
             Debug.Log(Camera.main.transform.position);
             Debug.Log(hit.distance);
             Instantiate(selected, hit.point, Quaternion.identity);
-        }
+        }*/
+
     }
 
     /// <summary>
