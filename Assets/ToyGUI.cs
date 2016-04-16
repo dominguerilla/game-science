@@ -6,10 +6,10 @@ using System.Collections;
 /// </summary>
 public class ToyGUI : MonoBehaviour {
 
-	/// <summary>
-	/// The Tabs available in the NGUI, used to switch selections of prefabs based on category in the Spawn Menu area.
-	/// </summary>
-	public enum TabTypes{
+    /// <summary>
+    /// The Tabs available in the NGUI, used to switch selections of prefabs based on category in the Spawn Menu area.
+    /// </summary>
+    public enum TabTypes{
 		TOYS,
 		ACCESSORIES,
 		PLAYZONES
@@ -81,8 +81,8 @@ public class ToyGUI : MonoBehaviour {
 			if (Physics.Raycast (ray, out hit)) {
 				Toy toy = hit.collider.gameObject.GetComponent<Toy> ();
 				Accessory acc = hit.collider.gameObject.GetComponent (typeof(Accessory)) as Accessory;
-				if (toy) {
-					SelectedToy = toy;
+                if (toy) {
+                    SelectedToy = toy;
 					SelectedAccessory = null;
 					CurrentGUIState = GUIStates.EDIT_MODE;
 					Debug.Log ("Entered EDIT_MODE.");
@@ -138,7 +138,8 @@ public class ToyGUI : MonoBehaviour {
 		SelectedToy = null;
 		SelectedAccessory = null;
 		CurrentGUIState = GUIStates.SPAWN_MODE;
-	}
+        Debug.Log("Entered SPAWN_MODE");
+    }
 
 	/// <summary>
 	/// Allows the player to spawn a selected Toy or Accessory on the spot clicked on.
@@ -146,18 +147,37 @@ public class ToyGUI : MonoBehaviour {
 	/// Exited when right clicking on a non-Toy or non-Accessory.
 	/// </summary>
 	void SPAWN_MODE(){
-		
-	}
+        Debug.Log("We in");
+    }
 
-	/// <summary>
-	/// Switches from the currently active tab to the tab that calls this method.
-	/// </summary>
-	/// <param name="NextTab">The next tab to switch to.</param>
-	public void SwitchTabs(TabTypes NextTab){
+
+    public GameObject selected;
+
+
+    public void Spawn()
+    {
+        Debug.Log("We in deeper");
+        RaycastHit hit;
+        Vector3 rayDir = Camera.main.transform.forward;
+        if (Physics.Raycast(Camera.main.transform.position, rayDir, out hit))
+        {
+            Debug.Log("We in the deepest");
+            Debug.Log(Camera.main.transform.position);
+            Debug.Log(hit.distance);
+            Instantiate(selected, hit.point, Quaternion.identity);
+        }
+    }
+
+    /// <summary>
+    /// Switches from the currently active tab to the tab that calls this method.
+    /// </summary>
+    /// <param name="NextTab">The next tab to switch to.</param>
+    public void SwitchTabs(TabTypes NextTab){
 		if (Tabs [(int)CurrentActiveTab])
 			NGUITools.SetActive (Tabs [(int)CurrentActiveTab].GetComponent<ToyboxGUITab> ().GetSelectionMenu (), false);
 		CurrentActiveTab = NextTab;
 		NGUITools.SetActive (Tabs [(int)CurrentActiveTab].GetComponent<ToyboxGUITab>().GetSelectionMenu(), true);
 		Debug.Log ("Enabling tab " + System.Enum.GetName(typeof(ToyGUI.TabTypes), NextTab));
-	}
+        EnterSPAWN_MODE();
+    }
 }
