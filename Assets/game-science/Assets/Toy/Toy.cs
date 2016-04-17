@@ -194,7 +194,9 @@ public class Toy : SmartObject {
         // Set state booleans
         this.SetInitialStates();
 
+        //Debug.Log("get component");
         agent = GetComponent<NavMeshAgent>();
+        //Debug.Log("got component");
         anim = GetComponent<Animator>();
         anim.SetBool("isWalk", false);
         playerInControl = false;
@@ -248,6 +250,11 @@ public class Toy : SmartObject {
 	
 	// Update is called once per frame
 	void Update () {
+        if(agent == null)
+        {
+            Debug.Log("null");
+        }
+            
         anim.SetBool("Moving", agent.hasPath);
 
         // If Toy is in range of an accessory, is in the "wantsAccessory" state,

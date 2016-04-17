@@ -39,11 +39,15 @@ public class ToyGUI : MonoBehaviour {
 	GUIStates CurrentGUIState;
 	Toy SelectedToy;
 	Accessory SelectedAccessory;
+    Camera m_Camera;
+    GameObject player;
+    public float speed;
 
-	/// <summary>
-	/// The GameObject holding all ToyBoxGUITabs.
-	/// </summary>
-	[SerializeField]
+
+    /// <summary>
+    /// The GameObject holding all ToyBoxGUITabs.
+    /// </summary>
+    [SerializeField]
 	GameObject TabObject;
 
 	GameObject[] Tabs;
@@ -51,8 +55,10 @@ public class ToyGUI : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 
-		//Initiating tabs
-		Tabs = new GameObject[System.Enum.GetNames(typeof(TabTypes)).Length];
+        m_Camera = Camera.main;
+        player = GameObject.Find("PlayerRTS");
+        //Initiating tabs
+        Tabs = new GameObject[System.Enum.GetNames(typeof(TabTypes)).Length];
 		foreach(Transform tab in TabObject.transform){
 			ToyboxGUITab button = tab.GetComponent<ToyboxGUITab> ();
 			if (button == null) {
@@ -135,16 +141,86 @@ public class ToyGUI : MonoBehaviour {
 	/// The default ToyGUI mode--allows for basic camera panning and scrolling.
 	/// </summary>
 	void NO_MODE(){
-		
-	}
+        if (Input.GetKey(KeyCode.W))
+        {
+            Debug.Log("moving");
+            player.transform.position = player.transform.position + (new Vector3(0, 0, 1) * speed * Time.deltaTime);
+        }
 
-	/// <summary>
-	/// Allows the player to edit the parameters of a given Accessory or Toy.
-	/// Called when a Toy or Accessory is clicked on in NO_MODE.
-	/// Exited when right clicking a non-Toy or non-Accessory.
-	/// </summary>
-	void EDIT_MODE(){
+        if (Input.GetKey(KeyCode.A))
+        {
 
+            player.transform.position = player.transform.position + (new Vector3(-1, 0, 0) * speed * Time.deltaTime);
+        }
+
+        if (Input.GetKey(KeyCode.S))
+        {
+
+            player.transform.position = player.transform.position + (new Vector3(0, 0, -1) * speed * Time.deltaTime);
+        }
+
+        if (Input.GetKey(KeyCode.D))
+        {
+
+            player.transform.position = player.transform.position + (new Vector3(1, 0, 0) * speed * Time.deltaTime);
+        }
+
+        if (Input.GetAxis("Mouse ScrollWheel") > 0f)
+        {
+            if (player.transform.position.y <= 10)
+            {
+
+            }
+            else
+            {
+                player.transform.position = player.transform.position + (m_Camera.transform.forward * 40f * Time.deltaTime);
+            }
+        }
+        else if (Input.GetAxis("Mouse ScrollWheel") < 0f)
+        {
+            if (player.transform.position.y >= 300)
+            {
+
+            }
+            else
+            {
+                player.transform.position = player.transform.position + (m_Camera.transform.forward * -1 * 40f * Time.deltaTime);
+            }
+        }
+
+    }
+
+    /// <summary>
+    /// Allows the player to edit the parameters of a given Accessory or Toy.
+    /// Called when a Toy or Accessory is clicked on in NO_MODE.
+    /// Exited when right clicking a non-Toy or non-Accessory.
+    /// </summary>
+    void EDIT_MODE(){
+        if (SelectedToy != null)
+        {
+            if (Input.GetMouseButtonDown(0))
+            {
+                RaycastHit hit;
+                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                if (CurrentGUIState.Equals(GUIStates.SPAWN_MODE))
+                {
+                    Debug.Log("Update Spawn");
+                    if (Physics.Raycast(ray, out hit))
+                    {
+                        Instantiate(selected, hit.point, Quaternion.identity);
+                    }
+
+                }
+                else
+                {
+                    if (Physics.Raycast(ray, out hit))
+                    {
+                        //Debug.Log("goto");
+                        SelectedToy.SetDestination(hit.point);
+                    }
+                }
+            }
+        }
 	}
 
 

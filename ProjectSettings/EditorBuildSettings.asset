@@ -11,5 +11,7 @@ EditorBuildSettings:
     path: Assets/BankScenario/Scenes/VideoFullBank.unity
   - enabled: 0
     path: Assets/game-science/Scenes/LinearLevel.unity
-  - enabled: 1
+  - enabled: 0
     path: Assets/game-science/Scenes/FinalDemo/Week9Demo.unity
+  - enabled: 1
+    path: Assets/game-science/Scenes/NewNGUI.unity
