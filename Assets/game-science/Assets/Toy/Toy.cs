@@ -324,6 +324,7 @@ public class Toy : SmartObject {
         SetStatesToFalse(SimpleStateDef.TPSMode);
         playerInControl = false;
         //Debug.Log(gameObject.name + " is unselected.");
+
         GameObject.Destroy(light);
 
         // When we exit TPS mode, tell the Toy to perform its idle behavior
