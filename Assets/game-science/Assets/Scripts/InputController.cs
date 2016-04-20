@@ -35,6 +35,68 @@ public class InputController : MonoBehaviour {
         UpdateToys();
 	}
 
+    #region Debug Stuff
+    // Taking this code from FlyingCameraController.cs
+    // This is just for testing until we make the proper GUI buttons
+
+    // Boolean for starting/stopping Toys
+    private bool playButton = false;
+
+    private void FixedUpdate()
+    {
+        DEBUG_ClickToControl();
+
+        // Tell all Toys in scene to start/stop their behaviors
+        if (Input.GetKeyUp(KeyCode.C))
+        {
+            if (playButton)
+            {   // Pause
+                print("Pausing...");
+                Pause();
+            }
+            else
+            {   // Play
+                print("Playing...");
+                Play();
+            }
+            playButton = !playButton;
+        }
+
+        // Kill everything
+        if (Input.GetKeyUp(KeyCode.V))
+        {
+            print("Stopping...");
+            Stop();
+        }
+    }
+
+    /// <summary>
+    /// Will take Third Person control of the Toy clicked on.
+    /// </summary>
+    private void DEBUG_ClickToControl()
+    {
+        //if (Input.GetMouseButtonDown(0))
+        if(Input.GetMouseButtonDown(1))
+        {
+            print("Right mouse button pressed");
+            RaycastHit hit;
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            if (Physics.Raycast(ray, out hit))
+            {
+                Toy toy = hit.collider.gameObject.GetComponent<Toy>();
+                if (toy)
+                {
+                    toyController.EnterTPControl(toy);
+
+                    // Going to try commenting this out
+                    // this.gameObject.SetActive (false);
+                }
+            }
+        }
+    }
+
+    #endregion
+
     #region GUI Functions
     // Play all Toys
     public void Play()

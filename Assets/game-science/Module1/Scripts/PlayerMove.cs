@@ -18,7 +18,12 @@ public class PlayerMove : MonoBehaviour {
     public float gravity = 20.0F;
 	public Accessory acc;
 
-	public int XInvert = 1;
+    // Initial settings to reset camera to
+    public float Initial_Cam_X = -10;
+    public float Initial_Cam_Y = 1;
+    public float Initial_Cam_Z = -20;
+
+    public int XInvert = 1;
 	public int ZInvert = 1;
 	public string FWDAxis = "Vertical";
 	public string SIDEAxis = "Horizontal";
@@ -167,8 +172,16 @@ public class PlayerMove : MonoBehaviour {
         // Note: currently flying camera controller is simply not deactivated
 
         // Reset Flying Camera Controller to its starting position
-        FlyingCameraController fcc = FindObjectOfType<FlyingCameraController>();
-        if (fcc) { fcc.ResetToDefaultPosition(); }
+        //FlyingCameraController fcc = FindObjectOfType<FlyingCameraController>();
+        //if (fcc) { fcc.ResetToDefaultPosition(); }
+
+        // Reset Camera to its starting position
+        Camera cam = FindObjectOfType<Camera>();
+        if(camera)
+        {
+            camera.transform.position = new Vector3(
+                Initial_Cam_X, Initial_Cam_Y, Initial_Cam_Z);
+        }
 
         // Once we exit TPS, tell the Toy that it's not in TPS anymore
         ModelToy.OnDeselect();
