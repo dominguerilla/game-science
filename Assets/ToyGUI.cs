@@ -2,7 +2,7 @@
 using System.Collections;
 
 /// <summary>
-/// The MonoBehaviour in charge of controlling the NGUI Toy interface.
+/// The MonoBehaviour in charge of controlling the NGUI Toy interface. Handles ONLY the NGUI Toy interface.
 /// </summary>
 public class ToyGUI : MonoBehaviour {
 
@@ -35,13 +35,27 @@ public class ToyGUI : MonoBehaviour {
 		SPAWN_MODE
 	}
 		
+	/// <summary>
+	/// The current active tab that is being displayed in the Spawn Menu.
+	/// </summary>
 	TabTypes CurrentActiveTab;
+
+	/// <summary>
+	/// The state of the current GUI.
+	/// </summary>
 	GUIStates CurrentGUIState;
+
+	/// <summary>
+	/// The Toy that has been selected by the player during scene setup. Will be null if not in EDIT_MODE.
+	/// </summary>
 	Toy SelectedToy;
+
+	/// <summary>
+	/// The Accessory that has been selected by the player during scene setup. Will be null if not in EDIT_MODE.
+	/// </summary>
 	Accessory SelectedAccessory;
-    Camera m_Camera;
-    GameObject player;
-    public float speed;
+
+	GameObject prefabToSpawn;
 
 
     /// <summary>
@@ -54,9 +68,6 @@ public class ToyGUI : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-
-        m_Camera = Camera.main;
-        player = GameObject.Find("PlayerRTS");
         //Initiating tabs
         Tabs = new GameObject[System.Enum.GetNames(typeof(TabTypes)).Length];
 		foreach(Transform tab in TabObject.transform){
@@ -79,115 +90,35 @@ public class ToyGUI : MonoBehaviour {
 	}
 
 
-	// Update is called once per frame
+	// Update is called once per frame, and should only be used to switch between the different modes
 	void Update () {
 		if (Input.GetMouseButtonDown (0)) {
-			RaycastHit hit;
 			Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
-            if (CurrentGUIState.Equals(GUIStates.SPAWN_MODE))
-            {
-                Debug.Log("Update Spawn");
-                if(Physics.Raycast(ray, out hit))
-                {
-                   Instantiate(selected, hit.point, Quaternion.identity);
-                }
-
-            }else
-            {
-                if (Physics.Raycast(ray, out hit))
-                {
-                    Toy toy = hit.collider.gameObject.GetComponent<Toy>();
-                    Accessory acc = hit.collider.gameObject.GetComponent(typeof(Accessory)) as Accessory;
-                    if (toy)
-                    {
-                        SelectedToy = toy;
-                        SelectedAccessory = null;
-                        CurrentGUIState = GUIStates.EDIT_MODE;
-                        Debug.Log("Entered EDIT_MODE.");
-                    }
-                    else if (acc)
-                    {
-                        SelectedToy = null;
-                        SelectedAccessory = acc;
-                        CurrentGUIState = GUIStates.EDIT_MODE;
-                        Debug.Log("Entered EDIT_MODE.");
-                    }
-                }
-            }
-
-			
-		    } else if (Input.GetMouseButtonDown (1)) {
+			switch (CurrentGUIState) {
+			case GUIStates.NO_MODE:
+				NO_MODE ();
+				break;
+			case GUIStates.EDIT_MODE:
+				EDIT_MODE (ray);
+				break;
+			case GUIStates.SPAWN_MODE:
+				SPAWN_MODE (ray);
+				break;
+			}
+        } else if (Input.GetMouseButtonDown (1)) {
 			    SelectedToy = null;
 			    SelectedAccessory = null;
 			    CurrentGUIState = GUIStates.NO_MODE;
 			    Debug.Log ("Entered NO_MODE.");
 		}
 
-
-		switch (CurrentGUIState) {
-		case GUIStates.NO_MODE:
-			NO_MODE ();
-			break;
-		case GUIStates.EDIT_MODE:
-			EDIT_MODE ();
-			break;
-		case GUIStates.SPAWN_MODE:
-			SPAWN_MODE ();
-			break;
-		}
 	}
 
 	/// <summary>
 	/// The default ToyGUI mode--allows for basic camera panning and scrolling.
 	/// </summary>
 	void NO_MODE(){
-        if (Input.GetKey(KeyCode.W))
-        {
-            Debug.Log("moving");
-            player.transform.position = player.transform.position + (new Vector3(0, 0, 1) * speed * Time.deltaTime);
-        }
-
-        if (Input.GetKey(KeyCode.A))
-        {
-
-            player.transform.position = player.transform.position + (new Vector3(-1, 0, 0) * speed * Time.deltaTime);
-        }
-
-        if (Input.GetKey(KeyCode.S))
-        {
-
-            player.transform.position = player.transform.position + (new Vector3(0, 0, -1) * speed * Time.deltaTime);
-        }
-
-        if (Input.GetKey(KeyCode.D))
-        {
-
-            player.transform.position = player.transform.position + (new Vector3(1, 0, 0) * speed * Time.deltaTime);
-        }
-
-        if (Input.GetAxis("Mouse ScrollWheel") > 0f)
-        {
-            if (player.transform.position.y <= 10)
-            {
-
-            }
-            else
-            {
-                player.transform.position = player.transform.position + (m_Camera.transform.forward * 40f * Time.deltaTime);
-            }
-        }
-        else if (Input.GetAxis("Mouse ScrollWheel") < 0f)
-        {
-            if (player.transform.position.y >= 300)
-            {
-
-            }
-            else
-            {
-                player.transform.position = player.transform.position + (m_Camera.transform.forward * -1 * 40f * Time.deltaTime);
-            }
-        }
-
+		
     }
 
     /// <summary>
@@ -195,43 +126,39 @@ public class ToyGUI : MonoBehaviour {
     /// Called when a Toy or Accessory is clicked on in NO_MODE.
     /// Exited when right clicking a non-Toy or non-Accessory.
     /// </summary>
-    void EDIT_MODE(){
-        if (SelectedToy != null)
-        {
-            if (Input.GetMouseButtonDown(0))
-            {
-                RaycastHit hit;
-                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                if (CurrentGUIState.Equals(GUIStates.SPAWN_MODE))
-                {
-                    Debug.Log("Update Spawn");
-                    if (Physics.Raycast(ray, out hit))
-                    {
-                        Instantiate(selected, hit.point, Quaternion.identity);
-                    }
-
-                }
-                else
-                {
-                    if (Physics.Raycast(ray, out hit))
-                    {
-                        //Debug.Log("goto");
-                        SelectedToy.SetDestination(hit.point);
-                    }
-                }
-            }
-        }
+void EDIT_MODE(Ray ray){
+		RaycastHit hit;
+		if (Physics.Raycast(ray, out hit))
+		{
+			Toy toy = hit.collider.gameObject.GetComponent<Toy>();
+			Accessory acc = hit.collider.gameObject.GetComponent(typeof(Accessory)) as Accessory;
+			if (toy)
+			{
+				SelectedToy = toy;
+				SelectedAccessory = null;
+				CurrentGUIState = GUIStates.EDIT_MODE;
+				Debug.Log("Entered EDIT_MODE.");
+			}
+			else if (acc)
+			{
+				SelectedToy = null;
+				SelectedAccessory = acc;
+				CurrentGUIState = GUIStates.EDIT_MODE;
+				Debug.Log("Entered EDIT_MODE.");
+			}
+		}
 	}
 
 
 	/// <summary>
 	/// Enables Spawn Mode, overriding the current GUI State.
 	/// </summary>
-	public void EnterSPAWN_MODE(){
+	public void EnterSPAWN_MODE(GameObject prefab){
 		SelectedToy = null;
 		SelectedAccessory = null;
 		CurrentGUIState = GUIStates.SPAWN_MODE;
         Debug.Log("Entered SPAWN_MODE");
+		prefabToSpawn = prefab;
     }
 
 	/// <summary>
@@ -239,29 +166,18 @@ public class ToyGUI : MonoBehaviour {
 	/// Is unique in that it is meant to be called from the GUI, overriding the CurrentGUIState.
 	/// Exited when right clicking on a non-Toy or non-Accessory.
 	/// </summary>
-	void SPAWN_MODE(){
-        Debug.Log("We in");
+	void SPAWN_MODE(Ray ray){
+		if (!prefabToSpawn) {
+			Debug.Log ("No prefab to spawn specified in Inspector!");
+			return;
+		}
+		RaycastHit hit;
+		if(Physics.Raycast(ray, out hit))
+		{
+			Instantiate(prefabToSpawn, hit.point, Quaternion.identity);
+		}
     }
-
-
-    public GameObject selected;
-
-    public void Spawn()
-    {
-        Debug.Log("We in deeper");
-        EnterSPAWN_MODE();
-        /*
-        RaycastHit hit;
-        Vector3 rayDir = Camera.main.transform.forward;
-        if (Physics.Raycast(Camera.main.transform.position, rayDir, out hit))
-        {
-            Debug.Log("We in the deepest");
-            Debug.Log(Camera.main.transform.position);
-            Debug.Log(hit.distance);
-            Instantiate(selected, hit.point, Quaternion.identity);
-        }*/
-
-    }
+		
 
     /// <summary>
     /// Switches from the currently active tab to the tab that calls this method.
@@ -273,6 +189,6 @@ public class ToyGUI : MonoBehaviour {
 		CurrentActiveTab = NextTab;
 		NGUITools.SetActive (Tabs [(int)CurrentActiveTab].GetComponent<ToyboxGUITab>().GetSelectionMenu(), true);
 		Debug.Log ("Enabling tab " + System.Enum.GetName(typeof(ToyGUI.TabTypes), NextTab));
-        EnterSPAWN_MODE();
+        //EnterSPAWN_MODE();
     }
 }
