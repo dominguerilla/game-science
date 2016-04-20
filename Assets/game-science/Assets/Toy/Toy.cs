@@ -313,7 +313,7 @@ public class Toy : SmartObject {
         light.transform.position = this.transform.position + new Vector3 (0, 2, 0);
         light.transform.Rotate(90, 0, 0);
 
-        //Debug.Log(gameObject.name + " is selected.");
+        Debug.Log(gameObject.name + " is selected.");
     }
 
     /// <summary>

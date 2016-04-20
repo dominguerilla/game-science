@@ -13,7 +13,7 @@ GameObject:
   - 114: {fileID: 11461264}
   - 114: {fileID: 11445060}
   m_Layer: 0
-  m_Name: ToyboxScriptHolder 1
+  m_Name: ToyboxScriptHolder
   m_TagString: Logger
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

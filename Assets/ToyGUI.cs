@@ -94,22 +94,28 @@ public class ToyGUI : MonoBehaviour {
 	void Update () {
 		if (Input.GetMouseButtonDown (0)) {
 			Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
+			RaycastHit hit;
+			if (Physics.Raycast(ray, out hit))
+			{
+				Toy toy = hit.collider.gameObject.GetComponent<Toy>();
+				Accessory acc = hit.collider.gameObject.GetComponent(typeof(Accessory)) as Accessory;
+				if (toy || acc) {
+					EDIT_MODE (toy, acc);
+				} 
+			}
 			switch (CurrentGUIState) {
 			case GUIStates.NO_MODE:
-				NO_MODE ();
+				//NO_MODE ();
 				break;
 			case GUIStates.EDIT_MODE:
-				EDIT_MODE (ray);
+				//EDIT_MODE (ray);
 				break;
 			case GUIStates.SPAWN_MODE:
 				SPAWN_MODE (ray);
 				break;
 			}
         } else if (Input.GetMouseButtonDown (1)) {
-			    SelectedToy = null;
-			    SelectedAccessory = null;
-			    CurrentGUIState = GUIStates.NO_MODE;
-			    Debug.Log ("Entered NO_MODE.");
+			NO_MODE ();
 		}
 
 	}
@@ -118,42 +124,68 @@ public class ToyGUI : MonoBehaviour {
 	/// The default ToyGUI mode--allows for basic camera panning and scrolling.
 	/// </summary>
 	void NO_MODE(){
-		
+		if (SelectedToy)
+			SelectedToy.OnDeselect (); 
+		SelectedToy = null;
+		SelectedAccessory = null;
+		CurrentGUIState = GUIStates.NO_MODE;
+		Debug.Log ("Entered NO_MODE.");
     }
+
 
     /// <summary>
     /// Allows the player to edit the parameters of a given Accessory or Toy.
     /// Called when a Toy or Accessory is clicked on in NO_MODE.
     /// Exited when right clicking a non-Toy or non-Accessory.
     /// </summary>
-void EDIT_MODE(Ray ray){
-		RaycastHit hit;
-		if (Physics.Raycast(ray, out hit))
+	void EDIT_MODE(Toy toy, Accessory acc){
+		if (toy)
 		{
-			Toy toy = hit.collider.gameObject.GetComponent<Toy>();
-			Accessory acc = hit.collider.gameObject.GetComponent(typeof(Accessory)) as Accessory;
-			if (toy)
-			{
-				SelectedToy = toy;
-				SelectedAccessory = null;
-				CurrentGUIState = GUIStates.EDIT_MODE;
-				Debug.Log("Entered EDIT_MODE.");
-			}
-			else if (acc)
-			{
-				SelectedToy = null;
-				SelectedAccessory = acc;
-				CurrentGUIState = GUIStates.EDIT_MODE;
-				Debug.Log("Entered EDIT_MODE.");
-			}
+			SelectToyOrAccessory (toy);
+		}
+		else if (acc)
+		{
+			SelectToyOrAccessory (acc);
 		}
 	}
 
+	/// <summary>
+	/// Selects a Toy.
+	/// </summary>
+	/// <param name="toy">Toy to select</param>
+	void SelectToyOrAccessory(Toy toy){
+		if (SelectedToy)
+			SelectedToy.OnDeselect ();
+		if (SelectedAccessory)
+			SelectedAccessory = null;
+		toy.OnSelect ();
+		SelectedToy = toy;
+		SelectedAccessory = null;
+		CurrentGUIState = GUIStates.EDIT_MODE;
+		Debug.Log("Entered EDIT_MODE.");
+	}
+
+	/// <summary>
+	/// Selects the given Accessory.
+	/// </summary>
+	/// <param name="acc">Accessory to select.</param>
+	void SelectToyOrAccessory(Accessory acc){
+		if (SelectedToy)
+			SelectedToy.OnDeselect ();
+		if (SelectedAccessory)
+			SelectedAccessory = null;
+		SelectedToy = null;
+		SelectedAccessory = acc;
+		CurrentGUIState = GUIStates.EDIT_MODE;
+		Debug.Log("Entered EDIT_MODE.");
+	}
 
 	/// <summary>
 	/// Enables Spawn Mode, overriding the current GUI State.
 	/// </summary>
 	public void EnterSPAWN_MODE(GameObject prefab){
+		if (SelectedToy)
+			SelectedToy.OnDeselect ();
 		SelectedToy = null;
 		SelectedAccessory = null;
 		CurrentGUIState = GUIStates.SPAWN_MODE;

@@ -12,7 +12,7 @@ GameObject:
   - 114: {fileID: 11441782}
   - 114: {fileID: 11462206}
   m_Layer: 0
-  m_Name: ToyboxScriptHolder
+  m_Name: ToyboxScriptHolder(old)
   m_TagString: Logger
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -41,6 +41,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fac1ca70c7e66b1418fb8e991cf18f46, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Team_Number: 0
+  Health_Value: 0
+  Speed_Value: 0
+  Accessory_ToEquip: {fileID: 0}
+  toyController: {fileID: 0}
 --- !u!114 &11459070
 MonoBehaviour:
   m_ObjectHideFlags: 1
