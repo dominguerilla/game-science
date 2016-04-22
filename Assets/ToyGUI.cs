@@ -115,7 +115,27 @@ public class ToyGUI : MonoBehaviour {
 				break;
 			}
         } else if (Input.GetMouseButtonDown (1)) {
-			NO_MODE ();
+			switch (CurrentGUIState) {
+			case GUIStates.NO_MODE:
+				//NO_MODE ();
+				break;
+			case GUIStates.EDIT_MODE:
+				Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
+				RaycastHit hit;
+				//If a Toy has been selected and the user right clicks on an Accessory, the toy will go to equip it.
+				if (SelectedToy && Physics.Raycast (ray, out hit)) {
+					Accessory targetAcc = hit.collider.gameObject.GetComponent (typeof(Accessory)) as Accessory;
+					if (targetAcc) {
+						SelectedToy.SetTargetAccessory (hit.collider.gameObject);
+					} else {
+						NO_MODE ();
+					}
+				}
+				break;
+			case GUIStates.SPAWN_MODE:
+				NO_MODE ();
+				break;
+			}
 		}
 
 	}

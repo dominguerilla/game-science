@@ -99,12 +99,12 @@ public class Toy : SmartObject {
     /// Makes this Toy equip an Accessory on the target GameObject.
     /// </summary>
     /// <param name="targetAccessory">Target accessory.</param>
-    public void SetAccessory(GameObject targetAccessory)
+    public void SetTargetAccessory(GameObject target)
     {
-        Debug.Log("SetAccessory: " + targetAccessory);
-        Accessory acc = targetAccessory.GetComponent (typeof(Accessory)) as Accessory;
+        Debug.Log("SetTargetAccessory: " + target);
+        Accessory acc = target.GetComponent (typeof(Accessory)) as Accessory;
 		if (acc) {
-			this.targetAccessory = targetAccessory;
+			this.targetAccessory = target;
             if (playerInControl)
             {   // Equip the accessory directly
                 DEBUG_EquipAccessoryDirectly(acc);
@@ -116,10 +116,12 @@ public class Toy : SmartObject {
 
             // NOTE: Depending on implementation, may want to do this too
             Equip(acc);
+			targetAccessory = null;
 		} else {
 			Debug.Log ("No Accessory found in given Game Object!");
 		}
     }
+
     #endregion
 
     #region getters
@@ -194,9 +196,7 @@ public class Toy : SmartObject {
         // Set state booleans
         this.SetInitialStates();
 
-        //Debug.Log("get component");
         agent = GetComponent<NavMeshAgent>();
-        //Debug.Log("got component");
         anim = GetComponent<Animator>();
         anim.SetBool("isWalk", false);
         playerInControl = false;
@@ -240,11 +240,6 @@ public class Toy : SmartObject {
                 SetAccessory(chosenAccessory);
             }*/
 
-            // DEBUG_SetIdleRootAsIdleStand();
-
-            // Testing with IdleWander
-            print("Toy.Start: Setting behavior to IdleWander");
-            IdleTreeRoot = IdleBehaviors.IdleWander(this);
         }
     }
 	
@@ -254,6 +249,10 @@ public class Toy : SmartObject {
         {
             Debug.Log("null");
         }
+
+		/*if (targetAccessory) {
+			SetTargetAccessory (targetAccessory);
+		}*/
             
         anim.SetBool("Moving", agent.hasPath);
 
@@ -278,7 +277,7 @@ public class Toy : SmartObject {
     {
         DEBUG_StopBehavior();
     }
-
+		
     /// <summary>
     /// Called when user hits Play
     /// </summary>
@@ -302,7 +301,7 @@ public class Toy : SmartObject {
     public void OnSelect()
     {
         SetStatesToTrue(SimpleStateDef.TPSMode);
-        playerInControl = true;
+        //playerInControl = true;
 
         light = new GameObject("Spotlight");
         Light lightComp = light.AddComponent<Light>();
@@ -392,6 +391,7 @@ public class Toy : SmartObject {
 		AccessoryArchetype = "";
     }
 
+
     /// <summary>
     /// Adds a flat float value bonus to this Toy's Attack stat. Can be positive or negative.
     /// </summary>
@@ -429,9 +429,10 @@ public class Toy : SmartObject {
     /// Sets the idle behavior of this Toy to the given root node.
     /// </summary>
     /// <param name="root"></param>
-    public void SetIdleBehavior(Node root)
+    public void SetIdleBehavior(Node root) //recompile
     {
 		if (root != null) {
+			Debug.Log ("Idle Behavior root given NOT null");
 			IdleTreeRoot = root;
             if (bagent != null) { bagent.StopBehavior(); }
 			bagent = new BehaviorAgent(IdleTreeRoot);
@@ -524,7 +525,7 @@ public class Toy : SmartObject {
             if (c.tag == "Accessory")
             {
                 // Have this accessory be this toy's target accessory
-                SetAccessory(c.gameObject);
+                SetTargetAccessory(c.gameObject);
             }
         }
         

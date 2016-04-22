@@ -45,7 +45,7 @@ namespace TreeSharpPlus{
                 accessoriesInScene[rand.Next(0, accessoriesInScene.Length)];
 
             // Have this accessory be this toy's target accessory
-            toy.SetAccessory(chosenAccessory);
+            toy.SetTargetAccessory(chosenAccessory);
 
             Debug.Log("In Node: Set " + toy + "'s accessory to " + chosenAccessory);
 
