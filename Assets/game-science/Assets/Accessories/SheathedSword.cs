@@ -28,6 +28,11 @@ public class SheathedSword : Accessory
         return new Sequence(
             new LeafAssert(() => { return IsEquippable; }),
             new EquipAccessory(toy, this, EquipSlot),
+
+            new LeafInvoke(() => {
+                toy.ShowEmoji(EmojiScript.EmojiTypes.Anger_Emoji);
+            }),
+
             new LeafInvoke(() => { toy.ChangeAttack(10.0f); gameObject.SetActive(false); })
             );
     }

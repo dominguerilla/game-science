@@ -2,9 +2,17 @@
 
 public class EmojiScript : MonoBehaviour {
 
+    public enum EmojiTypes
+    {
+        Hurt_Emoji,
+        Anger_Emoji,
+        Laugh_Emoji,
+        Heart_Emoji,
+    }
+
     private float time = 0;
     private float addHeight = 0;
-    private float riseSpeed = 0.1f;
+    private float riseSpeed = 0.03f;
 	
 	// Update is called once per frame
 	void Update () {
@@ -14,7 +22,7 @@ public class EmojiScript : MonoBehaviour {
             gameObject.transform.position.z);
 
         time += Time.deltaTime;
-	    if(time > 3)
+	    if(time > 2)
         {
             gameObject.SetActive(false);
             Destroy(gameObject);

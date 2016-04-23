@@ -444,7 +444,7 @@ public class Toy : SmartObject {
     {
         Debug.Log(gameObject.name + " has died.");
 
-        // ShowEmoji(Hurt_Emoji);
+        ShowEmoji(Hurt_Emoji);
 
 		if (bagent != null) bagent.StopBehavior();
         gameObject.SetActive(false);
@@ -552,6 +552,32 @@ public class Toy : SmartObject {
             this.transform.rotation);
         
         // Emoji objects are responsible for animating/destroying themselves
+    }
+
+    /// <summary>
+    /// Show the Emoji of the given type
+    /// </summary>
+    /// <param name="type"></param>
+    public void ShowEmoji(EmojiScript.EmojiTypes type)
+    {
+        switch(type)
+        {
+            case EmojiScript.EmojiTypes.Anger_Emoji:
+                ShowEmoji(Anger_Emoji);
+                break;
+            case EmojiScript.EmojiTypes.Hurt_Emoji:
+                ShowEmoji(Hurt_Emoji);
+                break;
+            case EmojiScript.EmojiTypes.Heart_Emoji:
+                ShowEmoji(Heart_Emoji);
+                break;
+            case EmojiScript.EmojiTypes.Laugh_Emoji:
+                ShowEmoji(Laugh_Emoji);
+                break;
+            default:
+                print("Toy.ShowEmoji: Got bad input");
+                break;
+        }
     }
     #endregion
 

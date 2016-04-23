@@ -3,6 +3,23 @@ using UnityEngine;
 
 public static class IdleBehaviors {
 
+    /// <summary>
+    /// Tell the Toy to give off Emojis at a given time interval
+    /// </summary>
+    /// <param name="toy"></param>
+    /// <param name="intervalInMillis"></param>
+    /// <returns></returns>
+    public static Node GiveOffEmojis(Toy toy, EmojiScript.EmojiTypes type, int intervalInMillis)
+    {
+        return new DecoratorLoop(
+            new Sequence(
+                new LeafInvoke(() => {
+                    toy.ShowEmoji(type);
+                }),
+                new LeafWait(intervalInMillis)
+            ));
+    }
+
     //[Affordance]
     public static Node TestBehavior(Toy toy)
     {

@@ -108,7 +108,7 @@ public abstract class Playzone : MonoBehaviour {
 
     public virtual Toy GetRandomToyInZone()
     {
-        return ToysInZone[Random.Range(0, ToysInZone.Count)];
+        return ToysInZone[Random.Range(0, ToysInZone.Count-1)];
     }
 
     public virtual Toy GetRandomOtherToyInZone(Toy toy)

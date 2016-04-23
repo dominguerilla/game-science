@@ -46,8 +46,12 @@ public class SmartSantaHat : Accessory {
                     // Go to them, if they're nearby
                     new WalkToNearestCharacter(agent),
                     // Give them a present!
-                    new GivePresent(toy, present)
-                    ),
+                    new GivePresent(toy, present),
+                    // Show a heart
+                    new LeafInvoke(() => {
+                        toy.ShowEmoji(EmojiScript.EmojiTypes.Heart_Emoji);
+                    })
+                ),
                 // Wait a bit
                 new LeafWait(2000)));
     }

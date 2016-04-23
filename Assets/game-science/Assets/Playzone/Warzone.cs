@@ -30,6 +30,9 @@ public class Warzone : Playzone {
         }
 
         print("Warzone.GetPlayzoneNode: " + toys[0] + " will attack " + defender);
-        return IdleBehaviors.AttackUntilDead(toys[0], defender);
+        return new SequenceParallel(
+            IdleBehaviors.GiveOffEmojis(toys[0], EmojiScript.EmojiTypes.Anger_Emoji, 5000),
+            IdleBehaviors.AttackUntilDead(toys[0], defender)
+            );
     }
 }

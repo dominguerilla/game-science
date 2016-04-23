@@ -23,6 +23,11 @@ public class Food : Accessory
         return new Sequence(
             new LeafAssert(() => { return IsEquippable; }),
             new EquipAccessory(toy, this, EquipSlot),
+            
+            new LeafInvoke(() => {
+                toy.ShowEmoji(EmojiScript.EmojiTypes.Heart_Emoji);
+            }),
+
             new LeafInvoke(() => { gameObject.SetActive(false); }),
 			new LeafInvoke(() => { toy.ChangeHealth(10); })
             );
