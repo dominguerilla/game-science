@@ -70,6 +70,12 @@ public class Toy : SmartObject {
     // The team number for this Toy
     public int team;
 
+    // The Emojis for this Toy
+    public GameObject Hurt_Emoji;
+    public GameObject Anger_Emoji;
+    public GameObject Laugh_Emoji;
+    public GameObject Heart_Emoji;
+
     #region setters
     // All states are initially set to true
     private void SetInitialStates()
@@ -421,6 +427,9 @@ public class Toy : SmartObject {
     private void Die()
     {
         Debug.Log(gameObject.name + " has died.");
+
+        // ShowEmoji(Hurt_Emoji);
+
 		if (bagent != null) bagent.StopBehavior();
         gameObject.SetActive(false);
     }
@@ -504,6 +513,23 @@ public class Toy : SmartObject {
         }
     }
 
+    /// <summary>
+    /// Show an emoji
+    /// </summary>
+    /// <param name="emoji"></param>
+    public void ShowEmoji(GameObject emoji)
+    {
+        if (!emoji)
+        {
+            print("Toy.ShowEmoji: Emoji is null");
+        }
+
+        Instantiate(emoji,
+            this.transform.position + new Vector3(0,4,0),
+            this.transform.rotation);
+
+        // TODO: Give Emojis a timer script
+    }
     #endregion
 
     #region Private utility functions
