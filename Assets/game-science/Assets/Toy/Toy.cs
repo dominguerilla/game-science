@@ -636,6 +636,9 @@ public class Toy : SmartObject {
         {
             bagent = new BehaviorAgent(IdleTreeRoot);
             bagent.StartBehavior();
+
+            print("Toy.DEBUG_StartBehavior: Testing Emoji");
+            ShowEmoji(Heart_Emoji);
         }
         else
         {
