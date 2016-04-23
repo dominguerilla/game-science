@@ -548,10 +548,10 @@ public class Toy : SmartObject {
         }
 
         Instantiate(emoji,
-            this.transform.position + new Vector3(0,4,0),
+            this.transform.position + new Vector3(0,2,0),
             this.transform.rotation);
-
-        // TODO: Give Emojis a timer script
+        
+        // Emoji objects are responsible for animating/destroying themselves
     }
     #endregion
 

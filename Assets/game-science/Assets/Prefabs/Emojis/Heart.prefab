@@ -29,6 +29,7 @@ GameObject:
   - 33: {fileID: 3322334}
   - 23: {fileID: 2325854}
   - 95: {fileID: 9587832}
+  - 114: {fileID: 11412792}
   m_Layer: 0
   m_Name: Heart
   m_TagString: Untagged
@@ -161,6 +162,17 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+--- !u!114 &11412792
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 187812}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 469e6a60242771543966a6a74de56aaa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
