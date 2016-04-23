@@ -49,8 +49,11 @@ public class Toy : SmartObject {
     // The states for this toy
     private bool[] states = new bool[Enum.GetNames(typeof(SimpleStateDef)).Length];
 
-    //The light that appears when this Toy is selected
-    private GameObject light;
+    //The light that appears on the Toy when it is selected
+	private GameObject ToySelectLight;
+
+	//The light that appears on its targeted Accessory when this Toy is selected
+	private GameObject AccessorySelectLight;
 
     //The current ability given by the Accessory equipped by this Toy.
 	private Accessory equippedAccessory;
@@ -102,7 +105,7 @@ public class Toy : SmartObject {
     }
 
     /// <summary>
-    /// Makes this Toy equip an Accessory on the target GameObject.
+	/// Enqueues a GameObject as a Target Accessory. Once OnPlay() is called again, the toy will attempt to equip the Target Accessory.
     /// </summary>
     /// <param name="targetAccessory">Target accessory.</param>
     public void SetTargetAccessory(GameObject target)
@@ -117,12 +120,13 @@ public class Toy : SmartObject {
             }
             else
             {   // New behavior: pick up the accessory
-                SetIdleBehavior(IdleBehaviors.IdleStandDuringAction(IdleBehaviors.MoveAndEquipAccessory(this, acc)));
-            }
+                //SetIdleBehavior(IdleBehaviors.IdleStandDuringAction(IdleBehaviors.MoveAndEquipAccessory(this, acc)));
+				ChangeIdleRoot(IdleBehaviors.IdleStandDuringAction(IdleBehaviors.MoveAndEquipAccessory(this, acc)));
+			}
 
             // NOTE: Depending on implementation, may want to do this too
-            Equip(acc);
-			targetAccessory = null;
+            //Equip(acc);
+			//targetAccessory = null;
 		} else {
 			Debug.Log ("No Accessory found in given Game Object!");
 		}
@@ -245,7 +249,7 @@ public class Toy : SmartObject {
                 // Have this accessory be this toy's target accessory
                 SetAccessory(chosenAccessory);
             }*/
-
+			SetIdleBehavior (IdleBehaviors.IdleStand ());
         }
     }
 	
@@ -306,34 +310,46 @@ public class Toy : SmartObject {
     /// </summary>
     public void OnSelect()
     {
-        SetStatesToTrue(SimpleStateDef.TPSMode);
-        //playerInControl = true;
-
-        light = new GameObject("Spotlight");
-        Light lightComp = light.AddComponent<Light>();
-        light.transform.parent = this.gameObject.transform;
+       	//Creating the glowing light on a selected Toy
+        ToySelectLight = new GameObject("Spotlight");
+        Light lightComp = ToySelectLight.AddComponent<Light>();
+        ToySelectLight.transform.parent = this.gameObject.transform;
         lightComp.color = Color.green;
         lightComp.type = LightType.Spot;
         lightComp.intensity = 10;
-        light.transform.position = this.transform.position + new Vector3 (0, 2, 0);
-        light.transform.Rotate(90, 0, 0);
+        ToySelectLight.transform.position = this.transform.position + new Vector3 (0, 2, 0);
+        ToySelectLight.transform.Rotate(90, 0, 0);
 
-        Debug.Log(gameObject.name + " is selected.");
+		SpawnTargetAccessoryLight ();
+        //Debug.Log(gameObject.name + " is selected.");
     }
+
+	/// <summary>
+	/// If there is a target Accessory set for this Toy, will spawn a spotlight on it.
+	/// </summary>
+	public void SpawnTargetAccessoryLight(){
+		if (targetAccessory && targetAccessory.activeInHierarchy) {
+			Debug.Log ("Creating targetAccessory light!");
+			AccessorySelectLight = new GameObject ("Spotlight");
+			Light accLightComp = AccessorySelectLight.AddComponent<Light> ();
+			AccessorySelectLight.transform.parent = targetAccessory.gameObject.transform;
+			accLightComp.color = Color.red;
+			accLightComp.type = LightType.Spot;
+			accLightComp.intensity = 10;
+			AccessorySelectLight.transform.position = targetAccessory.transform.position + new Vector3 (0, 2, 0);
+			AccessorySelectLight.transform.Rotate (90, 0, 0);
+		}
+	}
 
     /// <summary>
     /// The function called when this Toy is deselected.
     /// </summary>
     public void OnDeselect()
     {
-        SetStatesToFalse(SimpleStateDef.TPSMode);
         playerInControl = false;
-        //Debug.Log(gameObject.name + " is unselected.");
-
-        GameObject.Destroy(light);
-
-        // When we exit TPS mode, tell the Toy to perform its idle behavior
-        SetIdleBehavior(IdleTreeRoot);
+        GameObject.Destroy(ToySelectLight);
+		if (AccessorySelectLight)
+			GameObject.Destroy (AccessorySelectLight);
     }
 
     /// <summary>
@@ -441,7 +457,6 @@ public class Toy : SmartObject {
     public void SetIdleBehavior(Node root) //recompile
     {
 		if (root != null) {
-			Debug.Log ("Idle Behavior root given NOT null");
 			IdleTreeRoot = root;
             if (bagent != null) { bagent.StopBehavior(); }
 			bagent = new BehaviorAgent(IdleTreeRoot);
@@ -450,6 +465,14 @@ public class Toy : SmartObject {
 			Debug.Log ("Toy.SetIdleBehavior given null input");
 		}
     }
+
+	/// <summary>
+	/// Changes the idle tree root, WITHOUT starting the new behavior. The new behavior can be started by calling OnPlay().
+	/// </summary>
+	/// <param name="root">Behavior to queue.</param>
+	public void ChangeIdleRoot(Node root){
+		IdleTreeRoot = root;
+	}
 
     /// <summary>
     /// Tell the Toy it's in a Playzone

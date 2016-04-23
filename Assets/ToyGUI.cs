@@ -1,11 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 /// <summary>
 /// The MonoBehaviour in charge of controlling the NGUI Toy interface. Handles ONLY the NGUI Toy interface.
 /// </summary>
 public class ToyGUI : MonoBehaviour {
 
+	#region GUI fields
     /// <summary>
     /// The Tabs available in the NGUI, used to switch selections of prefabs based on category in the Spawn Menu area.
     /// </summary>
@@ -46,6 +48,14 @@ public class ToyGUI : MonoBehaviour {
 	GUIStates CurrentGUIState;
 
 	/// <summary>
+	/// The GameObject holding all ToyBoxGUITabs.
+	/// </summary>
+	[SerializeField]
+	GameObject TabObject;
+	#endregion
+
+	#region EDIT_MODE fields
+	/// <summary>
 	/// The Toy that has been selected by the player during scene setup. Will be null if not in EDIT_MODE.
 	/// </summary>
 	Toy SelectedToy;
@@ -54,20 +64,34 @@ public class ToyGUI : MonoBehaviour {
 	/// The Accessory that has been selected by the player during scene setup. Will be null if not in EDIT_MODE.
 	/// </summary>
 	Accessory SelectedAccessory;
+	#endregion
 
+	#region SPAWN_MODE fields
+	/// <summary>
+	/// The prefab selected in the Spawn Menu that is to be spawned. Set and de-set on entering and exiting SPAWN_MODE.
+	/// </summary>
 	GameObject prefabToSpawn;
 
+	/// <summary>
+	/// The list containing all the Toys in the scene spawned by the player from the menu. Only added to/removed from in SPAWN_MODE.
+	/// </summary>
+	List<Toy> AllToys;
 
-    /// <summary>
-    /// The GameObject holding all ToyBoxGUITabs.
-    /// </summary>
-    [SerializeField]
-	GameObject TabObject;
+	/// <summary>
+	/// The list containing all Accessories in the scene spawned by the player from the menu. Only added to/removed from in SPAWN_MODE.
+	/// </summary>
+	List<Accessory> AllAccessories;
+	#endregion
+
+
 
 	GameObject[] Tabs;
 
 	// Use this for initialization
 	void Start () {
+		AllToys = new List<Toy> ();
+		AllAccessories = new List<Accessory> ();
+
         //Initiating tabs
         Tabs = new GameObject[System.Enum.GetNames(typeof(TabTypes)).Length];
 		foreach(Transform tab in TabObject.transform){
@@ -126,7 +150,10 @@ public class ToyGUI : MonoBehaviour {
 				if (SelectedToy && Physics.Raycast (ray, out hit)) {
 					Accessory targetAcc = hit.collider.gameObject.GetComponent (typeof(Accessory)) as Accessory;
 					if (targetAcc) {
-						SelectedToy.SetTargetAccessory (hit.collider.gameObject);
+						Debug.Log (SelectedToy.gameObject.name + " is queued to equip " + targetAcc.name);
+						SelectedToy.ChangeIdleRoot(IdleBehaviors.IdleStandDuringAction(IdleBehaviors.MoveAndEquipAccessory(SelectedToy, targetAcc)));
+						SelectedToy.SetTargetAccessory (targetAcc.gameObject);
+						SelectedToy.SpawnTargetAccessoryLight ();
 					} else {
 						NO_MODE ();
 					}
@@ -226,10 +253,50 @@ public class ToyGUI : MonoBehaviour {
 		RaycastHit hit;
 		if(Physics.Raycast(ray, out hit))
 		{
-			Instantiate(prefabToSpawn, hit.point, Quaternion.identity);
+			GameObject newThing = GameObject.Instantiate(prefabToSpawn, hit.point, Quaternion.identity) as GameObject;
+			Toy toy = newThing.GetComponent<Toy>();
+			Accessory acc = newThing.GetComponent (typeof(Accessory)) as Accessory;
+			if (toy) {
+				AllToys.Add (toy);
+			} else if (acc) {
+				AllAccessories.Add (acc);
+			}
 		}
     }
 		
+	/// <summary>
+	/// Stops the Behavior Agents of all toys in the scene.
+	/// </summary>
+	public void StopAllBehaviors(){
+		foreach (Toy toy in AllToys) {
+			toy.OnPause();
+		}		
+	}
+
+	/// <summary>
+	/// Starts the Behavior Agents of all toys in the scene.
+	/// </summary>
+	public void StartAllBehaviors(){
+		foreach (Toy toy in AllToys) {
+			toy.OnPlay();
+		}
+	}
+
+	/// <summary>
+	/// Removes all Toys and Accessories spawned by the player in the scene.
+	/// </summary>
+	public void ResetScene(){
+		StopAllBehaviors ();
+		foreach (Toy toy in AllToys) {
+			GameObject.Destroy (toy.gameObject);
+		}
+		foreach (Accessory acc in AllAccessories) {
+			GameObject.Destroy (acc.gameObject);
+		}
+		AllToys.Clear ();
+		AllAccessories.Clear ();
+	}
+
 
     /// <summary>
     /// Switches from the currently active tab to the tab that calls this method.
