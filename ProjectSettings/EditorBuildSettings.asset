@@ -15,5 +15,7 @@ EditorBuildSettings:
     path: Assets/game-science/Scenes/FinalDemo/Week9Demo.unity
   - enabled: 0
     path: Assets/game-science/Scenes/NewNGUI.unity
-  - enabled: 1
+  - enabled: 0
     path: Assets/game-science/Scenes/Week11TestScene.unity
+  - enabled: 1
+    path: Assets/game-science/Scenes/Week12Demo.unity
