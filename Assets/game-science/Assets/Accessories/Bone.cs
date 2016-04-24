@@ -29,6 +29,7 @@ public class Bone : Accessory
 
     public override Node ToyUse(Toy toy)
     {
+        /*
         foreach(var gameObj in GameObject.FindGameObjectsWithTag("Skelly"))
         {
             Debug.Log("We in");
@@ -45,7 +46,13 @@ public class Bone : Accessory
         }
 
         Debug.Log("Why you wake up?");
-        return IdleBehaviors.CountTo3();
+
+        //return IdleBehaviors.CountTo3();
+        */
+
+        // 4/23 
+        // For now, let the bone show some of the emojis
+        return IdleBehaviors.GiveOffAllEmojis(toy);
 
     }
 }

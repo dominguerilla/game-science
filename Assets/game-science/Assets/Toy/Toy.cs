@@ -398,7 +398,6 @@ public class Toy : SmartObject {
         AccessoryArchetype = acc.Archetype;
         Debug.Log("Added " + acc.Archetype + " to " + this.Archetype + "'s inventory.");
 
-        // Set the Accessory's OnUse to be this Toy's IdleRoot
         // IdleTreeRoot = acc.OnUse(this);
     }
 
@@ -458,10 +457,15 @@ public class Toy : SmartObject {
     {
 		if (root != null) {
 			IdleTreeRoot = root;
+            //print("SetIdleBehavior 1");
             if (bagent != null) { bagent.StopBehavior(); }
-			bagent = new BehaviorAgent(IdleTreeRoot);
-			bagent.StartBehavior();
-		} else {
+
+            //print("SetIdleBehavior 2");
+            bagent = new BehaviorAgent(IdleTreeRoot);
+            //print("SetIdleBehavior 3");
+            bagent.StartBehavior();
+            //print("SetIdleBehavior 4");
+        } else {
 			Debug.Log ("Toy.SetIdleBehavior given null input");
 		}
     }
@@ -662,9 +666,6 @@ public class Toy : SmartObject {
         {
             bagent = new BehaviorAgent(IdleTreeRoot);
             bagent.StartBehavior();
-
-            print("Toy.DEBUG_StartBehavior: Testing Emoji");
-            ShowEmoji(Heart_Emoji);
         }
         else
         {

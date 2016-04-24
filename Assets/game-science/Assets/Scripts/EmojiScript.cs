@@ -22,7 +22,7 @@ public class EmojiScript : MonoBehaviour {
             gameObject.transform.position.z);
 
         time += Time.deltaTime;
-	    if(time > 2)
+	    if(time > 2.5)
         {
             gameObject.SetActive(false);
             Destroy(gameObject);

@@ -20,6 +20,37 @@ public static class IdleBehaviors {
             ));
     }
 
+    /// <summary>
+    /// Tell the Toy to show all the Emojis
+    /// </summary>
+    /// <param name="toy"></param>
+    /// <returns></returns>
+    public static Node GiveOffAllEmojis(Toy toy)
+    {
+        return new DecoratorLoop(
+            new Sequence(
+                new LeafInvoke(() => {
+                    toy.ShowEmoji(EmojiScript.EmojiTypes.Anger_Emoji);
+                }),
+                new LeafWait(1000),
+
+                new LeafInvoke(() => {
+                    toy.ShowEmoji(EmojiScript.EmojiTypes.Heart_Emoji);
+                }),
+                new LeafWait(1000),
+
+                new LeafInvoke(() => {
+                    toy.ShowEmoji(EmojiScript.EmojiTypes.Hurt_Emoji);
+                }),
+                new LeafWait(1000),
+
+                new LeafInvoke(() => {
+                    toy.ShowEmoji(EmojiScript.EmojiTypes.Laugh_Emoji);
+                }),
+                new LeafWait(1000)
+            ));
+    }
+
     //[Affordance]
     public static Node TestBehavior(Toy toy)
     {
