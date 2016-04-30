@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
-public class Utils {
+public class Utils : MonoBehaviour {
 
     public static Vector3 ORIGIN_VECTOR = new Vector3(0, 0, 0);
 
@@ -47,4 +48,38 @@ public class Utils {
         return returnVector;
     }
 
+    // Get a random Other Toy in the scene as GameObject
+    public static GameObject GetRandomOtherToyInSceneAsGameObject(Toy toy)
+    {
+        if (!toy)
+        {
+            print("Utils.GetRandomOther: no Toy given as input");
+            return null;
+        }
+
+        Object[] ToysInScene = FindObjectsOfType(typeof(Toy));
+        List<GameObject> tempList;
+
+        // Make sure there's at least one other Toy
+        if (ToysInScene.Length > 1)
+        {
+            tempList = new List<GameObject>(ToysInScene.Length);
+        }
+        else
+        {
+            return null;
+        }
+
+        // Copy over
+        foreach (Object ob in ToysInScene)
+        {
+            tempList.Add(ob as GameObject);
+        }
+
+        // Remove the Toy we don't want
+        tempList.Remove(toy.gameObject);
+
+        // At least 1 toy in tempList
+        return tempList[Random.Range(0, tempList.Count - 1)];
+    }
 }
