@@ -1300,6 +1300,7 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   playerInControl: 1
+  DEBUG_Accessory_1: {fileID: 147016, guid: 874111a1823bb434b93741ec14721a6a, type: 2}
   targetAccessory: {fileID: 0}
   targetToy: {fileID: 0}
   team: 2
@@ -1447,6 +1448,10 @@ Prefab:
       propertyPath: team
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: DEBUG_Accessory_1
+      value: 
+      objectReference: {fileID: 147016, guid: 874111a1823bb434b93741ec14721a6a, type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 171864}

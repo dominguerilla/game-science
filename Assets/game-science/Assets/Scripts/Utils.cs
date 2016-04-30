@@ -82,4 +82,15 @@ public class Utils : MonoBehaviour {
         // At least 1 toy in tempList
         return tempList[Random.Range(0, tempList.Count - 1)];
     }
+
+    /// <summary>
+    /// Return true if target is within 3f of Toy
+    /// </summary>
+    /// <param name="toy"></param>
+    /// <param name="target"></param>
+    /// <returns></returns>
+    public static bool TargetIsInRange(Toy toy, GameObject target)
+    {
+        return Vector3.Distance(toy.transform.position, target.transform.position) < 3f;
+    }
 }

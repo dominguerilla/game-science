@@ -20,7 +20,6 @@ public class Rose : NeoAccessory {
 
     private int TargetPriority, ActionPriority, EffectPriority;
 
-
     void Update()
     {
         IdleRotate(transform, RotateSpeed);
@@ -54,14 +53,40 @@ public class Rose : NeoAccessory {
         Action =
             new DecoratorLoop(
                 new SequenceParallel(
-                    // IdleBehaviors.WalkTo(Targets.get(0)),
+                    new WalkToToy(toy, Targets[0].GetComponent<Toy>()),
                     new Sequence(
-                        // IdleBehaviors.CheckForTargetInRange(Targets.get(0))),
+                        new LeafAssert(() => {
+                            return Utils.TargetIsInRange(toy, Targets[0]);
+                        }),
                         new LeafInvoke(() => {
-                    // toy.ShowEmoji(EmojiScript.EmojiTypes.Laugh_Emoji);
-                })),
+                            // TODO: need to initialize Toy
+                            // toy.ShowEmoji(EmojiScript.EmojiTypes.Laugh_Emoji);
+                        }),
+                        new LeafInvoke(() => { Effects(); })
+                        ),
                     new LeafInvoke(() => {
-                // toy.ShowEmoji(EmojiScript.EmojiTypes.Heart_Emoji);
-            })));
+                        // TODO: need to initialize Toy
+                        // toy.ShowEmoji(EmojiScript.EmojiTypes.Heart_Emoji);
+                    })));
+    }
+
+    public override Node GetParameterizedAction(Toy toy, NeoAccessory targetAccessory,
+        NeoAccessory effectAccessory)
+    {
+        List<GameObject> InputTargets = targetAccessory.GetTargets();
+
+        return new DecoratorLoop(
+                new SequenceParallel(
+                    new WalkToToy(toy, InputTargets[0].GetComponent<Toy>()),
+                    new Sequence(
+                        new LeafAssert(() => {
+                            return Utils.TargetIsInRange(toy, InputTargets[0]); }),
+                        new LeafInvoke(() => {
+                            toy.ShowEmoji(EmojiScript.EmojiTypes.Laugh_Emoji); }),
+                        new LeafInvoke(() => { effectAccessory.Effects(); })
+                        ),
+                    new LeafInvoke(() => {
+                        toy.ShowEmoji(EmojiScript.EmojiTypes.Heart_Emoji);
+                    })));
     }
 }

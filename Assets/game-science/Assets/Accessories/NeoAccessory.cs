@@ -20,10 +20,13 @@ public abstract class NeoAccessory : MonoBehaviour{
 
 	private int TargetPriority, ActionPriority, EffectPriority;
 
-	///<summary>
-	/// Determines whether or not an Accessory can be picked up and equipped by a Toy.
-	///</summary>
-	public abstract bool IsEquippable{ get; }
+    // The Data Logger in the scene
+    private DataLogger logger;
+
+    ///<summary>
+    /// Determines whether or not an Accessory can be picked up and equipped by a Toy.
+    ///</summary>
+    public abstract bool IsEquippable{ get; }
 
 	/// <summary>
 	/// The model that is shown on the Toy.
@@ -51,9 +54,24 @@ public abstract class NeoAccessory : MonoBehaviour{
 		None = 9
 	}
 
+    /// <summary>
+    /// Enum to ensure priorities are indexed correctly
+    /// </summary>
+    public enum PriorityIndex
+    {
+        Target = 0,
+        Action = 1,
+        Effect = 2
+    }
+
 	void Start(){
 		Targets = new List<GameObject> ();
-	}
+
+        // Data logging
+        GameObject logObject = GameObject.FindGameObjectWithTag("Logger");
+        logger = logObject.GetComponent(typeof(DataLogger)) as DataLogger;
+        if (logger != null) { logger.LogNewItem(this); }
+    }
 
 	/// <summary>
 	/// Initializes the priorities of the three components. Should set the values for TargetPriority, ActionPriority, and EffectPriority.
@@ -96,9 +114,9 @@ public abstract class NeoAccessory : MonoBehaviour{
 	/// <returns>The priorities.</returns>
 	public virtual int[] GetPriorities(){
 		int[] priorities = new int[3];
-		priorities [0] = TargetPriority;
-		priorities [1] = ActionPriority;
-		priorities [2] = EffectPriority;
+		priorities [(int)PriorityIndex.Target] = TargetPriority;
+		priorities [(int)PriorityIndex.Action] = ActionPriority;
+		priorities [(int)PriorityIndex.Effect] = EffectPriority;
 		return priorities;
 	}
 
@@ -123,4 +141,15 @@ public abstract class NeoAccessory : MonoBehaviour{
 		Destroy(this.gameObject);
 	}
 
+    /// <summary>
+    /// Get a parameterized behavior for this NeoAccessory
+    /// Target(s) provided by targetAccessory, effects by effectAccessory
+    /// Action is provided by this accessory
+    /// </summary>
+    /// <param name="toy">The Toy that performs the behavior</param>
+    /// <param name="targetAccessory">The target(s)</param>
+    /// <param name="effectAccessory">The effect(s)</param>
+    /// <returns></returns>
+    public abstract Node GetParameterizedAction(Toy toy, NeoAccessory targetAccessory,
+        NeoAccessory effectAccessory);
 }

@@ -58,6 +58,13 @@ public class Toy : SmartObject {
     //The current ability given by the Accessory equipped by this Toy.
 	private Accessory equippedAccessory;
 
+    // The accessories this Toy has
+    private List<NeoAccessory> NeoAccessories = new List<NeoAccessory>();
+
+    // Debug fields for testing NeoAccessories
+    public GameObject DEBUG_Accessory_1;
+    //DEBUG_Accessory_2;
+
     //The current Accessory Archetype of the Toy. Currently, only one is able to be stored at a time.
     private string AccessoryArchetype;
 
@@ -74,10 +81,8 @@ public class Toy : SmartObject {
     public int team;
 
     // The Emojis for this Toy
-    public GameObject Hurt_Emoji;
-    public GameObject Anger_Emoji;
-    public GameObject Laugh_Emoji;
-    public GameObject Heart_Emoji;
+    public GameObject Hurt_Emoji,
+        Anger_Emoji, Laugh_Emoji, Heart_Emoji;
 
     #region setters
     // All states are initially set to true
@@ -206,6 +211,13 @@ public class Toy : SmartObject {
         // Set state booleans
         this.SetInitialStates();
 
+        // DEBUG: Add debug accessories to this Toy's accessory list
+        if (DEBUG_Accessory_1)
+        {
+            Debug.Log("Toy.Start: Adding debug accessories");
+            NeoAccessories.Add(DEBUG_Accessory_1.GetComponent<NeoAccessory>());
+        }
+
         agent = GetComponent<NavMeshAgent>();
         anim = GetComponent<Animator>();
         anim.SetBool("isWalk", false);
@@ -277,6 +289,7 @@ public class Toy : SmartObject {
 
         // If Toy is inside of a Playzone, we may want to do something to it here
         // if(CheckStates(SimpleStateDef.IsInPlayzone)){ }
+
     }
 
     #region Public interface functions
@@ -468,6 +481,49 @@ public class Toy : SmartObject {
         } else {
 			Debug.Log ("Toy.SetIdleBehavior given null input");
 		}
+    }
+
+    /// <summary>
+    /// Computes idle behavior Node from this Toy's accessories
+    /// Does so using the priorities of each of the accessories
+    /// </summary>
+    public void SetIdleBehaviorFromAccessories()
+    {
+        int largestTargetPriority = -1,
+            largestActionPriority = -1,
+            largestEffectPriority = -1;
+
+        NeoAccessory targetAccessory = null,
+            actionAccessory = null,
+            effectAccessory = null;
+
+        // Get the accessory for target/action/effect based on largest priorities
+        foreach(NeoAccessory acc in NeoAccessories)
+        {
+            int[] currentPriorities = acc.GetPriorities();
+            if(currentPriorities[(int)NeoAccessory.PriorityIndex.Target] >
+                largestTargetPriority)
+            {
+                largestTargetPriority = currentPriorities[(int)NeoAccessory.PriorityIndex.Target];
+                targetAccessory = acc;
+            }
+            if (currentPriorities[(int)NeoAccessory.PriorityIndex.Action] >
+               largestActionPriority)
+            {
+                largestActionPriority = currentPriorities[(int)NeoAccessory.PriorityIndex.Action];
+                actionAccessory = acc;
+            }
+            if (currentPriorities[(int)NeoAccessory.PriorityIndex.Effect] >
+               largestEffectPriority)
+            {
+                largestEffectPriority = currentPriorities[(int)NeoAccessory.PriorityIndex.Effect];
+                effectAccessory = acc;
+            }
+        }
+
+        // Build the node from these accessories
+        IdleTreeRoot = actionAccessory.GetParameterizedAction(this,
+            targetAccessory, effectAccessory);
     }
 
 	/// <summary>

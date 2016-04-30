@@ -48,6 +48,12 @@ public class DataLogger : MonoBehaviour {
         LogMessage(newItem + " has entered the scene");
     }
 
+    // Write this accessory to the log
+    public void LogNewItem(NeoAccessory newItem)
+    {
+        LogMessage(newItem + " has entered the scene");
+    }
+
     // Write this playzone to the log
     public void LogNewItem(Playzone newItem)
     {
