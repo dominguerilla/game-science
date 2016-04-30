@@ -73,6 +73,7 @@ public class Rose : NeoAccessory {
     public override Node GetParameterizedAction(Toy toy, NeoAccessory targetAccessory,
         NeoAccessory effectAccessory)
     {
+        // If InputTargets doesn't contain a Toy, this won't work out well
         List<GameObject> InputTargets = targetAccessory.GetTargets();
 
         return new DecoratorLoop(
@@ -81,6 +82,7 @@ public class Rose : NeoAccessory {
                     new Sequence(
                         new LeafAssert(() => {
                             return Utils.TargetIsInRange(toy, InputTargets[0]); }),
+                        // The following 2 should only run if target is in range
                         new LeafInvoke(() => {
                             toy.ShowEmoji(EmojiScript.EmojiTypes.Laugh_Emoji); }),
                         new LeafInvoke(() => { effectAccessory.Effects(); })

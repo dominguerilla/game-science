@@ -489,6 +489,12 @@ public class Toy : SmartObject {
     /// </summary>
     public void SetIdleBehaviorFromAccessories()
     {
+        if(NeoAccessories.Count < 1)
+        {
+            Debug.Log("Toy.SetIdleBehaviorFromAccessories: no accessories");
+            return;
+        }
+
         int largestTargetPriority = -1,
             largestActionPriority = -1,
             largestEffectPriority = -1;
@@ -498,6 +504,7 @@ public class Toy : SmartObject {
             effectAccessory = null;
 
         // Get the accessory for target/action/effect based on largest priorities
+        // If the Toy only has one accessory, they should all just be the same
         foreach(NeoAccessory acc in NeoAccessories)
         {
             int[] currentPriorities = acc.GetPriorities();
