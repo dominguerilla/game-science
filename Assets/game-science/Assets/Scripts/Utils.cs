@@ -2,7 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class Utils : MonoBehaviour {
+public class Utils : MonoBehaviour
+{
 
     public static Vector3 ORIGIN_VECTOR = new Vector3(0, 0, 0);
 
@@ -48,6 +49,40 @@ public class Utils : MonoBehaviour {
         return returnVector;
     }
 
+    internal static List<GameObject> GetAllOtherToysInSceneAsGameObjects(Toy toy)
+    {
+        if (!toy)
+        {
+            print("Utils.GetAllOtherToys: no Toy given as input");
+            return null;
+        }
+
+        Object[] ToysInScene = FindObjectsOfType(typeof(Toy));
+        List<GameObject> tempList;
+
+        // Make sure there's at least one other Toy
+        if (ToysInScene.Length > 1)
+        {
+            tempList = new List<GameObject>(ToysInScene.Length);
+        }
+        else
+        {
+            return null;
+        }
+
+        // Copy over
+        foreach (Object ob in ToysInScene)
+        {
+            tempList.Add(ob as GameObject);
+        }
+
+        // Remove the Toy we don't want
+        tempList.Remove(toy.gameObject);
+
+        // Return the rest
+        return tempList;
+    }
+
     // Get a random Other Toy in the scene as GameObject
     public static GameObject GetRandomOtherToyInSceneAsGameObject(Toy toy)
     {
@@ -80,7 +115,7 @@ public class Utils : MonoBehaviour {
         tempList.Remove(toy.gameObject);
 
         // At least 1 toy in tempList
-        return tempList[Random.Range(0, tempList.Count - 1)];
+        return tempList[Random.Range(0, tempList.Count)];
     }
 
     /// <summary>
@@ -93,4 +128,16 @@ public class Utils : MonoBehaviour {
     {
         return Vector3.Distance(toy.transform.position, target.transform.position) < 3f;
     }
+
+    // Same thing, for multiple targets
+    public static bool TargetIsInRange(Toy toy, List<GameObject> targets)
+    {
+        foreach (GameObject ob in targets)
+        {
+            if (Vector3.Distance(toy.transform.position, ob.transform.position) < 3f)
+                return true;
+        }
+        return false;
+    }
+
 }
