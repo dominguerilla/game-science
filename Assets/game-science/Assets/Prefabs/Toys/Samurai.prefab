@@ -438,7 +438,7 @@ GameObject:
   - 54: {fileID: 5484294}
   m_Layer: 0
   m_Name: Samurai
-  m_TagString: Untagged
+  m_TagString: Toy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1300,7 +1300,6 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   playerInControl: 1
-  DEBUG_Accessory_1: {fileID: 195474, guid: 4c18104e1628cee418590e95ee61f4e4, type: 2}
   targetAccessory: {fileID: 0}
   targetToy: {fileID: 0}
   team: 2
@@ -1452,6 +1451,10 @@ Prefab:
       propertyPath: DEBUG_Accessory_1
       value: 
       objectReference: {fileID: 195474, guid: 4c18104e1628cee418590e95ee61f4e4, type: 2}
+    - target: {fileID: 0}
+      propertyPath: m_TagString
+      value: Toy
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 171864}

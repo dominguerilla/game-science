@@ -32,9 +32,9 @@ public class Joke : NeoAccessory {
     public override void InitializePriorities()
     {
         //are these just arbitrary?
-        TargetPriority = 9;
-        ActionPriority = 56;
-        EffectPriority = 11;
+        TargetPriority = 10;
+        ActionPriority = 57;
+        EffectPriority = 12;
     }
 
     public override void InitializeTargets()

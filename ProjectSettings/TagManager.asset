@@ -15,6 +15,7 @@ TagManager:
   - Speed
   - Accessory
   - Logger
+  - Toy
   layers:
   - Default
   - TransparentFX
