@@ -63,7 +63,7 @@ public class Utils : MonoBehaviour
         // Make sure there's at least one other Toy
         if (ToysInScene.Length > 1)
         {
-            tempList = new List<GameObject>(ToysInScene.Length);
+            tempList = new List<GameObject>();
         }
         else
         {

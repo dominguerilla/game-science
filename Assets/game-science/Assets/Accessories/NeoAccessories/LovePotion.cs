@@ -37,7 +37,15 @@ public class LovePotion : NeoAccessory {
     public override void InitializeTargets()
     {
         // Target is all other Toys in scene at time of initialization
-        Targets.AddRange(Utils.GetAllOtherToysInSceneAsGameObjects(this.toy));
+        // Commenting out for debug purposes
+        List<GameObject> tempList = Utils.GetAllOtherToysInSceneAsGameObjects(this.toy);
+        foreach (GameObject o in tempList)
+        {
+            Debug.Log("LovePotion add: " + o);
+            Targets.Add(o);
+        }
+
+        //Targets.AddRange(Utils.GetAllOtherToysInSceneAsGameObjects(this.toy));
 
         if(Targets.Count < 1)
         {   // No other toys, so just add this Toy to avoid errors

@@ -188,16 +188,10 @@ public abstract class NeoAccessory : MonoBehaviour{
     {
         Debug.Log("NeoAccessory.DEBUG_PrintTargets for " + this);
         Debug.Log("Count = " + Targets.Count);
-        foreach (GameObject o in Targets)
+        for(int i = 0; i < Targets.Count; i++)
         {
-            if (!o.GetComponent<Toy>())
-            {
-                Debug.Log("\t" + o.GetComponent<Toy>().name);
-            }
-            else
-            {
-                Debug.Log("\t(No Toy in Object)");
-            }
+            Debug.Log("\tNull?" + Targets[i] == null
+                + " Toy? " + Targets[i].GetComponent<Toy>());
         }
     }
 }
