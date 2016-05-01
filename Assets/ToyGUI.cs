@@ -149,12 +149,20 @@ public class ToyGUI : MonoBehaviour {
 				//If a Toy has been selected and the user right clicks on an Accessory, the toy will go to equip it.
 				if (SelectedToy && Physics.Raycast (ray, out hit)) {
 					Accessory targetAcc = hit.collider.gameObject.GetComponent (typeof(Accessory)) as Accessory;
-					if (targetAcc) {
+                    NeoAccessory targetNeoAcc = hit.collider.gameObject.GetComponent(typeof(NeoAccessory)) as NeoAccessory;
+                    if (targetAcc) {
 						Debug.Log (SelectedToy.gameObject.name + " is queued to equip " + targetAcc.name);
 						SelectedToy.ChangeIdleRoot(IdleBehaviors.IdleStandDuringAction(IdleBehaviors.MoveAndEquipAccessory(SelectedToy, targetAcc)));
 						SelectedToy.SetTargetAccessory (targetAcc.gameObject);
 						SelectedToy.SpawnTargetAccessoryLight ();
-					} else {
+					} else if (targetNeoAcc) {
+                        // Do the same thing for NeoAccessories
+                        Debug.Log(SelectedToy.gameObject.name + " is queued to equip " + targetNeoAcc.name);
+                        SelectedToy.ChangeIdleRoot(IdleBehaviors.IdleStandDuringAction
+                            (IdleBehaviors.MoveAndEquipAccessory(SelectedToy, targetNeoAcc)));
+                        SelectedToy.SetTargetAccessory(targetNeoAcc.gameObject);
+                        SelectedToy.SpawnTargetAccessoryLight();
+                    } else {
 						NO_MODE ();
 					}
 				}

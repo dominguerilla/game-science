@@ -143,6 +143,21 @@ public static class IdleBehaviors {
     }
 
     /// <summary>
+    /// Moves the Toy to the position of the NeoAccessory and then attempts to equip it.
+    /// </summary>
+    /// <param name="toy"></param>
+    /// <param name="acc"></param>
+    /// <returns></returns>
+    public static Node MoveAndEquipAccessory(Toy toy, NeoAccessory acc)
+    {
+        return new Sequence(
+            new WalkTo(toy, acc.gameObject.transform.position),
+            new LeafAssert(() => { return acc.gameObject.activeInHierarchy; }),
+            new LeafInvoke(() => { toy.Equip(acc); })
+        );
+    }
+
+    /// <summary>
     /// Makes the Attacker move to the Defender and attack repeatedly until the defender is dead.
     /// </summary>
     /// <param name="attacker"></param>

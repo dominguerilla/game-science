@@ -62,8 +62,7 @@ public class Toy : SmartObject {
     private List<NeoAccessory> NeoAccessories = new List<NeoAccessory>();
 
     // Debug fields for testing NeoAccessories
-    public GameObject DEBUG_Accessory_1;
-    //DEBUG_Accessory_2;
+    // public GameObject DEBUG_Accessory_1;
 
     //The current Accessory Archetype of the Toy. Currently, only one is able to be stored at a time.
     private string AccessoryArchetype;
@@ -116,9 +115,11 @@ public class Toy : SmartObject {
     public void SetTargetAccessory(GameObject target)
     {
         Debug.Log("SetTargetAccessory: " + target);
-        Accessory acc = target.GetComponent (typeof(Accessory)) as Accessory;
-		if (acc) {
-			this.targetAccessory = target;
+        Accessory acc = target.GetComponent(typeof(Accessory)) as Accessory;
+        NeoAccessory neoAcc = target.GetComponent(typeof(NeoAccessory)) as NeoAccessory;
+        if (acc)
+        {
+            this.targetAccessory = target;
             if (playerInControl)
             {   // Equip the accessory directly
                 DEBUG_EquipAccessoryDirectly(acc);
@@ -126,15 +127,20 @@ public class Toy : SmartObject {
             else
             {   // New behavior: pick up the accessory
                 //SetIdleBehavior(IdleBehaviors.IdleStandDuringAction(IdleBehaviors.MoveAndEquipAccessory(this, acc)));
-				ChangeIdleRoot(IdleBehaviors.IdleStandDuringAction(IdleBehaviors.MoveAndEquipAccessory(this, acc)));
-			}
+                ChangeIdleRoot(IdleBehaviors.IdleStandDuringAction(IdleBehaviors.MoveAndEquipAccessory(this, acc)));
+            }
 
             // NOTE: Depending on implementation, may want to do this too
             //Equip(acc);
-			//targetAccessory = null;
-		} else {
-			Debug.Log ("No Accessory found in given Game Object!");
-		}
+            //targetAccessory = null;
+        }
+        else if (neoAcc)
+        {
+            ChangeIdleRoot(IdleBehaviors.IdleStandDuringAction(IdleBehaviors.MoveAndEquipAccessory(this, neoAcc)));
+        }
+        else {
+            Debug.Log("No Accessory found in given Game Object!");
+        }
     }
 
     #endregion
@@ -212,11 +218,13 @@ public class Toy : SmartObject {
         this.SetInitialStates();
 
         // DEBUG: Add debug accessories to this Toy's accessory list
-        if (DEBUG_Accessory_1)
+        /*if (DEBUG_Accessory_1)
         {
             Debug.Log("Toy.Start: Adding debug accessories");
-            NeoAccessories.Add(DEBUG_Accessory_1.GetComponent<NeoAccessory>());
-        }
+            NeoAccessory neoAcc = DEBUG_Accessory_1.GetComponent<NeoAccessory>();
+            neoAcc.SetToy(this);
+            NeoAccessories.Add(neoAcc);
+        }*/
 
         agent = GetComponent<NavMeshAgent>();
         anim = GetComponent<Animator>();
@@ -289,6 +297,12 @@ public class Toy : SmartObject {
 
         // If Toy is inside of a Playzone, we may want to do something to it here
         // if(CheckStates(SimpleStateDef.IsInPlayzone)){ }
+
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            Debug.Log("Toy.Update: P key pressed");
+            SetIdleBehaviorFromAccessories();
+        }
 
     }
 
@@ -415,6 +429,17 @@ public class Toy : SmartObject {
     }
 
     /// <summary>
+    /// Equip the NeoAccessory
+    /// </summary>
+    /// <param name="acc"></param>
+    public void Equip(NeoAccessory acc)
+    {
+        Debug.Log("Equipping NeoAccessory: " + acc);
+        NeoAccessories.Add(acc);
+        acc.SetToy(this);
+    }
+
+    /// <summary>
     /// Removes the specified Accessory from the Inventory of this Toy.
     /// </summary>
     /// <param name="acc"></param>
@@ -495,6 +520,8 @@ public class Toy : SmartObject {
             return;
         }
 
+
+
         int largestTargetPriority = -1,
             largestActionPriority = -1,
             largestEffectPriority = -1;
@@ -503,11 +530,16 @@ public class Toy : SmartObject {
             actionAccessory = null,
             effectAccessory = null;
 
+
         // Get the accessory for target/action/effect based on largest priorities
         // If the Toy only has one accessory, they should all just be the same
         foreach(NeoAccessory acc in NeoAccessories)
         {
             int[] currentPriorities = acc.GetPriorities();
+            Debug.Log("\tCurrent Priorities: " +
+                currentPriorities[(int)NeoAccessory.PriorityIndex.Target] + ", " +
+                currentPriorities[(int)NeoAccessory.PriorityIndex.Action] + ", " +
+                currentPriorities[(int)NeoAccessory.PriorityIndex.Effect]);
             if(currentPriorities[(int)NeoAccessory.PriorityIndex.Target] >
                 largestTargetPriority)
             {

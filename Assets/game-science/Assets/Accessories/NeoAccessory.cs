@@ -14,14 +14,14 @@ using TreeSharpPlus;
 /// </summary>
 public abstract class NeoAccessory : MonoBehaviour{
 
-	private List<GameObject> Targets;
-	private Node Action;
+	protected List<GameObject> Targets;
+	protected Node Action;
 	public abstract void Effects();
 
-	private int TargetPriority, ActionPriority, EffectPriority;
+	protected int TargetPriority, ActionPriority, EffectPriority;
 
-    // The Data Logger in the scene
-    private DataLogger logger;
+    private DataLogger logger;  // The Data Logger in the scene
+    protected Toy toy;    // The Toy that's holding this accessory
 
     ///<summary>
     /// Determines whether or not an Accessory can be picked up and equipped by a Toy.
@@ -66,6 +66,9 @@ public abstract class NeoAccessory : MonoBehaviour{
 
 	void Start(){
 		Targets = new List<GameObject> ();
+        InitializePriorities();
+        InitializeTargets();
+        InitializeAction();
 
         // Data logging
         GameObject logObject = GameObject.FindGameObjectWithTag("Logger");
@@ -152,4 +155,21 @@ public abstract class NeoAccessory : MonoBehaviour{
     /// <returns></returns>
     public abstract Node GetParameterizedAction(Toy toy, NeoAccessory targetAccessory,
         NeoAccessory effectAccessory);
+
+    /// <summary>
+    /// Register a Toy for this accessory.
+    /// </summary>
+    /// <param name="toy"></param>
+    public void SetToy(Toy toy)
+    {
+        this.toy = toy;
+    }
+
+    /// <summary>
+    /// Get rid of this accessoy when it gets picked up
+    /// </summary>
+    public void OnUse()
+    {
+        this.gameObject.SetActive(false);
+    }
 }

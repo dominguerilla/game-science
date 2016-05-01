@@ -114,10 +114,10 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 1
   m_Enabled: 1
-  m_Radius: 0.017877841
-  m_Height: 0.16219737
+  m_Radius: 0.1
+  m_Height: 0
   m_Direction: 1
-  m_Center: {x: 0, y: 0.030098835, z: 0}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
@@ -137,6 +137,18 @@ Prefab:
       propertyPath: equipModel
       value: 
       objectReference: {fileID: 103826}
+    - target: {fileID: 0}
+      propertyPath: m_Height
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_Center.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_Radius
+      value: 0.1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 103826}

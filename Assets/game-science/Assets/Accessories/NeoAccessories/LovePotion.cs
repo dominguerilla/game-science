@@ -12,14 +12,6 @@ public class LovePotion : NeoAccessory {
     public override GameObject EquipModel { get { return equipModel; } }
     public override EquipSlots EquipSlot { get { return EquipSlots.LeftHand; } }
 
-    // The Toy holding this accessory
-    private Toy toy;
-
-    private List<GameObject> Targets;
-    private Node Action;
-
-    private int TargetPriority, ActionPriority, EffectPriority;
-
     void Update()
     {
         IdleRotate(transform, RotateSpeed);
@@ -45,7 +37,7 @@ public class LovePotion : NeoAccessory {
     public override void InitializeTargets()
     {
         // Target is all other Toys in scene at time of initialization
-        Targets.AddRange(Utils.GetAllOtherToysInSceneAsGameObjects(toy));
+        Targets.AddRange(Utils.GetAllOtherToysInSceneAsGameObjects(this.toy));
     }
 
     public override void InitializeAction()
@@ -56,14 +48,14 @@ public class LovePotion : NeoAccessory {
                     // Show burst of 5 hearts
                     new DecoratorLoop(5,
                         new Sequence(
-                            new LeafInvoke(() => { toy.ShowEmoji(EmojiScript.EmojiTypes.Heart_Emoji); }),
+                            new LeafInvoke(() => { this.toy.ShowEmoji(EmojiScript.EmojiTypes.Heart_Emoji); }),
                             new LeafWait(200)
                             )
                         ),
                     new DecoratorLoop(
                         new Sequence(
                             new LeafAssert(() => {
-                                return Utils.TargetIsInRange(toy, Targets);
+                                return Utils.TargetIsInRange(this.toy, Targets);
                             }),
                             // Below should only run if some target is in range
                             new LeafInvoke(() => {

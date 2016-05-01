@@ -12,14 +12,6 @@ public class Rose : NeoAccessory {
     public override GameObject EquipModel { get { return equipModel; } }
     public override EquipSlots EquipSlot { get { return EquipSlots.LeftHand; } }
 
-    // The Toy holding this accessory
-    private Toy toy;
-
-    private List<GameObject> Targets;
-    private Node Action;
-
-    private int TargetPriority, ActionPriority, EffectPriority;
-
     void Update()
     {
         IdleRotate(transform, RotateSpeed);
@@ -66,14 +58,12 @@ public class Rose : NeoAccessory {
                             return Utils.TargetIsInRange(toy, Targets[0]);
                         }),
                         new LeafInvoke(() => {
-                            // TODO: need to initialize Toy
-                            // toy.ShowEmoji(EmojiScript.EmojiTypes.Laugh_Emoji);
+                            this.toy.ShowEmoji(EmojiScript.EmojiTypes.Laugh_Emoji);
                         }),
                         new LeafInvoke(() => { Effects(); })
                         ),
                     new LeafInvoke(() => {
-                        // TODO: need to initialize Toy
-                        // toy.ShowEmoji(EmojiScript.EmojiTypes.Heart_Emoji);
+                        this.toy.ShowEmoji(EmojiScript.EmojiTypes.Heart_Emoji);
                     })));
     }
 
