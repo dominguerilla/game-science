@@ -3,7 +3,7 @@ using TreeSharpPlus;
 using System;
 using System.Collections.Generic;
 
-public class Rose : NeoAccessory {
+public class Joke : NeoAccessory {
 
     public GameObject equipModel;
     public float RotateSpeed = 100.0f;
@@ -12,14 +12,6 @@ public class Rose : NeoAccessory {
     public override GameObject EquipModel { get { return equipModel; } }
     public override EquipSlots EquipSlot { get { return EquipSlots.LeftHand; } }
 
-    // The Toy holding this accessory
-    private Toy toy;
-
-    private List<GameObject> Targets;
-    private Node Action;
-
-    private int TargetPriority, ActionPriority, EffectPriority;
-
     void Update()
     {
         IdleRotate(transform, RotateSpeed);
@@ -27,16 +19,19 @@ public class Rose : NeoAccessory {
 
     public override void Effects()
     {
-        // Target shows heart for now
         Toy target = Targets[0].GetComponent<Toy>();
         if (target)
         {
-            target.ShowEmoji(EmojiScript.EmojiTypes.Heart_Emoji);
+            if (UnityEngine.Random.Range(0, 2) < 1)
+            {   // Accepted
+                target.ShowEmoji(EmojiScript.EmojiTypes.Laugh_Emoji);
+            }
         }
     }
 
     public override void InitializePriorities()
     {
+        //are these just arbitrary?
         TargetPriority = 9;
         ActionPriority = 56;
         EffectPriority = 11;
@@ -59,15 +54,10 @@ public class Rose : NeoAccessory {
                             return Utils.TargetIsInRange(toy, Targets[0]);
                         }),
                         new LeafInvoke(() => {
-                            // TODO: need to initialize Toy
-                            // toy.ShowEmoji(EmojiScript.EmojiTypes.Laugh_Emoji);
+                            this.toy.ShowEmoji(EmojiScript.EmojiTypes.Laugh_Emoji);
                         }),
-                        new LeafInvoke(() => { Effects(); })
-                        ),
-                    new LeafInvoke(() => {
-                        // TODO: need to initialize Toy
-                        // toy.ShowEmoji(EmojiScript.EmojiTypes.Heart_Emoji);
-                    })));
+                        new LeafInvoke(() => { Effects();
+                        }))));
     }
 
     public override Node GetParameterizedAction(Toy toy, NeoAccessory targetAccessory,
@@ -86,9 +76,6 @@ public class Rose : NeoAccessory {
                         new LeafInvoke(() => {
                             toy.ShowEmoji(EmojiScript.EmojiTypes.Laugh_Emoji); }),
                         new LeafInvoke(() => { effectAccessory.Effects(); })
-                        ),
-                    new LeafInvoke(() => {
-                        toy.ShowEmoji(EmojiScript.EmojiTypes.Heart_Emoji);
-                    })));
+                        )));
     }
 }
