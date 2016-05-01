@@ -437,6 +437,7 @@ public class Toy : SmartObject {
         Debug.Log("Equipping NeoAccessory: " + acc);
         NeoAccessories.Add(acc);
         acc.SetToy(this);
+        acc.OnUse();
     }
 
     /// <summary>
@@ -516,11 +517,9 @@ public class Toy : SmartObject {
     {
         if(NeoAccessories.Count < 1)
         {
-            Debug.Log("Toy.SetIdleBehaviorFromAccessories: no accessories");
+            Debug.Log("Toy.SetIdleBehaviorFromAccessories: no accessories for " + this);
             return;
         }
-
-
 
         int largestTargetPriority = -1,
             largestActionPriority = -1,
@@ -536,10 +535,7 @@ public class Toy : SmartObject {
         foreach(NeoAccessory acc in NeoAccessories)
         {
             int[] currentPriorities = acc.GetPriorities();
-            Debug.Log("\tCurrent Priorities: " +
-                currentPriorities[(int)NeoAccessory.PriorityIndex.Target] + ", " +
-                currentPriorities[(int)NeoAccessory.PriorityIndex.Action] + ", " +
-                currentPriorities[(int)NeoAccessory.PriorityIndex.Effect]);
+
             if(currentPriorities[(int)NeoAccessory.PriorityIndex.Target] >
                 largestTargetPriority)
             {
@@ -560,9 +556,19 @@ public class Toy : SmartObject {
             }
         }
 
+        Debug.Log("Toy.SetIdleBehaviorFromAccessories: building new root from these accessories:");
+        Debug.Log("\tAction: " + actionAccessory);
+        Debug.Log("\tTargets: " + targetAccessory + ", count = " + targetAccessory.GetTargets().Count);
+        Debug.Log("\tEffect: " + effectAccessory);
+
+        targetAccessory.DEBUG_PrintTargets();
+
         // Build the node from these accessories
         IdleTreeRoot = actionAccessory.GetParameterizedAction(this,
             targetAccessory, effectAccessory);
+
+        // For debug purposes, run the new IdleTreeRoot
+        DEBUG_StartBehavior();
     }
 
 	/// <summary>

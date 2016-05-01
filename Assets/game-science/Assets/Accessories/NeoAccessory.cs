@@ -66,9 +66,6 @@ public abstract class NeoAccessory : MonoBehaviour{
 
 	void Start(){
 		Targets = new List<GameObject> ();
-        InitializePriorities();
-        InitializeTargets();
-        InitializeAction();
 
         // Data logging
         GameObject logObject = GameObject.FindGameObjectWithTag("Logger");
@@ -170,6 +167,37 @@ public abstract class NeoAccessory : MonoBehaviour{
     /// </summary>
     public void OnUse()
     {
+        // Initialize all the stuff for this Accessory when Toy picks it up
+        InitializePriorities();
+        InitializeTargets();
+        InitializeAction();
+
+        Debug.Log("NeoAccessory.OnUse for " + this);
+        Debug.Log("\tPriorities: " + GetPriorities()[0] + ", "
+            + GetPriorities()[1] + ", "
+            + GetPriorities()[2]);
+        Debug.Log("\tTargets Count: " + GetTargets().Count);
+
         this.gameObject.SetActive(false);
+    }
+
+    /// <summary>
+    /// Print the list of Targets for this NeoAccessory to Debug.Log
+    /// </summary>
+    public void DEBUG_PrintTargets()
+    {
+        Debug.Log("NeoAccessory.DEBUG_PrintTargets for " + this);
+        Debug.Log("Count = " + Targets.Count);
+        foreach (GameObject o in Targets)
+        {
+            if (!o.GetComponent<Toy>())
+            {
+                Debug.Log("\t" + o.GetComponent<Toy>().name);
+            }
+            else
+            {
+                Debug.Log("\t(No Toy in Object)");
+            }
+        }
     }
 }
