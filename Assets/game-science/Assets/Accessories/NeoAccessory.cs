@@ -163,7 +163,7 @@ public abstract class NeoAccessory : MonoBehaviour{
     }
 
     /// <summary>
-    /// Get rid of this accessoy when it gets picked up
+    /// Get rid of this accessory when it gets picked up
     /// </summary>
     public void OnUse()
     {

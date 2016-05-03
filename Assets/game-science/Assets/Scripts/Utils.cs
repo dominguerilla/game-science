@@ -57,7 +57,50 @@ public class Utils : MonoBehaviour
             return null;
         }
 
-        Object[] ToysInScene = FindObjectsOfType(typeof(Toy));
+        GameObject[] ToysInScene = GameObject.FindGameObjectsWithTag("Toy");
+        //GameObject[] ToysInScene = FindObjectsOfType(typeof(Toy)) as GameObject[];
+
+        List<GameObject> tempList;
+
+        // Make sure there's at least one other Toy
+        if (ToysInScene.Length > 1)
+        {
+            tempList = new List<GameObject>();
+        }
+        else
+        {
+            return null;
+        }
+
+
+        // Copy over
+        foreach (GameObject ob in ToysInScene)
+        {
+            tempList.Add(ob);
+        }
+
+
+        // Remove the Toy we don't want
+        // TODO: check this
+        tempList.Remove(toy.GetComponent<GameObject>());
+
+        // Return the rest
+        return tempList;
+    }
+
+    // Get a random Other Toy in the scene as GameObject
+    public static GameObject GetRandomOtherToyInSceneAsGameObject(Toy toy)
+    {
+        if (!toy)
+        {
+            print("Utils.GetRandomOther: no Toy given as input");
+            return null;
+        }
+
+        // Object[] ToysInScene = FindObjectsOfType(typeof(Toy));
+        // GameObject[] ToysInScene = FindObjectsOfType(typeof(Toy)) as GameObject[];
+        GameObject[] ToysInScene = GameObject.FindGameObjectsWithTag("Toy");
+
         List<GameObject> tempList;
 
         // Make sure there's at least one other Toy
@@ -77,42 +120,9 @@ public class Utils : MonoBehaviour
         }
 
         // Remove the Toy we don't want
-        tempList.Remove(toy.gameObject);
-
-        // Return the rest
-        return tempList;
-    }
-
-    // Get a random Other Toy in the scene as GameObject
-    public static GameObject GetRandomOtherToyInSceneAsGameObject(Toy toy)
-    {
-        if (!toy)
-        {
-            print("Utils.GetRandomOther: no Toy given as input");
-            return null;
-        }
-
-        Object[] ToysInScene = FindObjectsOfType(typeof(Toy));
-        List<GameObject> tempList;
-
-        // Make sure there's at least one other Toy
-        if (ToysInScene.Length > 1)
-        {
-            tempList = new List<GameObject>(ToysInScene.Length);
-        }
-        else
-        {
-            return null;
-        }
-
-        // Copy over
-        foreach (Object ob in ToysInScene)
-        {
-            tempList.Add(ob as GameObject);
-        }
-
-        // Remove the Toy we don't want
-        tempList.Remove(toy.gameObject);
+        // TODO: check this
+        tempList.Remove(toy.GetComponent<GameObject>());
+        //tempList.Remove(toy.gameObject);
 
         // At least 1 toy in tempList
         return tempList[Random.Range(0, tempList.Count)];
