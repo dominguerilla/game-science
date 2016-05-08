@@ -438,6 +438,7 @@ public class Toy : SmartObject {
         NeoAccessories.Add(acc);
         acc.SetToy(this);
         acc.OnUse();
+        SetIdleBehaviorFromAccessories();
     }
 
     /// <summary>
