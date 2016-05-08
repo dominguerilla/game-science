@@ -17,8 +17,10 @@ public class Joke : NeoAccessory {
         IdleRotate(transform, RotateSpeed);
     }
 
+	/*
     public override void Effects()
     {
+		
         Toy target = Targets[0].GetComponent<Toy>();
         if (target)
         {
@@ -28,23 +30,27 @@ public class Joke : NeoAccessory {
             }
         }
     }
+	*/
 
     public override void InitializePriorities()
     {
         //are these just arbitrary?
+        /*
         TargetPriority = 10;
         ActionPriority = 57;
         EffectPriority = 12;
+        */
     }
 
     public override void InitializeTargets()
     {
         // Target is random other Toy in scene
-        Targets.Add(Utils.GetRandomOtherToyInSceneAsGameObject(toy));
+        //Targets.Add(Utils.GetRandomOtherToyInSceneAsGameObject(toy));
     }
 
     public override void InitializeAction()
     {
+		/*
         Action =
             new DecoratorLoop(
                 new SequenceParallel(
@@ -58,9 +64,16 @@ public class Joke : NeoAccessory {
                         }),
                         new LeafInvoke(() => { Effects();
                         }))));
+                        */
     }
 
-    public override Node GetParameterizedAction(Toy toy, NeoAccessory targetAccessory,
+	public override void InitializeEffects(){
+
+	}
+
+
+    
+	/*public override Node GetParameterizedAction(Toy toy, NeoAccessory targetAccessory,
         NeoAccessory effectAccessory)
     {
         // If InputTargets doesn't contain a Toy, this won't work out well
@@ -77,5 +90,5 @@ public class Joke : NeoAccessory {
                             toy.ShowEmoji(EmojiScript.EmojiTypes.Laugh_Emoji); }),
                         new LeafInvoke(() => { effectAccessory.Effects(); })
                         )));
-    }
+    }*/
 }

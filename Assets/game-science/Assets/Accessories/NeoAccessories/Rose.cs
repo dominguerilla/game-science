@@ -17,28 +17,10 @@ public class Rose : NeoAccessory {
         IdleRotate(transform, RotateSpeed);
     }
 
-    public override void Effects()
-    {
-        // Target shows either heart or anger
-        Toy target = Targets[0].GetComponent<Toy>();
-        if (target)
-        {
-            if (UnityEngine.Random.Range(0, 2) < 1)
-            {   // Accepted
-                target.ShowEmoji(EmojiScript.EmojiTypes.Heart_Emoji);
-            }
-            else
-            {   // Rejected
-                target.ShowEmoji(EmojiScript.EmojiTypes.Anger_Emoji);
-            }
-        }
-    }
 
     public override void InitializePriorities()
     {
-        TargetPriority = 9;
-        ActionPriority = 56;
-        EffectPriority = 11;
+		hybridAccessory.SetPriorities (new int[3] {9, 56, 11});
     }
 
     public override void InitializeTargets()
@@ -47,17 +29,19 @@ public class Rose : NeoAccessory {
         GameObject target = Utils.GetRandomOtherToyInSceneAsGameObject(toy);
         if (target)
         {
-            Targets.Add(target);
+			hybridAccessory.SetTarget(new List<GameObject>(), 9);
+			hybridAccessory.GetTarget ().Add (target);
         }
         else
         {   // To avoid errors, add the Toy itself
-            Targets.Add(this.toy.gameObject);
+			//hybridAccessory.GetTarget ().Add (toy.gameObject);
         }
     }
 
     public override void InitializeAction()
     {
-        Action =
+		GameObject[] Targets = hybridAccessory.GetTarget ().ToArray ();
+        Node Action =
             new DecoratorLoop(
                 new SequenceParallel(
                     new Sequence(
@@ -72,13 +56,32 @@ public class Rose : NeoAccessory {
                             return Utils.TargetIsInRange(toy, Targets[0]); }),
                         new LeafInvoke(() => {
                             this.toy.ShowEmoji(EmojiScript.EmojiTypes.Laugh_Emoji); }),
-                        new LeafInvoke(() => { Effects(); })
+						new LeafInvoke(() => { hybridAccessory.ExecuteEffects(); })
                         ),
                     new LeafInvoke(() => {
                         this.toy.ShowEmoji(EmojiScript.EmojiTypes.Heart_Emoji);
                     })));
+
+		hybridAccessory.SetAction (Action, 56);
+                   
     }
 
+	public override void InitializeEffects(){
+		HybridAccessory.EffectFunction function = () => {
+			Toy target = hybridAccessory.GetTarget () [0].GetComponent<Toy>();
+			if (target) {
+				if (UnityEngine.Random.Range (0, 2) < 1) {   // Accepted
+					target.ShowEmoji (EmojiScript.EmojiTypes.Heart_Emoji);
+				} else {   // Rejected
+					target.ShowEmoji (EmojiScript.EmojiTypes.Anger_Emoji);
+				}
+			}
+		};
+
+		hybridAccessory.SetEffect (function, 11);
+	}
+
+	/*
     public override Node GetParameterizedAction(Toy toy, NeoAccessory targetAccessory,
         NeoAccessory effectAccessory)
     {
@@ -113,4 +116,5 @@ public class Rose : NeoAccessory {
                         toy.ShowEmoji(EmojiScript.EmojiTypes.Heart_Emoji);
                     })));
     }
+    */
 }

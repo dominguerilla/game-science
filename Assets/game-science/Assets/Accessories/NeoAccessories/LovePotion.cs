@@ -17,6 +17,7 @@ public class LovePotion : NeoAccessory {
         IdleRotate(transform, RotateSpeed);
     }
 
+	/*
     public override void Effects()
     {
         // This Toy is happy and in love
@@ -26,12 +27,15 @@ public class LovePotion : NeoAccessory {
             toy.ShowEmoji(EmojiScript.EmojiTypes.Heart_Emoji);
         }
     }
+    */
 
     public override void InitializePriorities()
     {
+		/*
         TargetPriority = 15;
         ActionPriority = 20;
         EffectPriority = 65;
+        */
     }
 
     public override void InitializeTargets()
@@ -42,19 +46,21 @@ public class LovePotion : NeoAccessory {
         foreach (GameObject o in tempList)
         {
             Debug.Log("LovePotion add: " + o);
-            Targets.Add(o);
+            //Targets.Add(o);
         }
 
         //Targets.AddRange(Utils.GetAllOtherToysInSceneAsGameObjects(this.toy));
-
+		/*
         if(Targets.Count < 1)
         {   // No other toys, so just add this Toy to avoid errors
             Targets.Add(this.toy.gameObject);
         }
+        */
     }
 
     public override void InitializeAction()
     {
+		/*
         Action =
             new DecoratorLoop(
                 new Sequence(
@@ -79,8 +85,13 @@ public class LovePotion : NeoAccessory {
                         )
                     )
                 );
+                */
     }
 
+	public override void InitializeEffects(){
+
+	}
+	/*
     public override Node GetParameterizedAction(Toy toy, NeoAccessory targetAccessory,
         NeoAccessory effectAccessory)
     {
@@ -111,4 +122,5 @@ public class LovePotion : NeoAccessory {
                 )
             );
     }
+    */
 }

@@ -21,10 +21,12 @@ public class Abuse : NeoAccessory
     }
 
     int id = 0;
+	/*
     public override void Effects()
     {
         // Target shows either heart or anger
-        Toy target = Targets[0].GetComponent<Toy>();
+        
+		Toy target = Targets[0].GetComponent<Toy>();
         if (target)
         {
             if(id == 0)
@@ -44,12 +46,15 @@ public class Abuse : NeoAccessory
             }
         }
     }
+    */
 
     public override void InitializePriorities()
     {
+		/*
         TargetPriority = 9;
         ActionPriority = 56;
         EffectPriority = 11;
+        */
     }
 
     public override void InitializeTargets()
@@ -58,16 +63,17 @@ public class Abuse : NeoAccessory
         GameObject target = Utils.GetRandomOtherToyInSceneAsGameObject(toy);
         if (target)
         {
-            Targets.Add(target);
+            //Targets.Add(target);
         }
         else
         {   // To avoid errors, add the Toy itself
-            Targets.Add(this.toy.gameObject);
+            //Targets.Add(this.toy.gameObject);
         }
     }
 
     public override void InitializeAction()
     {
+		/*
         Action =
             new DecoratorLoop(
                 new SequenceParallel(
@@ -104,8 +110,14 @@ public class Abuse : NeoAccessory
                     new LeafInvoke(() => {
                         this.toy.ShowEmoji(EmojiScript.EmojiTypes.Heart_Emoji);
                     })));
+                    */
     }
 
+	public override void InitializeEffects(){
+
+	}
+
+	/*
     public override Node GetParameterizedAction(Toy toy, NeoAccessory targetAccessory,
         NeoAccessory effectAccessory)
     {
@@ -144,4 +156,5 @@ public class Abuse : NeoAccessory
                         toy.ShowEmoji(EmojiScript.EmojiTypes.Heart_Emoji);
                     })));
     }
+    */
 }

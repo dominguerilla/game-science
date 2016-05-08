@@ -436,7 +436,7 @@ public class Toy : SmartObject {
     {
         Debug.Log("Equipping NeoAccessory: " + acc);
         NeoAccessories.Add(acc);
-        acc.SetToy(this);
+        acc.OnEquip(this);
         acc.OnUse();
         SetIdleBehaviorFromAccessories();
     }
@@ -516,6 +516,7 @@ public class Toy : SmartObject {
     /// </summary>
     public void SetIdleBehaviorFromAccessories()
     {
+		/*
         if(NeoAccessories.Count < 1)
         {
             Debug.Log("Toy.SetIdleBehaviorFromAccessories: no accessories for " + this);
@@ -570,6 +571,7 @@ public class Toy : SmartObject {
 
         // For debug purposes, run the new IdleTreeRoot
         DEBUG_StartBehavior();
+        */
     }
 
 	/// <summary>

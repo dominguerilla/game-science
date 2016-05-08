@@ -14,14 +14,10 @@ using TreeSharpPlus;
 /// </summary>
 public abstract class NeoAccessory : MonoBehaviour{
 
-	protected List<GameObject> Targets;
-	protected Node Action;
-	public abstract void Effects();
-
-	protected int TargetPriority, ActionPriority, EffectPriority;
 
     private DataLogger logger;  // The Data Logger in the scene
     protected Toy toy;    // The Toy that's holding this accessory
+	protected HybridAccessory hybridAccessory;
 
     ///<summary>
     /// Determines whether or not an Accessory can be picked up and equipped by a Toy.
@@ -65,7 +61,7 @@ public abstract class NeoAccessory : MonoBehaviour{
     }
 
 	void Start(){
-		Targets = new List<GameObject> ();
+		hybridAccessory = new HybridAccessory ();
 
         // Data logging
         GameObject logObject = GameObject.FindGameObjectWithTag("Logger");
@@ -92,35 +88,9 @@ public abstract class NeoAccessory : MonoBehaviour{
 	public abstract void InitializeAction();
 
 	/// <summary>
-	/// Returns the Action for this Accessory.
+	/// Sets the Effects function in the Hybrid Accessory.
 	/// </summary>
-	/// <returns>The action.</returns>
-	public virtual Node GetAction(){
-		return Action;
-	}
-
-	/// <summary>
-	/// Returns the Targets of this Accessory.
-	/// </summary>
-	/// <returns>The targets.</returns>
-	public virtual List<GameObject> GetTargets(){
-		return Targets;
-	}
-
-	/// <summary>
-	/// Returns the priorities of the Accessory in an Array.
-	/// [0] is the Target priority, [1] is the Action priority, [2] is the Effect priority.
-	/// </summary>
-	/// <returns>The priorities.</returns>
-	public virtual int[] GetPriorities(){
-		int[] priorities = new int[3];
-		priorities [(int)PriorityIndex.Target] = TargetPriority;
-		priorities [(int)PriorityIndex.Action] = ActionPriority;
-		priorities [(int)PriorityIndex.Effect] = EffectPriority;
-		return priorities;
-	}
-
-
+	public abstract void InitializeEffects ();
 
 	/// <summary>
 	/// Rotates the Accessory.
@@ -150,16 +120,16 @@ public abstract class NeoAccessory : MonoBehaviour{
     /// <param name="targetAccessory">The target(s)</param>
     /// <param name="effectAccessory">The effect(s)</param>
     /// <returns></returns>
-    public abstract Node GetParameterizedAction(Toy toy, NeoAccessory targetAccessory,
-        NeoAccessory effectAccessory);
+    //public abstract Node GetParameterizedAction(Toy toy, NeoAccessory targetAccessory,
+        //NeoAccessory effectAccessory);
 
     /// <summary>
-    /// Register a Toy for this accessory.
+    /// Called when a Toy equips this NeoAccessory.
     /// </summary>
     /// <param name="toy"></param>
-    public void SetToy(Toy toy)
+    public virtual void OnEquip(Toy toy)
     {
-        this.toy = toy;
+		hybridAccessory.SetEquipper (toy);
     }
 
     /// <summary>
@@ -173,10 +143,10 @@ public abstract class NeoAccessory : MonoBehaviour{
         InitializeAction();
 
         Debug.Log("NeoAccessory.OnUse for " + this);
-        Debug.Log("\tPriorities: " + GetPriorities()[0] + ", "
+        /*Debug.Log("\tPriorities: " + GetPriorities()[0] + ", "
             + GetPriorities()[1] + ", "
             + GetPriorities()[2]);
-        Debug.Log("\tTargets Count: " + GetTargets().Count);
+        Debug.Log("\tTargets Count: " + GetTargets().Count);*/
 
         this.gameObject.SetActive(false);
     }
@@ -187,11 +157,15 @@ public abstract class NeoAccessory : MonoBehaviour{
     public void DEBUG_PrintTargets()
     {
         Debug.Log("NeoAccessory.DEBUG_PrintTargets for " + this);
-        Debug.Log("Count = " + Targets.Count);
+        /*Debug.Log("Count = " + Targets.Count);
         for(int i = 0; i < Targets.Count; i++)
         {
             Debug.Log("\tNull?" + Targets[i] == null
                 + " Toy? " + Targets[i].GetComponent<Toy>());
-        }
+        }*/
     }
+
+	public HybridAccessory GetHybridAccessory(){
+		return this.hybridAccessory;
+	}
 }
