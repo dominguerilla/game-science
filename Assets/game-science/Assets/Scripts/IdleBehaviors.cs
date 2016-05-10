@@ -3,6 +3,11 @@ using UnityEngine;
 
 public static class IdleBehaviors {
 
+    public static Node TurnAndWave(Toy toy, Toy target)
+    {
+        return new LeafTrace("TODO: Implement Turning and Waving");
+    }
+
     /// <summary>
     /// Tell the Toy to give off Emojis at a given time interval
     /// </summary>
@@ -217,4 +222,5 @@ public static class IdleBehaviors {
                 )
             );
     }
+
 }

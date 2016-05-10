@@ -83,7 +83,12 @@ public class HybridAccessory {
 			}
 		}
 
-		return hybrid;
+        Debug.Log("HybridAccessory.HybridizeComponents: Target/Action/Effect Priorities");
+        Debug.Log("\t" + hybrid.ReturnPriority(0) + ", "
+            + hybrid.ReturnPriority(1) + ", "
+            + hybrid.ReturnPriority(2));
+
+        return hybrid;
 	}
 
 

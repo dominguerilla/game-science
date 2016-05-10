@@ -21,7 +21,7 @@ public class Rose : NeoAccessory
 
     public override void InitializePriorities()
     {
-        hybridAccessory.SetPriorities(new int[3] { 9, 56, 11 });
+        hybridAccessory.SetPriorities(new int[3] { 99, 1, 99 });
     }
 
     public override void InitializeTargets()
@@ -30,7 +30,7 @@ public class Rose : NeoAccessory
         GameObject target = Utils.GetRandomOtherToyInSceneAsGameObject(toy);
         if (target)
         {
-            hybridAccessory.SetTarget(new List<GameObject>(), 9);
+            hybridAccessory.SetTarget(new List<GameObject>(), hybridAccessory.ReturnPriority(0));
             hybridAccessory.GetTarget().Add(target);
         }
         else
@@ -81,7 +81,7 @@ public class Rose : NeoAccessory
                         this.toy.ShowEmoji(EmojiScript.EmojiTypes.Heart_Emoji);
                     })));
 
-        hybridAccessory.SetAction(Action, 56);
+        hybridAccessory.SetAction(Action, hybridAccessory.ReturnPriority(1));
 
     }
 
@@ -102,6 +102,6 @@ public class Rose : NeoAccessory
             }
         };
 
-        hybridAccessory.SetEffect(function, 11);
+        hybridAccessory.SetEffect(function, hybridAccessory.ReturnPriority(2));
     }
 }

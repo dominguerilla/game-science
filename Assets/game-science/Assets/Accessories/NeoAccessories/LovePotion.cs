@@ -19,7 +19,7 @@ public class LovePotion : NeoAccessory {
 
     public override void InitializePriorities()
     {
-        hybridAccessory.SetPriorities(new int[3] { 15, 20, 65 });
+        hybridAccessory.SetPriorities(new int[3] { 1, 99, 1 });
     }
 
     public override void InitializeTargets()
@@ -36,6 +36,7 @@ public class LovePotion : NeoAccessory {
 
     public override void InitializeAction()
     {
+        Toy currentTarget = null;
         GameObject[] Targets = hybridAccessory.GetTarget().ToArray();
         Node Action =
             new DecoratorLoop(
@@ -52,11 +53,13 @@ public class LovePotion : NeoAccessory {
                         new Sequence(
                             // First, walk to a random location within 5 units of Toy
                             new WalkToRandomRange(this.toy, 5f),
-                            // Check that a target is in range (and targets is not null)
+                            // Check that a target is in range
                             new LeafAssert(() => {
-                                return Utils.TargetIsInRange(this.toy, Targets);
+                                return (currentTarget = Utils.GetToyInRange(this.toy, Targets)) != null;
                             }),
-                            new LeafTrace("LovePotion: target in range"),
+                            new LeafTrace("LovePotion: target " + currentTarget + " in range"),
+                            // Have the Toy turn to face the target and wave
+                            IdleBehaviors.TurnAndWave(this.toy, currentTarget),
                             // There's a target in range: execute effects
                             new LeafInvoke(() => {
                                 hybridAccessory.ExecuteEffects();

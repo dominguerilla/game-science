@@ -161,4 +161,20 @@ public class Utils : MonoBehaviour
         return false;
     }
 
+    // Return the Toy that's in range, if there is one
+    public static Toy GetToyInRange(Toy toy, GameObject[] targets)
+    {
+        foreach (GameObject ob in targets)
+        {
+            if (Vector3.Distance(toy.transform.position, ob.transform.position) < 3f)
+            {
+                if(ob.GetComponent<Toy>() != null)
+                {
+                    return ob.GetComponent<Toy>();
+                }
+            }
+        }
+        return null;
+    }
+
 }
