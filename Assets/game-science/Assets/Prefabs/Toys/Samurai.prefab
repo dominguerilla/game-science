@@ -1304,7 +1304,7 @@ MonoBehaviour:
   targetToy: {fileID: 0}
   team: 2
   Hurt_Emoji: {fileID: 128152, guid: c8f1c78510cddcc45bce017b33ceaac9, type: 2}
-  Anger_Emoji: {fileID: 140712, guid: 36014b533d611d54ebc7a8414d971cdb, type: 2}
+  Anger_Emoji: {fileID: 140712, guid: 6e868962c8f661a48961788d142dbf2d, type: 2}
   Laugh_Emoji: {fileID: 197980, guid: 62c15ba0b7e57ce4f90ef5fcaf31b903, type: 2}
   Heart_Emoji: {fileID: 187812, guid: b7472f858dc2ab442aa91a63814c62a7, type: 2}
 --- !u!136 &13653288
@@ -1430,7 +1430,7 @@ Prefab:
     - target: {fileID: 0}
       propertyPath: Anger_Emoji
       value: 
-      objectReference: {fileID: 140712, guid: 36014b533d611d54ebc7a8414d971cdb, type: 2}
+      objectReference: {fileID: 140712, guid: 6e868962c8f661a48961788d142dbf2d, type: 2}
     - target: {fileID: 0}
       propertyPath: Hurt_Emoji
       value: 

@@ -50,7 +50,9 @@ public class LovePotion : NeoAccessory {
                         ),
                     new DecoratorLoop(
                         new Sequence(
-                            // Need target to be in range (and not null)
+                            // First, walk to a random location within 5 units of Toy
+                            new WalkToRandomRange(this.toy, 5f),
+                            // Check that a target is in range (and targets is not null)
                             new LeafAssert(() => {
                                 return Utils.TargetIsInRange(this.toy, Targets);
                             }),
