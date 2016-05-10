@@ -130,6 +130,9 @@ public abstract class NeoAccessory : MonoBehaviour{
     public virtual void OnEquip(Toy toy)
     {
 		hybridAccessory.SetEquipper (toy);
+
+        // NeoAccessory also needs to know which Toy equipped it
+        this.toy = toy;
     }
 
     /// <summary>

@@ -65,6 +65,9 @@ public class HybridAccessory {
 	/// <param name="Accessories">Accessories.</param>
 	public static HybridAccessory HybridizeComponents(params HybridAccessory[] Accessories){
 		int[] maxPriorities = new int[3];
+
+        if(Accessories.Length < 1) { return null; }
+
 		HybridAccessory hybrid = new HybridAccessory ();
 
 		foreach (HybridAccessory acc in Accessories) {

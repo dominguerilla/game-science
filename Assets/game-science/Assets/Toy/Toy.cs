@@ -58,11 +58,11 @@ public class Toy : SmartObject {
     //The current ability given by the Accessory equipped by this Toy.
 	private Accessory equippedAccessory;
 
-    // The accessories this Toy has
-    private List<NeoAccessory> NeoAccessories = new List<NeoAccessory>();
+    // The hybrid accessories this Toy has
+    private List<HybridAccessory> H_LIST = new List<HybridAccessory>();
 
-    // Debug fields for testing NeoAccessories
-    // public GameObject DEBUG_Accessory_1;
+    // The Toy's active hybrid accessory
+    private HybridAccessory ActiveHybridAccessory;
 
     //The current Accessory Archetype of the Toy. Currently, only one is able to be stored at a time.
     private string AccessoryArchetype;
@@ -217,15 +217,6 @@ public class Toy : SmartObject {
         // Set state booleans
         this.SetInitialStates();
 
-        // DEBUG: Add debug accessories to this Toy's accessory list
-        /*if (DEBUG_Accessory_1)
-        {
-            Debug.Log("Toy.Start: Adding debug accessories");
-            NeoAccessory neoAcc = DEBUG_Accessory_1.GetComponent<NeoAccessory>();
-            neoAcc.SetToy(this);
-            NeoAccessories.Add(neoAcc);
-        }*/
-
         agent = GetComponent<NavMeshAgent>();
         anim = GetComponent<Animator>();
         anim.SetBool("isWalk", false);
@@ -233,7 +224,7 @@ public class Toy : SmartObject {
         AvailableSlots = AccessorySlots.Length;
 
         // Option to start a toy with a target accessory
-        if (targetAccessory != null)
+        /*if (targetAccessory != null)
         {
             Debug.Log("Starting with target accessory: " + targetAccessory);
             Accessory acc = targetAccessory.GetComponent(typeof(Accessory)) as Accessory;
@@ -268,9 +259,9 @@ public class Toy : SmartObject {
 
                 // Have this accessory be this toy's target accessory
                 SetAccessory(chosenAccessory);
-            }*/
+            }
 			SetIdleBehavior (IdleBehaviors.IdleStand ());
-        }
+        }*/
     }
 	
 	// Update is called once per frame
@@ -435,9 +426,16 @@ public class Toy : SmartObject {
     public void Equip(NeoAccessory acc)
     {
         Debug.Log("Equipping NeoAccessory: " + acc);
-        NeoAccessories.Add(acc);
+
+        // Call the NeoAccessory stuff
         acc.OnEquip(this);
         acc.OnUse();
+
+        // Turn it into a hybrid accessory
+        HybridAccessory newHybrid = acc.GetHybridAccessory();
+        H_LIST.Add(newHybrid);
+
+        // Update the Toy's active hybrid accessory
         SetIdleBehaviorFromAccessories();
     }
 
@@ -516,7 +514,15 @@ public class Toy : SmartObject {
     /// </summary>
     public void SetIdleBehaviorFromAccessories()
     {
-		/*
+        ActiveHybridAccessory = HybridAccessory.HybridizeComponents(H_LIST.ToArray());
+
+        if (ActiveHybridAccessory != null)
+        {
+            IdleTreeRoot = ActiveHybridAccessory.GetAction();
+            // DEBUG_StartBehavior();
+        }
+
+        /*
         if(NeoAccessories.Count < 1)
         {
             Debug.Log("Toy.SetIdleBehaviorFromAccessories: no accessories for " + this);
@@ -773,7 +779,7 @@ public class Toy : SmartObject {
         }
         else
         {
-            print("Toy.DEBUG_StartBehavior: IdleTreeRoot is null");
+            print("Toy.DEBUG_StartBehavior: IdleTreeRoot is null for " + this);
         }
     }
 	public void DEBUG_StopBehavior()
@@ -788,7 +794,7 @@ public class Toy : SmartObject {
         }
         else
         {
-            print("Toy.DEBUG_StopBehavior: bagent is null");
+            print("Toy.DEBUG_StopBehavior: bagent is null for " + this);
         }
     }
     #endregion
