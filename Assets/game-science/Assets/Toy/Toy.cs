@@ -519,6 +519,9 @@ public class Toy : SmartObject {
         if (ActiveHybridAccessory != null)
         {
             IdleTreeRoot = ActiveHybridAccessory.GetAction();
+
+            /* If we want the toy to start its new action immediately after picking up accessory,
+            * uncomment the line below. Otherwise, user needs to click start. */
             // DEBUG_StartBehavior();
         }
 

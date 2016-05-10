@@ -17,80 +17,69 @@ public class LovePotion : NeoAccessory {
         IdleRotate(transform, RotateSpeed);
     }
 
-	/*
-    public override void Effects()
-    {
-        // This Toy is happy and in love
-        for (int i = 0; i < 5; i++)
-        {
-            toy.ShowEmoji(EmojiScript.EmojiTypes.Laugh_Emoji);
-            toy.ShowEmoji(EmojiScript.EmojiTypes.Heart_Emoji);
-        }
-    }
-    */
-
     public override void InitializePriorities()
     {
-		/*
-        TargetPriority = 15;
-        ActionPriority = 20;
-        EffectPriority = 65;
-        */
+        hybridAccessory.SetPriorities(new int[3] { 15, 20, 65 });
     }
 
     public override void InitializeTargets()
     {
         // Target is all other Toys in scene at time of initialization
-        // Commenting out for debug purposes
         List<GameObject> tempList = Utils.GetAllOtherToysInSceneAsGameObjects(this.toy);
+        hybridAccessory.SetTarget(new List<GameObject>(), hybridAccessory.ReturnPriority(0));
+
         foreach (GameObject o in tempList)
         {
-            Debug.Log("LovePotion add: " + o);
-            //Targets.Add(o);
+            hybridAccessory.GetTarget().Add(o);
         }
-
-        //Targets.AddRange(Utils.GetAllOtherToysInSceneAsGameObjects(this.toy));
-		/*
-        if(Targets.Count < 1)
-        {   // No other toys, so just add this Toy to avoid errors
-            Targets.Add(this.toy.gameObject);
-        }
-        */
     }
 
     public override void InitializeAction()
     {
-		/*
-        Action =
+        GameObject[] Targets = hybridAccessory.GetTarget().ToArray();
+        Node Action =
             new DecoratorLoop(
                 new Sequence(
                     // Show burst of 5 hearts
                     new DecoratorLoop(5,
                         new Sequence(
-                            new LeafInvoke(() => { this.toy.ShowEmoji(EmojiScript.EmojiTypes.Heart_Emoji); }),
+                            new LeafInvoke(() => {
+                                this.toy.ShowEmoji(EmojiScript.EmojiTypes.Heart_Emoji); }),
                             new LeafWait(200)
                             )
                         ),
                     new DecoratorLoop(
                         new Sequence(
+                            // Need target to be in range (and not null)
                             new LeafAssert(() => {
                                 return Utils.TargetIsInRange(this.toy, Targets);
                             }),
-                            // Below should only run if some target is in range
+                            new LeafTrace("LovePotion: target in range"),
+                            // There's a target in range: execute effects
                             new LeafInvoke(() => {
-                                Effects();
+                                hybridAccessory.ExecuteEffects();
                             }),
                             new LeafWait(1000)
                             )
                         )
                     )
                 );
-                */
+        hybridAccessory.SetAction(Action, hybridAccessory.ReturnPriority(1));
     }
 
 	public override void InitializeEffects(){
+        HybridAccessory.EffectFunction function = () =>
+        {
+            // This Toy is happy and in love
+            for (int i = 0; i < 3; i++)
+            {
+                toy.ShowEmoji(EmojiScript.EmojiTypes.Laugh_Emoji);
+                toy.ShowEmoji(EmojiScript.EmojiTypes.Heart_Emoji);
+            }
+        };
 
-	}
+        hybridAccessory.SetEffect(function, hybridAccessory.ReturnPriority(2));
+    }
 	/*
     public override Node GetParameterizedAction(Toy toy, NeoAccessory targetAccessory,
         NeoAccessory effectAccessory)

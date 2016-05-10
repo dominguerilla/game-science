@@ -139,8 +139,19 @@ public class Utils : MonoBehaviour
         return Vector3.Distance(toy.transform.position, target.transform.position) < 3f;
     }
 
-    // Same thing, for multiple targets
+    // Same thing, for multiple targets (List version)
     public static bool TargetIsInRange(Toy toy, List<GameObject> targets)
+    {
+        foreach (GameObject ob in targets)
+        {
+            if (Vector3.Distance(toy.transform.position, ob.transform.position) < 3f)
+                return true;
+        }
+        return false;
+    }
+
+    // Same thing, for multiple targets (Array version)
+    public static bool TargetIsInRange(Toy toy, GameObject[] targets)
     {
         foreach (GameObject ob in targets)
         {

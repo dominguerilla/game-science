@@ -141,9 +141,11 @@ public abstract class NeoAccessory : MonoBehaviour{
     public void OnUse()
     {
         // Initialize all the stuff for this Accessory when Toy picks it up
+        /*** NOTE: Please leave this so that InitializePriorities runs FIRST */
         InitializePriorities();
         InitializeTargets();
         InitializeAction();
+        InitializeEffects();
 
         Debug.Log("NeoAccessory.OnUse for " + this);
         /*Debug.Log("\tPriorities: " + GetPriorities()[0] + ", "

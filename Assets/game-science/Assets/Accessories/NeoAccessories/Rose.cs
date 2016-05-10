@@ -3,7 +3,8 @@ using TreeSharpPlus;
 using System;
 using System.Collections.Generic;
 
-public class Rose : NeoAccessory {
+public class Rose : NeoAccessory
+{
 
     public GameObject equipModel;
     public float RotateSpeed = 100.0f;
@@ -20,101 +21,87 @@ public class Rose : NeoAccessory {
 
     public override void InitializePriorities()
     {
-		hybridAccessory.SetPriorities (new int[3] {9, 56, 11});
+        hybridAccessory.SetPriorities(new int[3] { 9, 56, 11 });
     }
 
     public override void InitializeTargets()
     {
-        // Target is random other Toy in scene
+        // Target is one random other Toy in scene
         GameObject target = Utils.GetRandomOtherToyInSceneAsGameObject(toy);
         if (target)
         {
-			hybridAccessory.SetTarget(new List<GameObject>(), 9);
-			hybridAccessory.GetTarget ().Add (target);
+            hybridAccessory.SetTarget(new List<GameObject>(), 9);
+            hybridAccessory.GetTarget().Add(target);
         }
         else
         {   // To avoid errors, add the Toy itself
-			//hybridAccessory.GetTarget ().Add (toy.gameObject);
+            //hybridAccessory.GetTarget ().Add (toy.gameObject);
         }
     }
 
     public override void InitializeAction()
     {
-		GameObject[] Targets = hybridAccessory.GetTarget ().ToArray ();
+        GameObject[] Targets = hybridAccessory.GetTarget().ToArray();
         Node Action =
             new DecoratorLoop(
                 new SequenceParallel(
                     new Sequence(
-                        new LeafAssert(() => {
-                            return Targets[0] != null; }),
+                        // Need a target
+                        new LeafAssert(() =>
+                        {
+                            return Targets[0] != null;
+                        }),
+                        // Wait a bit before walking
+                        new LeafWait(500),
                         new WalkToToy(toy, Targets[0].GetComponent<Toy>())
                     ),
                     new Sequence(
-                        new LeafAssert(() => {
-                            return Targets[0] != null; }),
-                        new LeafAssert(() => {
-                            return Utils.TargetIsInRange(toy, Targets[0]); }),
-                        new LeafInvoke(() => {
-                            this.toy.ShowEmoji(EmojiScript.EmojiTypes.Laugh_Emoji); }),
-						new LeafInvoke(() => { hybridAccessory.ExecuteEffects(); })
+                        // Need a target
+                        new LeafAssert(() =>
+                        {
+                            return Targets[0] != null;
+                        }),
+                        new LeafTrace("Rose: target not null"),
+                        // Need target to be in range, and not null
+                        new LeafAssert(() =>
+                        {
+                            return Utils.TargetIsInRange(toy, Targets[0]);
+                        }),
+                        new LeafTrace("Rose: target in range"),
+                        // Once it's in range, laugh and execute effect
+                        new LeafInvoke(() =>
+                        {
+                            this.toy.ShowEmoji(EmojiScript.EmojiTypes.Laugh_Emoji);
+                        }),
+                        new LeafInvoke(() => { hybridAccessory.ExecuteEffects(); })
                         ),
-                    new LeafInvoke(() => {
+                    // Show a heart at the beginning of the behavior
+                    new LeafInvoke(() =>
+                    {
                         this.toy.ShowEmoji(EmojiScript.EmojiTypes.Heart_Emoji);
                     })));
 
-		hybridAccessory.SetAction (Action, 56);
-                   
+        hybridAccessory.SetAction(Action, 56);
+
     }
 
-	public override void InitializeEffects(){
-		HybridAccessory.EffectFunction function = () => {
-			Toy target = hybridAccessory.GetTarget () [0].GetComponent<Toy>();
-			if (target) {
-				if (UnityEngine.Random.Range (0, 2) < 1) {   // Accepted
-					target.ShowEmoji (EmojiScript.EmojiTypes.Heart_Emoji);
-				} else {   // Rejected
-					target.ShowEmoji (EmojiScript.EmojiTypes.Anger_Emoji);
-				}
-			}
-		};
-
-		hybridAccessory.SetEffect (function, 11);
-	}
-
-	/*
-    public override Node GetParameterizedAction(Toy toy, NeoAccessory targetAccessory,
-        NeoAccessory effectAccessory)
+    public override void InitializeEffects()
     {
-        // Debug.Log("Rose.GetParameterizedAction entered");
-        // If InputTargets doesn't contain a Toy, this won't work out well
-        List<GameObject> InputTargets = targetAccessory.GetTargets();
+        HybridAccessory.EffectFunction function = () =>
+        {
+            Toy target = hybridAccessory.GetTarget()[0].GetComponent<Toy>();
+            if (target)
+            {
+                if (UnityEngine.Random.Range(0, 2) < 1)
+                {   // Accepted
+                    target.ShowEmoji(EmojiScript.EmojiTypes.Heart_Emoji);
+                }
+                else {   // Rejected
+                    target.ShowEmoji(EmojiScript.EmojiTypes.Anger_Emoji);
+                }
+            }
+        };
 
-        Debug.Log("Rose.GetParameterizedAction inputs: " + toy + ", "
-            + targetAccessory + ", "
-            + effectAccessory);
-
-        targetAccessory.DEBUG_PrintTargets();
-
-        return new DecoratorLoop(
-                new SequenceParallel(
-                    new Sequence(
-                        new LeafAssert(() => {
-                            return InputTargets[0] != null; }),
-                        new WalkToToy(toy, InputTargets[0].GetComponent<Toy>())
-                    ),
-                    new Sequence(
-                        new LeafAssert(() => {
-                            return InputTargets[0] != null; }),
-                        new LeafAssert(() => {
-                            return Utils.TargetIsInRange(toy, InputTargets[0]); }),
-                        // The following 2 should only run if target is in range
-                        new LeafInvoke(() => {
-                            toy.ShowEmoji(EmojiScript.EmojiTypes.Laugh_Emoji); }),
-                        new LeafInvoke(() => { effectAccessory.Effects(); })
-                        ),
-                    new LeafInvoke(() => {
-                        toy.ShowEmoji(EmojiScript.EmojiTypes.Heart_Emoji);
-                    })));
+        hybridAccessory.SetEffect(function, 11);
     }
-    */
 }

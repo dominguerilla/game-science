@@ -1576,9 +1576,9 @@ MonoBehaviour:
   targetAccessory: {fileID: 0}
   targetToy: {fileID: 0}
   team: 1
-  Hurt_Emoji: {fileID: 128152, guid: fdd859b8a39a33c489d7b3257f879f52, type: 2}
+  Hurt_Emoji: {fileID: 128152, guid: c8f1c78510cddcc45bce017b33ceaac9, type: 2}
   Anger_Emoji: {fileID: 140712, guid: 36014b533d611d54ebc7a8414d971cdb, type: 2}
-  Laugh_Emoji: {fileID: 197980, guid: 3fce9d8f7260339438914fed778fc6e2, type: 2}
+  Laugh_Emoji: {fileID: 197980, guid: 62c15ba0b7e57ce4f90ef5fcaf31b903, type: 2}
   Heart_Emoji: {fileID: 187812, guid: b7472f858dc2ab442aa91a63814c62a7, type: 2}
 --- !u!114 &11469928
 MonoBehaviour:
@@ -1710,11 +1710,11 @@ Prefab:
     - target: {fileID: 0}
       propertyPath: Hurt_Emoji
       value: 
-      objectReference: {fileID: 128152, guid: fdd859b8a39a33c489d7b3257f879f52, type: 2}
+      objectReference: {fileID: 128152, guid: c8f1c78510cddcc45bce017b33ceaac9, type: 2}
     - target: {fileID: 0}
       propertyPath: Laugh_Emoji
       value: 
-      objectReference: {fileID: 197980, guid: 3fce9d8f7260339438914fed778fc6e2, type: 2}
+      objectReference: {fileID: 197980, guid: 62c15ba0b7e57ce4f90ef5fcaf31b903, type: 2}
     - target: {fileID: 0}
       propertyPath: Anger_Emoji
       value: 
