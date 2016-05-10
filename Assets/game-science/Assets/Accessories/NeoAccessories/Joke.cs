@@ -3,7 +3,8 @@ using TreeSharpPlus;
 using System;
 using System.Collections.Generic;
 
-public class Joke : NeoAccessory {
+public class Joke : NeoAccessory
+{
 
     public GameObject equipModel;
     public float RotateSpeed = 100.0f;
@@ -17,78 +18,90 @@ public class Joke : NeoAccessory {
         IdleRotate(transform, RotateSpeed);
     }
 
-	/*
-    public override void Effects()
-    {
-		
-        Toy target = Targets[0].GetComponent<Toy>();
-        if (target)
-        {
-            if (UnityEngine.Random.Range(0, 2) < 1)
-            {   // Accepted
-                target.ShowEmoji(EmojiScript.EmojiTypes.Laugh_Emoji);
-            }
-        }
-    }
-	*/
 
     public override void InitializePriorities()
     {
-        //are these just arbitrary?
-        /*
-        TargetPriority = 10;
-        ActionPriority = 57;
-        EffectPriority = 12;
-        */
+        hybridAccessory.SetPriorities(new int[3] { 99, 1, 99 });
     }
 
     public override void InitializeTargets()
     {
-        // Target is random other Toy in scene
-        //Targets.Add(Utils.GetRandomOtherToyInSceneAsGameObject(toy));
+        // Target is one random other Toy in scene
+        GameObject target = Utils.GetRandomOtherToyInSceneAsGameObject(toy);
+        if (target)
+        {
+            hybridAccessory.SetTarget(new List<GameObject>(), hybridAccessory.ReturnPriority(0));
+            hybridAccessory.GetTarget().Add(target);
+        }
+        else
+        {   // To avoid errors, add the Toy itself
+            //hybridAccessory.GetTarget ().Add (toy.gameObject);
+        }
     }
 
     public override void InitializeAction()
     {
-		/*
-        Action =
+        GameObject[] Targets = hybridAccessory.GetTarget().ToArray();
+        Node Action =
             new DecoratorLoop(
                 new SequenceParallel(
-                    new WalkToToy(toy, Targets[0].GetComponent<Toy>()),
                     new Sequence(
-                        new LeafAssert(() => {
+                        // Need a target
+                        new LeafAssert(() =>
+                        {
+                            return Targets[0] != null;
+                        }),
+                        // Wait a bit before walking
+                        new LeafWait(500),
+                        new WalkToToy(toy, Targets[0].GetComponent<Toy>())
+                    ),
+                    new Sequence(
+                        // Need a target
+                        new LeafAssert(() =>
+                        {
+                            return Targets[0] != null;
+                        }),
+                        new LeafTrace("Joke: target not null"),
+                        // Need target to be in range, and not null
+                        new LeafAssert(() =>
+                        {
                             return Utils.TargetIsInRange(toy, Targets[0]);
                         }),
-                        new LeafInvoke(() => {
+                        new LeafTrace("Joke: target in range"),
+                        // Once it's in range, laugh and execute effect
+                        new LeafInvoke(() =>
+                        {
                             this.toy.ShowEmoji(EmojiScript.EmojiTypes.Laugh_Emoji);
                         }),
-                        new LeafInvoke(() => { Effects();
-                        }))));
-                        */
+                        new LeafInvoke(() => { hybridAccessory.ExecuteEffects(); })
+                        ),
+                    
+                    new LeafInvoke(() =>
+                    {
+                        this.toy.ShowEmoji(EmojiScript.EmojiTypes.Laugh_Emoji);
+                    })));
+
+        hybridAccessory.SetAction(Action, hybridAccessory.ReturnPriority(1));
+
     }
 
-	public override void InitializeEffects(){
-
-	}
-
-
-    
-	/*public override Node GetParameterizedAction(Toy toy, NeoAccessory targetAccessory,
-        NeoAccessory effectAccessory)
+    public override void InitializeEffects()
     {
-        // If InputTargets doesn't contain a Toy, this won't work out well
-        List<GameObject> InputTargets = targetAccessory.GetTargets();
+        HybridAccessory.EffectFunction function = () =>
+        {
+            Toy target = hybridAccessory.GetTarget()[0].GetComponent<Toy>();
+            if (target)
+            {
+                if (UnityEngine.Random.Range(0, 2) < 1)
+                {   // Accepted
+                    target.ShowEmoji(EmojiScript.EmojiTypes.Laugh_Emoji);
+                }
+                else {   //Need to find an emoji for frown face
+                    
+                }
+            }
+        };
 
-        return new DecoratorLoop(
-                new SequenceParallel(
-                    new WalkToToy(toy, InputTargets[0].GetComponent<Toy>()),
-                    new Sequence(
-                        new LeafAssert(() => {
-                            return Utils.TargetIsInRange(toy, InputTargets[0]); }),
-                        // The following 2 should only run if target is in range
-                        new LeafInvoke(() => {
-                            toy.ShowEmoji(EmojiScript.EmojiTypes.Laugh_Emoji); }),
-                        new LeafInvoke(() => { effectAccessory.Effects(); })
-                        )));
-    }*/
+        hybridAccessory.SetEffect(function, hybridAccessory.ReturnPriority(2));
+    }
 }
