@@ -3714,7 +3714,7 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 157338}
-  m_LocalRotation: {x: -0.093746535, y: 0.6978551, z: 0.707469, w: 0.060806733}
+  m_LocalRotation: {x: -0.09374654, y: 0.6978552, z: 0.70746905, w: 0.060806736}
   m_LocalPosition: {x: -0.05543403, y: 0.0017306843, z: 0.098653734}
   m_LocalScale: {x: 1.0000004, y: 1.0000006, z: 1.0000005}
   m_Children:
@@ -4887,10 +4887,10 @@ MonoBehaviour:
   targetAccessory: {fileID: 0}
   targetToy: {fileID: 0}
   team: 5
-  Hurt_Emoji: {fileID: 128152, guid: c8f1c78510cddcc45bce017b33ceaac9, type: 2}
-  Anger_Emoji: {fileID: 140712, guid: 6e868962c8f661a48961788d142dbf2d, type: 2}
-  Laugh_Emoji: {fileID: 197980, guid: 62c15ba0b7e57ce4f90ef5fcaf31b903, type: 2}
-  Heart_Emoji: {fileID: 187812, guid: b7472f858dc2ab442aa91a63814c62a7, type: 2}
+  Hurt_Emoji: {fileID: 128152, guid: a25b8e5b7a1547e469ca5440640e8611, type: 2}
+  Anger_Emoji: {fileID: 140712, guid: 8e6df9feb6fe2ee478f513480fd08021, type: 2}
+  Laugh_Emoji: {fileID: 197980, guid: 0ccf276194eae7143a863be9457d9f99, type: 2}
+  Heart_Emoji: {fileID: 187812, guid: 63b0761cecef23a47947af14292a0012, type: 2}
 --- !u!136 &13661592
 CapsuleCollider:
   m_ObjectHideFlags: 1
@@ -6151,19 +6151,19 @@ Prefab:
     - target: {fileID: 0}
       propertyPath: Hurt_Emoji
       value: 
-      objectReference: {fileID: 128152, guid: c8f1c78510cddcc45bce017b33ceaac9, type: 2}
+      objectReference: {fileID: 128152, guid: a25b8e5b7a1547e469ca5440640e8611, type: 2}
     - target: {fileID: 0}
       propertyPath: Anger_Emoji
       value: 
-      objectReference: {fileID: 140712, guid: 6e868962c8f661a48961788d142dbf2d, type: 2}
+      objectReference: {fileID: 140712, guid: 8e6df9feb6fe2ee478f513480fd08021, type: 2}
     - target: {fileID: 0}
       propertyPath: Laugh_Emoji
       value: 
-      objectReference: {fileID: 197980, guid: 62c15ba0b7e57ce4f90ef5fcaf31b903, type: 2}
+      objectReference: {fileID: 197980, guid: 0ccf276194eae7143a863be9457d9f99, type: 2}
     - target: {fileID: 0}
       propertyPath: Heart_Emoji
       value: 
-      objectReference: {fileID: 187812, guid: b7472f858dc2ab442aa91a63814c62a7, type: 2}
+      objectReference: {fileID: 187812, guid: 63b0761cecef23a47947af14292a0012, type: 2}
     - target: {fileID: 0}
       propertyPath: team
       value: 5

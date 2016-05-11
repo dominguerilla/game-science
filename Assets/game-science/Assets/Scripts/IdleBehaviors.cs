@@ -3,9 +3,28 @@ using UnityEngine;
 
 public static class IdleBehaviors {
 
+    public static Node TurnTowardsTarget(Toy toy, Toy target)
+    {
+        return new LeafInvoke(() =>
+        {
+            // For now, just turn instantly
+            toy.transform.LookAt(target.transform);
+        });
+    }
+
     public static Node TurnAndWave(Toy toy, Toy target)
     {
-        return new LeafTrace("TODO: Implement Turning and Waving");
+        Animator anim = toy.GetAnimator();
+        if (!anim) { return null; }
+
+        return new Sequence(
+            // Turn to the target
+            TurnTowardsTarget(toy, target),
+            // Wave at the target
+            new LeafInvoke(() => {
+                Debug.Log("TODO: Implement waving");
+            })
+            );
     }
 
     /// <summary>

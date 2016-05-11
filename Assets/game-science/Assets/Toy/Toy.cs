@@ -447,7 +447,7 @@ public class Toy : SmartObject {
         acc.OnEquip(this);
         acc.OnUse();
 
-        // Get rid of the light
+        // Get rid of the accessory light
         if (AccessorySelectLight)
         {
             GameObject.Destroy(AccessorySelectLight);
