@@ -73,6 +73,9 @@ public class Toy : SmartObject {
 	[SerializeField]
 	private GameObject targetToy;
 
+    // Same thing for NeoAccessory, allowing for light to show up
+    private GameObject targetNeoAccessory;
+
     // The Data Logger in the scene
     private DataLogger logger;
 
@@ -136,6 +139,7 @@ public class Toy : SmartObject {
         }
         else if (neoAcc)
         {
+            this.targetNeoAccessory = target;
             ChangeIdleRoot(IdleBehaviors.IdleStandDuringAction(IdleBehaviors.MoveAndEquipAccessory(this, neoAcc)));
         }
         else {
@@ -357,6 +361,18 @@ public class Toy : SmartObject {
 			AccessorySelectLight.transform.position = targetAccessory.transform.position + new Vector3 (0, 2, 0);
 			AccessorySelectLight.transform.Rotate (90, 0, 0);
 		}
+        else if (targetNeoAccessory)
+        {   // Do the same thing for NeoAccessories
+            Debug.Log("Creating targetAccessory light!");
+            AccessorySelectLight = new GameObject("Spotlight");
+            Light accLightComp = AccessorySelectLight.AddComponent<Light>();
+            AccessorySelectLight.transform.parent = targetNeoAccessory.gameObject.transform;
+            accLightComp.color = Color.red;
+            accLightComp.type = LightType.Spot;
+            accLightComp.intensity = 10;
+            AccessorySelectLight.transform.position = targetNeoAccessory.transform.position + new Vector3(0, 2, 0);
+            AccessorySelectLight.transform.Rotate(90, 0, 0);
+        }
 	}
 
     /// <summary>
@@ -430,6 +446,12 @@ public class Toy : SmartObject {
         // Call the NeoAccessory stuff
         acc.OnEquip(this);
         acc.OnUse();
+
+        // Get rid of the light
+        if (AccessorySelectLight)
+        {
+            GameObject.Destroy(AccessorySelectLight);
+        }
 
         // Turn it into a hybrid accessory
         HybridAccessory newHybrid = acc.GetHybridAccessory();
