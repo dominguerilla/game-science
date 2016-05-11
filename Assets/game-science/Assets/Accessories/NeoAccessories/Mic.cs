@@ -25,7 +25,7 @@ public class Mic : NeoAccessory {
     public override void InitializeTargets()
     {
         // Target is all other Toys in scene at time of initialization
-        List<GameObject> tempList = Utils.GetAllOtherToysInSceneAsGameObjects(this.toy);
+        List<GameObject> tempList = Utils.GetAllOtherToysInSceneAsGameObjects(this.toy.gameObject);
         hybridAccessory.SetTarget(new List<GameObject>(), hybridAccessory.ReturnPriority(0));
 
         foreach (GameObject o in tempList)
@@ -55,7 +55,7 @@ public class Mic : NeoAccessory {
                             new WalkToRandomRange(this.toy, 5f),
                             // Check that a target is in range
                             new LeafAssert(() => {
-                                return (currentTarget = Utils.GetToyInRange(this.toy, Targets)) != null;
+                                return (currentTarget = Utils.GetToyInRange(this.toy, Targets, 3f)) != null;
                             }),
                             new LeafTrace("Mic: target " + currentTarget + " in range"),
                             // Have the Toy turn to face the target and wave

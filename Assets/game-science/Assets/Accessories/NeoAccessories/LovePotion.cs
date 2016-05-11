@@ -25,7 +25,7 @@ public class LovePotion : NeoAccessory {
     public override void InitializeTargets()
     {
         // Target is all other Toys in scene at time of initialization
-        List<GameObject> tempList = Utils.GetAllOtherToysInSceneAsGameObjects(this.toy);
+        List<GameObject> tempList = Utils.GetAllOtherToysInSceneAsGameObjects(this.toy.gameObject);
         hybridAccessory.SetTarget(new List<GameObject>(), hybridAccessory.ReturnPriority(0));
 
         foreach (GameObject o in tempList)
@@ -51,16 +51,20 @@ public class LovePotion : NeoAccessory {
                         ),
                     new DecoratorLoop(
                         new Sequence(
-                            // First, walk to a random location within 5 units of Toy
-                            new WalkToRandomRange(this.toy, 5f),
-                            // Check that a target is in range
-                            new LeafAssert(() => {
-                                return (currentTarget = Utils.GetToyInRange(this.toy, Targets)) != null;
-                            }),
-                            new LeafTrace("LovePotion: target " + currentTarget + " in range"),
+                            new DecoratorLoop(100,
+                                new Sequence(
+                                    new LeafTrace("Looking for Toy..."),
+                                    // First, walk to a random location within 5 units of Toy
+                                    new WalkToRandomRange(this.toy, 5f),
+                                    // Check that a target is in range before proceeding
+                                    new LeafAssert(() => {
+                                        return (currentTarget = Utils.GetToyInRange(this.toy, Targets, 8f)) == null;
+                                    }))
+                            ),
+                            // We have a current target now
+                            new LeafTrace("LovePotion: found target " + currentTarget + " in range."),
                             // Have the Toy turn to face the target and wave
                             IdleBehaviors.TurnAndWave(this.toy, currentTarget),
-                            // There's a target in range: execute effects
                             new LeafInvoke(() => {
                                 hybridAccessory.ExecuteEffects();
                             }),

@@ -49,9 +49,9 @@ public class Utils : MonoBehaviour
         return returnVector;
     }
 
-    internal static List<GameObject> GetAllOtherToysInSceneAsGameObjects(Toy toy)
+    internal static List<GameObject> GetAllOtherToysInSceneAsGameObjects(GameObject thisToy)
     {
-        if (!toy)
+        if (!thisToy)
         {
             print("Utils.GetAllOtherToys: no Toy given as input");
             return null;
@@ -73,18 +73,18 @@ public class Utils : MonoBehaviour
         }
 
 
-        // Copy over
+        // Copy over every Toy but this one
         foreach (GameObject ob in ToysInScene)
         {
-            tempList.Add(ob);
+            if (ob != thisToy)
+            {
+                tempList.Add(ob);
+            }
+            else
+            {
+                Debug.Log("Utils.GetOtherToys: not copying over this Toy: " + thisToy);
+            }
         }
-
-
-        // Remove the Toy we don't want
-        // TODO: check this
-        tempList.Remove(toy.GetComponent<GameObject>());
-
-        // Return the rest
         return tempList;
     }
 
@@ -162,18 +162,20 @@ public class Utils : MonoBehaviour
     }
 
     // Return the Toy that's in range, if there is one
-    public static Toy GetToyInRange(Toy toy, GameObject[] targets)
+    public static Toy GetToyInRange(Toy toy, GameObject[] targets, float range)
     {
         foreach (GameObject ob in targets)
         {
-            if (Vector3.Distance(toy.transform.position, ob.transform.position) < 3f)
+            if (Vector3.Distance(toy.transform.position, ob.transform.position) < range)
             {
                 if(ob.GetComponent<Toy>() != null)
                 {
+                    Debug.Log("Utils.GetToyInRange: found Toy " + ob.GetComponent<Toy>());
                     return ob.GetComponent<Toy>();
                 }
             }
         }
+        Debug.Log("Utils.GetToyInRange: no Toy found");
         return null;
     }
 

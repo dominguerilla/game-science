@@ -5,11 +5,17 @@ public static class IdleBehaviors {
 
     public static Node TurnTowardsTarget(Toy toy, Toy target)
     {
-        return new LeafInvoke(() =>
-        {
-            // For now, just turn instantly
-            toy.transform.LookAt(target.transform);
-        });
+        return new Sequence(
+            new LeafAssert(() => {
+                return toy != null
+                && target != null;
+            }),
+            new LeafInvoke(() =>
+            {
+                // For now, just turn instantly
+                Debug.Log("Turning towards target");
+                toy.transform.LookAt(target.transform);
+            }));
     }
 
     public static Node TurnAndWave(Toy toy, Toy target)

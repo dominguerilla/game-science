@@ -53,7 +53,7 @@ namespace TreeSharpPlus{
                 }
 
             }
-            //Debug.Log("Arrived at " + vector);
+            Debug.Log("Arrived at " + vector);
             yield return RunStatus.Success;
         }
     }
