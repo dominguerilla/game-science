@@ -44,31 +44,25 @@ public class Mic : NeoAccessory {
 
     public override void InitializeAction()
     {
-        Toy currentTarget = null;
         GameObject[] Targets = hybridAccessory.GetTarget().ToArray();
         Node Action =
             new DecoratorLoop(
                 new Sequence(
-                    // Show burst of 5 Laugh
+                    // Show burst of 5 laughs
                     new DecoratorLoop(5,
                         new Sequence(
                             new LeafInvoke(() => {
-                                this.toy.ShowEmoji(EmojiScript.EmojiTypes.Laugh_Emoji); }),
+                                this.toy.ShowEmoji(EmojiScript.EmojiTypes.Laugh_Emoji);
+                            }),
                             new LeafWait(200)
                             )
                         ),
                     new DecoratorLoop(
                         new Sequence(
-                            // First, walk to a random location within 5 units of Toy
-                            new WalkToRandomRange(this.toy, 5f),
-                            // Check that a target is in range
-                            new LeafAssert(() => {
-                                return (currentTarget = Utils.GetToyInRange(this.toy, Targets, 3f)) != null;
-                            }),
-                            new LeafTrace("Mic: target " + currentTarget + " in range"),
+                            new LeafTrace("Target is: " + (Targets[0].GetComponent<Toy>() as Toy)),
+                            new WalkToToy(this.toy, Targets[0].GetComponent<Toy>() as Toy),
                             // Have the Toy turn to face the target and wave
-                            IdleBehaviors.TurnAndWave(this.toy, currentTarget),
-                            // There's a target in range: execute effects
+                            IdleBehaviors.TurnAndWave(this.toy, Targets[0].GetComponent<Toy>() as Toy),
                             new LeafInvoke(() => {
                                 hybridAccessory.ExecuteEffects();
                             }),
@@ -77,7 +71,6 @@ public class Mic : NeoAccessory {
                         )
                     )
                 );
-        hybridAccessory.SetAction(Action, hybridAccessory.ReturnPriority(1));
     }
 
 	public override void InitializeEffects(){

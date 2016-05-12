@@ -48,32 +48,17 @@ public class Rose : NeoAccessory
                 new SequenceParallel(
                     new Sequence(
                         // Need a target
-                        new LeafAssert(() =>
-                        {
-                            return Targets[0] != null;
-                        }),
+                        new LeafAssert(() => {
+                            return Targets[0] != null; }),
                         // Wait a bit before walking
                         new LeafWait(500),
-                        new WalkToToy(toy, Targets[0].GetComponent<Toy>())
+                        new WalkToToy(toy, Targets[0].GetComponent<Toy>() as Toy)
                     ),
                     new Sequence(
-                        // Need a target
-                        new LeafAssert(() =>
-                        {
-                            return Targets[0] != null;
-                        }),
-                        new LeafTrace("Rose: target not null"),
-                        // Need target to be in range, and not null
-                        new LeafAssert(() =>
-                        {
-                            return Utils.TargetIsInRange(toy, Targets[0]);
-                        }),
                         new LeafTrace("Rose: target in range"),
-                        // Once it's in range, laugh and execute effect
-                        new LeafInvoke(() =>
-                        {
-                            this.toy.ShowEmoji(EmojiScript.EmojiTypes.Laugh_Emoji);
-                        }),
+                        IdleBehaviors.TurnAndWave(this.toy, Targets[0].GetComponent<Toy>() as Toy),
+                        new LeafInvoke(() => {
+                            this.toy.ShowEmoji(EmojiScript.EmojiTypes.Laugh_Emoji); }),
                         new LeafInvoke(() => { hybridAccessory.ExecuteEffects(); })
                         ),
                     // Show a heart at the beginning of the behavior

@@ -48,35 +48,22 @@ public class Joke : NeoAccessory
                 new SequenceParallel(
                     new Sequence(
                         // Need a target
-                        new LeafAssert(() =>
-                        {
+                        new LeafAssert(() => {
                             return Targets[0] != null;
                         }),
                         // Wait a bit before walking
                         new LeafWait(500),
-                        new WalkToToy(toy, Targets[0].GetComponent<Toy>())
+                        new WalkToToy(toy, Targets[0].GetComponent<Toy>() as Toy)
                     ),
                     new Sequence(
-                        // Need a target
-                        new LeafAssert(() =>
-                        {
-                            return Targets[0] != null;
-                        }),
-                        new LeafTrace("Joke: target not null"),
-                        // Need target to be in range, and not null
-                        new LeafAssert(() =>
-                        {
-                            return Utils.TargetIsInRange(toy, Targets[0]);
-                        }),
-                        new LeafTrace("Joke: target in range"),
-                        // Once it's in range, laugh and execute effect
-                        new LeafInvoke(() =>
-                        {
+                        new LeafTrace("Rose: target in range"),
+                        IdleBehaviors.TurnAndWave(this.toy, Targets[0].GetComponent<Toy>() as Toy),
+                        new LeafInvoke(() => {
                             this.toy.ShowEmoji(EmojiScript.EmojiTypes.Laugh_Emoji);
                         }),
                         new LeafInvoke(() => { hybridAccessory.ExecuteEffects(); })
                         ),
-                    
+                    // Show a laugh at the beginning of the behavior
                     new LeafInvoke(() =>
                     {
                         this.toy.ShowEmoji(EmojiScript.EmojiTypes.Laugh_Emoji);
@@ -98,7 +85,8 @@ public class Joke : NeoAccessory
                     target.ShowEmoji(EmojiScript.EmojiTypes.Laugh_Emoji);
                 }
                 else {   //Need to find an emoji for frown face
-                    
+                    // The joke is so bad it hurts!
+                    target.ShowEmoji(EmojiScript.EmojiTypes.Hurt_Emoji);
                 }
             }
         };
