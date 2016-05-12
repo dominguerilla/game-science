@@ -20,8 +20,8 @@ public class Joke : NeoAccessory
 
     public override void InitializePriorities()
     {
-		//hybridAccessory.SetPriorities(new int[4] { 0, 0, 0, 3});
-		hybridAccessory.SetPriorities(new int[4] { Random.Range(1, 100), Random.Range(1,100), Random.Range(1,100), Random.Range(1,100)});
+		hybridAccessory.SetPriorities(new int[4] { 0, 0, 1, 0});
+		//hybridAccessory.SetPriorities(new int[4] { Random.Range(1, 100), Random.Range(1,100), Random.Range(1,100), Random.Range(1,100)});
     }
 
     public override void InitializeTargets()
@@ -53,14 +53,15 @@ public class Joke : NeoAccessory
                         }),
                         // Wait a bit before walking
                         new LeafWait(500),
-                        new WalkToToy(toy, Targets[0].GetComponent<Toy>() as Toy)
-                    ),
-                    new Sequence(
-                        new LeafTrace("Rose: target in range"),
+                        new WalkToToy(toy, Targets[0].GetComponent<Toy>() as Toy),
+
+                        new LeafTrace("Joke: target in range"),
                         IdleBehaviors.TurnAndWave(this.toy, Targets[0].GetComponent<Toy>() as Toy),
                         new LeafInvoke(() => {
                             this.toy.ShowEmoji(EmojiScript.EmojiTypes.Laugh_Emoji);
                         }),
+                        // Wait for the joke
+                        new LeafWait(500),
                         new LeafInvoke(() => { hybridAccessory.ExecuteEffects(); })
                         ),
                     // Show a laugh at the beginning of the behavior
@@ -84,7 +85,7 @@ public class Joke : NeoAccessory
                 {   // Accepted
                     target.ShowEmoji(EmojiScript.EmojiTypes.Laugh_Emoji);
                 }
-                else {   //Need to find an emoji for frown face
+                else {
                     // The joke is so bad it hurts!
                     target.ShowEmoji(EmojiScript.EmojiTypes.Hurt_Emoji);
                 }

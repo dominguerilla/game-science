@@ -6,7 +6,8 @@ namespace TreeSharpPlus{
     /// <summary>
     /// Walk to a Toy
     /// </summary>
-    public class WalkToToy : Node {
+    public class WalkToToy : Node
+    {
 
         NavMeshAgent agent;
         Toy target;
@@ -30,8 +31,11 @@ namespace TreeSharpPlus{
             Vector3 agentPos = agent.transform.position;
 
             // Get target's location
-            Vector3 vector = target.transform.position;
+            // Vector3 vector = target.transform.position;
 
+            // Get slight offset of target's location
+            Vector3 vector = 
+                Utils.GetNewRandomPositionInRange(target.transform.position, 0.5f);
 
             // Walk to the toy
             //Debug.Log("Walking to Toy " + target);
@@ -39,16 +43,17 @@ namespace TreeSharpPlus{
 
             int maxIterations = 1000;
             while (true)
-            { 
+            {
                 float distance = Vector3.Distance(agent.transform.position, vector);
 
                 // Close enough
-                if(distance <= 3f){ break; }
+                if (distance <= 1f) { break; }
 
-                if(--maxIterations % 5 == 0)
+                if (--maxIterations % 5 == 0)
                 {
                     // Recalculate vector
-                    vector = target.transform.position;
+                    vector =
+                        Utils.GetNewRandomPositionInRange(target.transform.position, 0.5f);
                     agent.SetDestination(vector);
                 }
                 else if (maxIterations < 1)

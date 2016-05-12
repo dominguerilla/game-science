@@ -20,8 +20,8 @@ public class Rose : NeoAccessory
 
     public override void InitializePriorities()
     {
-		//hybridAccessory.SetPriorities(new int[4] { 1, 0, 1, 0});
-		hybridAccessory.SetPriorities(new int[4] { Random.Range(1, 100), Random.Range(1,100), Random.Range(1,100), Random.Range(1,100)});
+		hybridAccessory.SetPriorities(new int[4] { 1, 1, 0, 1});
+		//hybridAccessory.SetPriorities(new int[4] { Random.Range(1, 100), Random.Range(1,100), Random.Range(1,100), Random.Range(1,100)});
     }
 
     public override void InitializeTargets()
@@ -52,13 +52,14 @@ public class Rose : NeoAccessory
                             return Targets[0] != null; }),
                         // Wait a bit before walking
                         new LeafWait(500),
-                        new WalkToToy(toy, Targets[0].GetComponent<Toy>() as Toy)
-                    ),
-                    new Sequence(
+                        new WalkToToy(toy, Targets[0].GetComponent<Toy>() as Toy),
+
                         new LeafTrace("Rose: target in range"),
                         IdleBehaviors.TurnAndWave(this.toy, Targets[0].GetComponent<Toy>() as Toy),
                         new LeafInvoke(() => {
                             this.toy.ShowEmoji(EmojiScript.EmojiTypes.Laugh_Emoji); }),
+                        // Wait for the proposal
+                        new LeafWait(500),
                         new LeafInvoke(() => { hybridAccessory.ExecuteEffects(); })
                         ),
                     // Show a heart at the beginning of the behavior
