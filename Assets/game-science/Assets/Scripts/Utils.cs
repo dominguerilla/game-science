@@ -69,6 +69,7 @@ public class Utils : MonoBehaviour
         }
         else
         {
+            Debug.Log("Utils.GetOtherToys: no other Toys in scene");
             return null;
         }
 

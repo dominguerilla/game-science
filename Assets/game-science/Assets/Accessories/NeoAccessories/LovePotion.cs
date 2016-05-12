@@ -18,8 +18,8 @@ public class LovePotion : NeoAccessory {
 
     public override void InitializePriorities()
     {
-		hybridAccessory.SetPriorities(new int[4] { 0, 1, 0, 1});
-		//hybridAccessory.SetPriorities(new int[4] { Random.Range(1, 100), Random.Range(1,100), Random.Range(1,100), Random.Range(1,100)});
+		//hybridAccessory.SetPriorities(new int[4] { 0, 1, 0, 1});
+		hybridAccessory.SetPriorities(new int[4] { Random.Range(1, 100), Random.Range(1,100), Random.Range(1,100), Random.Range(1,100)});
     }
 
     public override void InitializeTargets()
@@ -28,9 +28,17 @@ public class LovePotion : NeoAccessory {
         List<GameObject> tempList = Utils.GetAllOtherToysInSceneAsGameObjects(this.toy.gameObject);
         hybridAccessory.SetTarget(new List<GameObject>(), hybridAccessory.ReturnPriority(0));
 
-        foreach (GameObject o in tempList)
+        if (tempList != null)
         {
-            hybridAccessory.GetTarget().Add(o);
+            foreach (GameObject o in tempList)
+            {
+                hybridAccessory.GetTarget().Add(o);
+            }
+        }
+        else
+        {
+            // Add the Toy itself to ensure there's something in the Target list
+            hybridAccessory.GetTarget().Add(this.toy.gameObject);
         }
     }
 

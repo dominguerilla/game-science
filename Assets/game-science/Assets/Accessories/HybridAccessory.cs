@@ -108,14 +108,13 @@ public class HybridAccessory {
 		};
 		hybrid.SetCheckerFunction (function);
 
-        Debug.Log("HybridAccessory.HybridizeComponents: Target/Action/Effect/Execution");
 		hybrid.PrintPriorities ();
 
         return hybrid;
 	}
 
 	public void PrintPriorities(){
-		Debug.Log ("Priorities:");
+		Debug.Log ("Hybrid Priorities:");
 		Debug.Log("\t" + this.ReturnPriority(0) + ", "
 			+ this.ReturnPriority(1) + ", "
 			+ this.ReturnPriority(2) + ", "

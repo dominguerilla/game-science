@@ -20,8 +20,8 @@ public class Joke : NeoAccessory
 
     public override void InitializePriorities()
     {
-		hybridAccessory.SetPriorities(new int[4] { 0, 0, 0, 3});
-		//hybridAccessory.SetPriorities(new int[4] { Random.Range(1, 100), Random.Range(1,100), Random.Range(1,100), Random.Range(1,100)});
+		//hybridAccessory.SetPriorities(new int[4] { 0, 0, 0, 3});
+		hybridAccessory.SetPriorities(new int[4] { Random.Range(1, 100), Random.Range(1,100), Random.Range(1,100), Random.Range(1,100)});
     }
 
     public override void InitializeTargets()
@@ -34,8 +34,9 @@ public class Joke : NeoAccessory
             hybridAccessory.GetTarget().Add(target);
         }
         else
-        {   // To avoid errors, add the Toy itself
-            //hybridAccessory.GetTarget ().Add (toy.gameObject);
+        {
+            // To avoid errors, add the Toy itself so there's something in the Targets list
+            hybridAccessory.GetTarget().Add(toy.gameObject);
         }
     }
 

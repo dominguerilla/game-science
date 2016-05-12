@@ -20,8 +20,8 @@ public class Rose : NeoAccessory
 
     public override void InitializePriorities()
     {
-		hybridAccessory.SetPriorities(new int[4] { 1, 0, 1, 0});
-		//hybridAccessory.SetPriorities(new int[4] { Random.Range(1, 100), Random.Range(1,100), Random.Range(1,100), Random.Range(1,100)});
+		//hybridAccessory.SetPriorities(new int[4] { 1, 0, 1, 0});
+		hybridAccessory.SetPriorities(new int[4] { Random.Range(1, 100), Random.Range(1,100), Random.Range(1,100), Random.Range(1,100)});
     }
 
     public override void InitializeTargets()
@@ -34,7 +34,8 @@ public class Rose : NeoAccessory
             hybridAccessory.GetTarget().Add(target);
         }
         else
-        {   // To avoid errors, add the Toy itself
+        {   
+            // To avoid errors, add the Toy itself so there's something in the Targets list
             hybridAccessory.GetTarget ().Add (toy.gameObject);
         }
     }
