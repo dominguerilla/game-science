@@ -170,8 +170,10 @@ public class Utils : MonoBehaviour
             {
                 if(ob.GetComponent<Toy>() != null)
                 {
-                    Debug.Log("Utils.GetToyInRange: found Toy " + ob.GetComponent<Toy>());
-                    return ob.GetComponent<Toy>();
+                    Debug.Log("Utils.GetToyInRange: found Toy " + ob.GetComponent<Toy>()
+                        + "at distance = "
+                        + Vector3.Distance(toy.transform.position, ob.transform.position));
+                    return ob.GetComponent<Toy>() as Toy;
                 }
             }
         }

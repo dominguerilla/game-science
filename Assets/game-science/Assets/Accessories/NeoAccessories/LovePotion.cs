@@ -36,7 +36,6 @@ public class LovePotion : NeoAccessory {
 
     public override void InitializeAction()
     {
-        Toy currentTarget = null;
         GameObject[] Targets = hybridAccessory.GetTarget().ToArray();
         Node Action =
             new DecoratorLoop(
@@ -51,20 +50,26 @@ public class LovePotion : NeoAccessory {
                         ),
                     new DecoratorLoop(
                         new Sequence(
+                            // Old stuff: Failed attempt to get a random Toy in list as target
+                            /*new DecoratorForceStatus(RunStatus.Success,
                             new DecoratorLoop(100,
                                 new Sequence(
                                     new LeafTrace("Looking for Toy..."),
                                     // First, walk to a random location within 5 units of Toy
                                     new WalkToRandomRange(this.toy, 5f),
                                     // Check that a target is in range before proceeding
+                                    new LeafInvoke(() => {
+                                        SetTarget(Utils.GetToyInRange(this.toy, Targets, 8f));
+                                    }),
+                                    new LeafTrace("Current target == null? " + (currentTarget == null)),
                                     new LeafAssert(() => {
-                                        return (currentTarget = Utils.GetToyInRange(this.toy, Targets, 8f)) == null;
+                                        return currentTarget == null;
                                     }))
-                            ),
-                            // We have a current target now
-                            new LeafTrace("LovePotion: found target " + currentTarget + " in range."),
+                            )),*/
+                            new LeafTrace("Target is: " + (Targets[0].GetComponent<Toy>() as Toy)),
+                            new WalkToToy(this.toy, Targets[0].GetComponent<Toy>() as Toy),
                             // Have the Toy turn to face the target and wave
-                            IdleBehaviors.TurnAndWave(this.toy, currentTarget),
+                            IdleBehaviors.TurnAndWave(this.toy, Targets[0].GetComponent<Toy>() as Toy),
                             new LeafInvoke(() => {
                                 hybridAccessory.ExecuteEffects();
                             }),

@@ -5,23 +5,28 @@ public static class IdleBehaviors {
 
     public static Node TurnTowardsTarget(Toy toy, Toy target)
     {
-        return new Sequence(
-            new LeafAssert(() => {
-                return toy != null
-                && target != null;
-            }),
-            new LeafInvoke(() =>
-            {
-                // For now, just turn instantly
-                Debug.Log("Turning towards target");
-                toy.transform.LookAt(target.transform);
-            }));
+        if(toy == null)
+        {
+            return new LeafTrace("TurnTowardsTarget: toy is null");
+        }
+        if (target == null)
+        {
+            return new LeafTrace("TurnTowardsTarget: target is null");
+        }
+
+        return new LeafInvoke(() => {
+            // For now, just turn instantly
+            Debug.Log("Turning towards target");
+            toy.transform.LookAt(target.transform); });
     }
 
     public static Node TurnAndWave(Toy toy, Toy target)
     {
         Animator anim = toy.GetAnimator();
-        if (!anim) { return null; }
+        if (!anim)
+        {
+            return new LeafTrace("TurnAndWave: toy.GetAnimator returned null");
+        }
 
         return new Sequence(
             // Turn to the target

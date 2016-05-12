@@ -296,11 +296,11 @@ public class Toy : SmartObject {
         // If Toy is inside of a Playzone, we may want to do something to it here
         // if(CheckStates(SimpleStateDef.IsInPlayzone)){ }
 
-        if (Input.GetKeyDown(KeyCode.P))
+        /*if (Input.GetKeyDown(KeyCode.P))
         {
             //Debug.Log("Toy.Update: P key pressed");
             //SetIdleBehaviorFromAccessories();
-        }
+        }*/
 
     }
 
@@ -479,11 +479,18 @@ public class Toy : SmartObject {
 		}
 
 		//This SHOULD sort them out by execution priority
-		H_LIST.Sort ((x,y) =>{return ~x.ReturnPriority(3).CompareTo(y.ReturnPriority(3));});
+		//H_LIST.Sort ((x,y) =>{return ~x.ReturnPriority(3).CompareTo(y.ReturnPriority(3));});
+        H_LIST.Sort((x, y) => { return x.ReturnPriority(3).CompareTo(y.ReturnPriority(3)); });
+        H_LIST.Reverse();
 
+        Debug.Log("Toy.Equip: H_LIST after sorting:");
+        foreach(HybridAccessory h in H_LIST)
+        {
+            Debug.Log("Priority: " + h.ReturnPriority(3));
+        }
 
         // Update the Toy's active hybrid accessory
-		RunCheckerFunctions();
+        RunCheckerFunctions();
         //SetIdleBehaviorFromAccessories();
     }
 
@@ -543,14 +550,12 @@ public class Toy : SmartObject {
     {
 		if (root != null) {
 			IdleTreeRoot = IdleBehaviors.IdleStandDuringAction(root);
-            //print("SetIdleBehavior 1");
             if (bagent != null) { bagent.StopBehavior(); }
-
-            //print("SetIdleBehavior 2");
             bagent = new BehaviorAgent(IdleTreeRoot);
-            //print("SetIdleBehavior 3");
-            bagent.StartBehavior();
-            //print("SetIdleBehavior 4");
+
+            // Commenting this out so that user needs to hit play to start behavior
+            //bagent.StartBehavior();
+
         } else {
 			Debug.Log ("Toy.SetIdleBehavior given null input");
 		}

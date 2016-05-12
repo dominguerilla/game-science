@@ -43,9 +43,9 @@ namespace TreeSharpPlus{
                 float distance = Vector3.Distance(agent.transform.position, vector);
 
                 // Close enough
-                if(distance <= 2f){ break; }
+                if(distance <= 3f){ break; }
 
-                if(--maxIterations % 10 == 0)
+                if(--maxIterations % 5 == 0)
                 {
                     // Recalculate vector
                     vector = target.transform.position;
