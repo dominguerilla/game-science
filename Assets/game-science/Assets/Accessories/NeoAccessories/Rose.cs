@@ -20,8 +20,8 @@ public class Rose : NeoAccessory
 
     public override void InitializePriorities()
     {
-		hybridAccessory.SetPriorities(new int[4] { 1, 1, 0, 1});
-		//hybridAccessory.SetPriorities(new int[4] { Random.Range(1, 100), Random.Range(1,100), Random.Range(1,100), Random.Range(1,100)});
+		//hybridAccessory.SetPriorities(new int[4] { 1, 1, 0, 1});
+		hybridAccessory.SetPriorities(new int[4] { Random.Range(1, 100), Random.Range(1,100), Random.Range(1,100), Random.Range(1,100)});
     }
 
     public override void InitializeTargets()
