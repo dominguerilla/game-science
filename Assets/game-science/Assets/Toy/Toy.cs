@@ -479,19 +479,11 @@ public class Toy : SmartObject {
 		}
 
 		//This SHOULD sort them out by execution priority
-		//H_LIST.Sort ((x,y) =>{return ~x.ReturnPriority(3).CompareTo(y.ReturnPriority(3));});
         H_LIST.Sort((x, y) => { return x.ReturnPriority(3).CompareTo(y.ReturnPriority(3)); });
         H_LIST.Reverse();
 
-        Debug.Log("Toy.Equip: H_LIST after sorting:");
-        foreach(HybridAccessory h in H_LIST)
-        {
-            Debug.Log("Priority: " + h.ReturnPriority(3));
-        }
-
         // Update the Toy's active hybrid accessory
         RunCheckerFunctions();
-        //SetIdleBehaviorFromAccessories();
     }
 
     /// <summary>
@@ -554,7 +546,7 @@ public class Toy : SmartObject {
             bagent = new BehaviorAgent(IdleTreeRoot);
 
             // Commenting this out so that user needs to hit play to start behavior
-            //bagent.StartBehavior();
+            bagent.StartBehavior();
 
         } else {
 			Debug.Log ("Toy.SetIdleBehavior given null input");
@@ -829,6 +821,8 @@ public class Toy : SmartObject {
     {
         if (IdleTreeRoot != null)
         {
+			if (bagent != null)
+				bagent.StopBehavior ();
             bagent = new BehaviorAgent(IdleTreeRoot);
             bagent.StartBehavior();
         }
@@ -858,6 +852,10 @@ public class Toy : SmartObject {
 	/// Runs all of the Checker Functions contained in the Hybrid Accessories in H_LIST, in order of the list. The first one that returns true will make the Toy switch to that behavior.
 	/// </summary>
 	public void RunCheckerFunctions(){
+		if (H_LIST.Count == 1) {
+			SetIdleBehavior (H_LIST[0].GetAction());
+			return;
+		}
 		int i = 0;
 		foreach (HybridAccessory hacc in H_LIST) {
 			HybridAccessory.CheckerFunction function = hacc.GetCheckerFunction ();
@@ -915,7 +913,6 @@ public class Toy : SmartObject {
         {
             if(this.states[(int)i] != true)
             {
-                //Debug.Log("In Toy.CheckStates. State '" + i + "' is false");
                 return false;
             }
         }

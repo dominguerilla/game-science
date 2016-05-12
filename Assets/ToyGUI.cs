@@ -261,7 +261,7 @@ public class ToyGUI : MonoBehaviour {
 		RaycastHit hit;
 		if(Physics.Raycast(ray, out hit))
 		{
-			GameObject newThing = GameObject.Instantiate(prefabToSpawn, hit.point, Quaternion.identity) as GameObject;
+			GameObject newThing = GameObject.Instantiate(prefabToSpawn, hit.point + new Vector3(0, 0.5f, 0), Quaternion.identity) as GameObject;
 			Toy toy = newThing.GetComponent<Toy>();
 			Accessory acc = newThing.GetComponent (typeof(Accessory)) as Accessory;
 			if (toy) {
