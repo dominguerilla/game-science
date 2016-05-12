@@ -104,6 +104,15 @@ public static class IdleBehaviors {
         ));
     }
 
+    public static Node TurnWave(Toy toy, GameObject target)
+    {
+        return new Sequence(
+                new LeafInvoke(()=> { toy.transform.LookAt(target.transform);
+                    //fill with wave animation here
+                })
+            );
+    }
+
     //[Affordance]
     public static Node WalkBackAndForth(Toy toy, GameObject position1, GameObject position2)
     {
