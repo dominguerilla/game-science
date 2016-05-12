@@ -13,7 +13,7 @@ public class Skelefier : NeoAccessory {
 
 
 	public override void InitializePriorities(){
-		
+		hybridAccessory.SetPriorities(new int[4] { Random.Range(1, 100), Random.Range(1,100), Random.Range(1,100), Random.Range(1,100)});
 	}
 
 	public override void InitializeTargets(){
@@ -28,6 +28,18 @@ public class Skelefier : NeoAccessory {
 	public override void InitializeEffects(){
 
 	}
+
+	public override void InitializeExecutionOrder(){
+		hybridAccessory.SetExecutionPriority (Random.Range(1,100));
+	}
+
+	public override void InitializeCheckerFunction(){
+		HybridAccessory.CheckerFunction function = () => {
+			return true;
+		};
+		hybridAccessory.SetCheckerFunction (function);
+	}
+
 
 
 }

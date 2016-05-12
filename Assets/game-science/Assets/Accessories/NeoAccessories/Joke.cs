@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using TreeSharpPlus;
-using System;
 using System.Collections.Generic;
 
 public class Joke : NeoAccessory
@@ -21,7 +20,8 @@ public class Joke : NeoAccessory
 
     public override void InitializePriorities()
     {
-        hybridAccessory.SetPriorities(new int[3] { 99, 1, 99 });
+		hybridAccessory.SetPriorities(new int[4] { 0, 0, 0, 3});
+		//hybridAccessory.SetPriorities(new int[4] { Random.Range(1, 100), Random.Range(1,100), Random.Range(1,100), Random.Range(1,100)});
     }
 
     public override void InitializeTargets()
@@ -87,7 +87,7 @@ public class Joke : NeoAccessory
 
     public override void InitializeEffects()
     {
-        HybridAccessory.EffectFunction function = () =>
+        HybridAccessory.AccessoryFunction function = () =>
         {
             Toy target = hybridAccessory.GetTarget()[0].GetComponent<Toy>();
             if (target)
@@ -104,4 +104,17 @@ public class Joke : NeoAccessory
 
         hybridAccessory.SetEffect(function, hybridAccessory.ReturnPriority(2));
     }
+
+	public override void InitializeExecutionOrder(){
+		hybridAccessory.SetExecutionPriority (Random.Range(1,100));
+	}
+
+	public override void InitializeCheckerFunction(){
+		HybridAccessory.CheckerFunction function = () => {
+			return true;
+		};
+		hybridAccessory.SetCheckerFunction (function);
+	}
+
+
 }

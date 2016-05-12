@@ -8,6 +8,7 @@ using TreeSharpPlus;
 /// 1. Targets
 /// 2. Action
 /// 3. Effects
+/// 4. Execution Order!
 /// Note that we don't need a core function for this--we're focusing directly on behaviors that the Toy
 /// uses, not the player.
 /// :(((((((
@@ -57,7 +58,8 @@ public abstract class NeoAccessory : MonoBehaviour{
     {
         Target = 0,
         Action = 1,
-        Effect = 2
+        Effect = 2,
+		Execution = 3
     }
 
 	void Start(){
@@ -91,6 +93,17 @@ public abstract class NeoAccessory : MonoBehaviour{
 	/// Sets the Effects function in the Hybrid Accessory.
 	/// </summary>
 	public abstract void InitializeEffects ();
+
+	/// <summary>
+	/// Initializes the priority for executing this Accessory. The list of equipped Accessories is scanned (every second? frame?) by order of priority.
+	/// </summary>
+	public abstract void InitializeExecutionOrder ();
+
+	/// <summary>
+	/// Initializes the checker function for this Accessory. The checker function is called when the Toy is scanning H_LIST, and if it is true, execution of this Accessory takes place.
+	/// </summary>
+	public abstract void InitializeCheckerFunction ();
+
 
 	/// <summary>
 	/// Rotates the Accessory.
@@ -147,7 +160,7 @@ public abstract class NeoAccessory : MonoBehaviour{
         InitializeAction();
         InitializeEffects();
 
-        Debug.Log("NeoAccessory.OnUse for " + this);
+        //Debug.Log("NeoAccessory.OnUse for " + this);
         /*Debug.Log("\tPriorities: " + GetPriorities()[0] + ", "
             + GetPriorities()[1] + ", "
             + GetPriorities()[2]);

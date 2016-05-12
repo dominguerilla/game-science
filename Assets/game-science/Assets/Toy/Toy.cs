@@ -61,8 +61,11 @@ public class Toy : SmartObject {
     // The hybrid accessories this Toy has
     private List<HybridAccessory> H_LIST = new List<HybridAccessory>();
 
-    // The Toy's active hybrid accessory
+    // The Toy's active hybrid accessory. Different depending on the priorities of the accessories in H_LIST.
     private HybridAccessory ActiveHybridAccessory;
+
+	// The Hybrid Accessory that is a result of all current hybrid Accessories in H_LIST. Recalculated every time a Toy equips a new one.
+	private HybridAccessory AmalgamateAccessory;
 
     //The current Accessory Archetype of the Toy. Currently, only one is able to be stored at a time.
     private string AccessoryArchetype;
@@ -117,7 +120,7 @@ public class Toy : SmartObject {
     /// <param name="targetAccessory">Target accessory.</param>
     public void SetTargetAccessory(GameObject target)
     {
-        Debug.Log("SetTargetAccessory: " + target);
+        //Debug.Log("SetTargetAccessory: " + target);
         Accessory acc = target.GetComponent(typeof(Accessory)) as Accessory;
         NeoAccessory neoAcc = target.GetComponent(typeof(NeoAccessory)) as NeoAccessory;
         if (acc)
@@ -295,8 +298,8 @@ public class Toy : SmartObject {
 
         if (Input.GetKeyDown(KeyCode.P))
         {
-            Debug.Log("Toy.Update: P key pressed");
-            SetIdleBehaviorFromAccessories();
+            //Debug.Log("Toy.Update: P key pressed");
+            //SetIdleBehaviorFromAccessories();
         }
 
     }
@@ -343,6 +346,16 @@ public class Toy : SmartObject {
         ToySelectLight.transform.Rotate(90, 0, 0);
 
 		SpawnTargetAccessoryLight ();
+		if (H_LIST.Count > 0) {
+			Debug.Log ("ALL equipped HybridAccessories for " + this.gameObject.name);
+			int i = 0;
+			foreach(HybridAccessory hacc in H_LIST){
+				Debug.Log ("Hybrid Acc " + i + ": ");
+				hacc.PrintPriorities ();
+				i++;
+			}
+		}
+
         //Debug.Log(gameObject.name + " is selected.");
     }
 
@@ -455,10 +468,23 @@ public class Toy : SmartObject {
 
         // Turn it into a hybrid accessory
         HybridAccessory newHybrid = acc.GetHybridAccessory();
-        H_LIST.Add(newHybrid);
+		H_LIST.Add (newHybrid);
+
+		//Creates an amalgamate Accessory if there is more than one in the list
+		if (H_LIST.Count > 1) {
+			if (AmalgamateAccessory != null)
+				H_LIST.Remove (AmalgamateAccessory);
+			AmalgamateAccessory = HybridAccessory.HybridizeComponents (H_LIST.ToArray ());
+			H_LIST.Add (AmalgamateAccessory);
+		}
+
+		//This SHOULD sort them out by execution priority
+		H_LIST.Sort ((x,y) =>{return ~x.ReturnPriority(3).CompareTo(y.ReturnPriority(3));});
+
 
         // Update the Toy's active hybrid accessory
-        SetIdleBehaviorFromAccessories();
+		RunCheckerFunctions();
+        //SetIdleBehaviorFromAccessories();
     }
 
     /// <summary>
@@ -516,7 +542,7 @@ public class Toy : SmartObject {
     public void SetIdleBehavior(Node root) //recompile
     {
 		if (root != null) {
-			IdleTreeRoot = root;
+			IdleTreeRoot = IdleBehaviors.IdleStandDuringAction(root);
             //print("SetIdleBehavior 1");
             if (bagent != null) { bagent.StopBehavior(); }
 
@@ -540,8 +566,7 @@ public class Toy : SmartObject {
 
         if (ActiveHybridAccessory != null)
         {
-            IdleTreeRoot = ActiveHybridAccessory.GetAction();
-
+			IdleTreeRoot = IdleBehaviors.IdleStandDuringAction(ActiveHybridAccessory.GetAction());
             /* If we want the toy to start its new action immediately after picking up accessory,
             * uncomment the line below. Otherwise, user needs to click start. */
             // DEBUG_StartBehavior();
@@ -823,6 +848,25 @@ public class Toy : SmartObject {
         }
     }
     #endregion
+
+	/// <summary>
+	/// Runs all of the Checker Functions contained in the Hybrid Accessories in H_LIST, in order of the list. The first one that returns true will make the Toy switch to that behavior.
+	/// </summary>
+	public void RunCheckerFunctions(){
+		int i = 0;
+		foreach (HybridAccessory hacc in H_LIST) {
+			HybridAccessory.CheckerFunction function = hacc.GetCheckerFunction ();
+			if ( function != null) {
+				bool run = function ();
+				Debug.Log ("Checker function for HybridAccessory " + i + " returns " + run);
+				if (run) {
+					SetIdleBehavior (hacc.GetAction());
+					break;
+				}
+			}
+			i++;
+		}
+	}
 
     #region Node Functions
     /// <summary>

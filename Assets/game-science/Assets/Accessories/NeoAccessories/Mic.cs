@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using TreeSharpPlus;
-using System;
 using System.Collections.Generic;
 
 public class Mic : NeoAccessory {
@@ -19,7 +18,8 @@ public class Mic : NeoAccessory {
 
     public override void InitializePriorities()
     {
-        hybridAccessory.SetPriorities(new int[3] { 1, 99, 1 });
+		hybridAccessory.SetPriorities(new int[4] { 3, 0, 0, 0});
+		//hybridAccessory.SetPriorities(new int[4] { Random.Range(1, 100), Random.Range(1,100), Random.Range(1,100), Random.Range(1,100)});
     }
 
     public override void InitializeTargets()
@@ -73,7 +73,7 @@ public class Mic : NeoAccessory {
     }
 
 	public override void InitializeEffects(){
-        HybridAccessory.EffectFunction function = () =>
+        HybridAccessory.AccessoryFunction function = () =>
         {
             for (int i = 0; i < 3; i++)
             {
@@ -115,4 +115,16 @@ public class Mic : NeoAccessory {
             );
     }
     */
+
+	public override void InitializeExecutionOrder(){
+		hybridAccessory.SetExecutionPriority (Random.Range(1,100));
+	}
+
+	public override void InitializeCheckerFunction(){
+		HybridAccessory.CheckerFunction function = () => {
+			return true;
+		};
+		hybridAccessory.SetCheckerFunction (function);
+	}
+
 }

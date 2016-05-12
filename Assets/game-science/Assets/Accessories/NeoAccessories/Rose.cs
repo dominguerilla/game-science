@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using TreeSharpPlus;
-using System;
 using System.Collections.Generic;
 
 public class Rose : NeoAccessory
@@ -21,7 +20,8 @@ public class Rose : NeoAccessory
 
     public override void InitializePriorities()
     {
-        hybridAccessory.SetPriorities(new int[3] { 99, 1, 99 });
+		hybridAccessory.SetPriorities(new int[4] { 1, 0, 1, 0});
+		//hybridAccessory.SetPriorities(new int[4] { Random.Range(1, 100), Random.Range(1,100), Random.Range(1,100), Random.Range(1,100)});
     }
 
     public override void InitializeTargets()
@@ -35,7 +35,7 @@ public class Rose : NeoAccessory
         }
         else
         {   // To avoid errors, add the Toy itself
-            //hybridAccessory.GetTarget ().Add (toy.gameObject);
+            hybridAccessory.GetTarget ().Add (toy.gameObject);
         }
     }
 
@@ -87,7 +87,7 @@ public class Rose : NeoAccessory
 
     public override void InitializeEffects()
     {
-        HybridAccessory.EffectFunction function = () =>
+        HybridAccessory.AccessoryFunction function = () =>
         {
             Toy target = hybridAccessory.GetTarget()[0].GetComponent<Toy>();
             if (target)
@@ -104,4 +104,16 @@ public class Rose : NeoAccessory
 
         hybridAccessory.SetEffect(function, hybridAccessory.ReturnPriority(2));
     }
+
+	public override void InitializeExecutionOrder(){
+		hybridAccessory.SetExecutionPriority (Random.Range(1,100));
+	}
+
+	public override void InitializeCheckerFunction(){
+		HybridAccessory.CheckerFunction function = () => {
+			return true;
+		};
+		hybridAccessory.SetCheckerFunction (function);
+	}
+
 }

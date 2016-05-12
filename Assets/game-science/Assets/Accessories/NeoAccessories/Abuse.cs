@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using TreeSharpPlus;
-using System;
 using System.Collections.Generic;
 
 public class Abuse : NeoAccessory
@@ -55,6 +54,7 @@ public class Abuse : NeoAccessory
         ActionPriority = 56;
         EffectPriority = 11;
         */
+		hybridAccessory.SetPriorities(new int[4] { Random.Range(1, 100), Random.Range(1,100), Random.Range(1,100), Random.Range(1,100)});
     }
 
     public override void InitializeTargets()
@@ -116,6 +116,18 @@ public class Abuse : NeoAccessory
 	public override void InitializeEffects(){
 
 	}
+
+	public override void InitializeExecutionOrder(){
+		hybridAccessory.SetExecutionPriority (Random.Range(1,100));
+	}
+
+	public override void InitializeCheckerFunction(){
+		HybridAccessory.CheckerFunction function = () => {
+			return true;
+		};
+		hybridAccessory.SetCheckerFunction (function);
+	}
+
 
 	/*
     public override Node GetParameterizedAction(Toy toy, NeoAccessory targetAccessory,

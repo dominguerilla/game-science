@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using TreeSharpPlus;
-using System;
 using System.Collections.Generic;
 
 public class LovePotion : NeoAccessory {
@@ -19,7 +18,8 @@ public class LovePotion : NeoAccessory {
 
     public override void InitializePriorities()
     {
-        hybridAccessory.SetPriorities(new int[3] { 1, 99, 1 });
+		hybridAccessory.SetPriorities(new int[4] { 0, 1, 0, 1});
+		//hybridAccessory.SetPriorities(new int[4] { Random.Range(1, 100), Random.Range(1,100), Random.Range(1,100), Random.Range(1,100)});
     }
 
     public override void InitializeTargets()
@@ -77,7 +77,7 @@ public class LovePotion : NeoAccessory {
     }
 
 	public override void InitializeEffects(){
-        HybridAccessory.EffectFunction function = () =>
+        HybridAccessory.AccessoryFunction function = () =>
         {
             // This Toy is happy and in love
             for (int i = 0; i < 3; i++)
@@ -89,6 +89,19 @@ public class LovePotion : NeoAccessory {
 
         hybridAccessory.SetEffect(function, hybridAccessory.ReturnPriority(2));
     }
+
+	public override void InitializeExecutionOrder(){
+		hybridAccessory.SetExecutionPriority (Random.Range(1,100));
+	}
+
+	public override void InitializeCheckerFunction(){
+		HybridAccessory.CheckerFunction function = () => {
+			return true;
+		};
+		hybridAccessory.SetCheckerFunction (function);
+	}
+
+
 	/*
     public override Node GetParameterizedAction(Toy toy, NeoAccessory targetAccessory,
         NeoAccessory effectAccessory)
