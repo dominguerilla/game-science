@@ -110,7 +110,7 @@ public class ToyGUI : MonoBehaviour {
 
 		//Initiating GUIState
 		CurrentGUIState = GUIStates.NO_MODE;
-		Debug.Log ("Starting at NO_MODE.");
+		//Debug.Log ("Starting at NO_MODE.");
 	}
 
 
@@ -151,13 +151,13 @@ public class ToyGUI : MonoBehaviour {
 					Accessory targetAcc = hit.collider.gameObject.GetComponent (typeof(Accessory)) as Accessory;
                     NeoAccessory targetNeoAcc = hit.collider.gameObject.GetComponent(typeof(NeoAccessory)) as NeoAccessory;
                     if (targetAcc) {
-						Debug.Log (SelectedToy.gameObject.name + " is queued to equip " + targetAcc.name);
+						//Debug.Log (SelectedToy.gameObject.name + " is queued to equip " + targetAcc.name);
 						SelectedToy.ChangeIdleRoot(IdleBehaviors.IdleStandDuringAction(IdleBehaviors.MoveAndEquipAccessory(SelectedToy, targetAcc)));
 						SelectedToy.SetTargetAccessory (targetAcc.gameObject);
 						SelectedToy.SpawnTargetAccessoryLight ();
 					} else if (targetNeoAcc) {
                         // Do the same thing for NeoAccessories
-                        Debug.Log(SelectedToy.gameObject.name + " is queued to equip " + targetNeoAcc.name);
+                        //Debug.Log(SelectedToy.gameObject.name + " is queued to equip " + targetNeoAcc.name);
                         SelectedToy.ChangeIdleRoot(IdleBehaviors.IdleStandDuringAction
                             (IdleBehaviors.MoveAndEquipAccessory(SelectedToy, targetNeoAcc)));
                         SelectedToy.SetTargetAccessory(targetNeoAcc.gameObject);
@@ -184,7 +184,7 @@ public class ToyGUI : MonoBehaviour {
 		SelectedToy = null;
 		SelectedAccessory = null;
 		CurrentGUIState = GUIStates.NO_MODE;
-		Debug.Log ("Entered NO_MODE.");
+		//Debug.Log ("Entered NO_MODE.");
     }
 
 
@@ -217,7 +217,7 @@ public class ToyGUI : MonoBehaviour {
 		SelectedToy = toy;
 		SelectedAccessory = null;
 		CurrentGUIState = GUIStates.EDIT_MODE;
-		Debug.Log("Entered EDIT_MODE.");
+		//Debug.Log("Entered EDIT_MODE.");
 	}
 
 	/// <summary>
@@ -232,7 +232,7 @@ public class ToyGUI : MonoBehaviour {
 		SelectedToy = null;
 		SelectedAccessory = acc;
 		CurrentGUIState = GUIStates.EDIT_MODE;
-		Debug.Log("Entered EDIT_MODE.");
+		//Debug.Log("Entered EDIT_MODE.");
 	}
 
 	/// <summary>
@@ -244,7 +244,7 @@ public class ToyGUI : MonoBehaviour {
 		SelectedToy = null;
 		SelectedAccessory = null;
 		CurrentGUIState = GUIStates.SPAWN_MODE;
-        Debug.Log("Entered SPAWN_MODE");
+        //Debug.Log("Entered SPAWN_MODE");
 		prefabToSpawn = prefab;
     }
 
@@ -315,7 +315,7 @@ public class ToyGUI : MonoBehaviour {
 			NGUITools.SetActive (Tabs [(int)CurrentActiveTab].GetComponent<ToyboxGUITab> ().GetSelectionMenu (), false);
 		CurrentActiveTab = NextTab;
 		NGUITools.SetActive (Tabs [(int)CurrentActiveTab].GetComponent<ToyboxGUITab>().GetSelectionMenu(), true);
-		Debug.Log ("Enabling tab " + System.Enum.GetName(typeof(ToyGUI.TabTypes), NextTab));
+		//Debug.Log ("Enabling tab " + System.Enum.GetName(typeof(ToyGUI.TabTypes), NextTab));
         //EnterSPAWN_MODE();
     }
 }

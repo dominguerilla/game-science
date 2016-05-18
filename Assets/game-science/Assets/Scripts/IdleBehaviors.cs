@@ -178,12 +178,14 @@ public static class IdleBehaviors {
     /// <returns></returns>
     public static Node MoveAndEquipAccessory(Toy toy, Accessory acc)
     {
-        return new Sequence(
-			new WalkTo(toy, acc.gameObject.transform.position),
-                    new LeafAssert(() => { return acc.gameObject.activeInHierarchy; }), 
-                    new LeafInvoke(() => { toy.Equip(acc); }),
-                    acc.OnUse(toy)
-        );
+		return new DecoratorForceStatus(RunStatus.Success, 
+			new Sequence(
+				new WalkTo(toy, acc.gameObject.transform.position),
+				new LeafAssert(() => { return acc.gameObject.activeInHierarchy; }), 
+				new LeafInvoke(() => { toy.Equip(acc); }),
+				acc.OnUse(toy)
+			)
+		);
     }
 
     /// <summary>
@@ -194,11 +196,13 @@ public static class IdleBehaviors {
     /// <returns></returns>
     public static Node MoveAndEquipAccessory(Toy toy, NeoAccessory acc)
     {
-        return new Sequence(
-            new WalkTo(toy, acc.gameObject.transform.position),
-            new LeafAssert(() => { return acc.gameObject.activeInHierarchy; }),
-            new LeafInvoke(() => { toy.Equip(acc); })
-        );
+		return new DecoratorForceStatus(RunStatus.Success, 
+			new Sequence(
+				new WalkTo(toy, acc.gameObject.transform.position),
+				new LeafAssert(() => { return acc.gameObject.activeInHierarchy; }),
+				new LeafInvoke(() => { toy.Equip(acc); })
+			)
+		);
     }
 
     /// <summary>

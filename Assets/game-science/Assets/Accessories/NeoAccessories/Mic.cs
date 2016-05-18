@@ -117,9 +117,7 @@ public class Mic : NeoAccessory {
     }
     */
 
-	public override void InitializeExecutionOrder(){
-		hybridAccessory.SetExecutionPriority (Random.Range(1,100));
-	}
+
 
 	public override void InitializeCheckerFunction(){
 		HybridAccessory.CheckerFunction function = () => {

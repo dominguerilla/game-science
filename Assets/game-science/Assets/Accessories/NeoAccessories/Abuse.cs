@@ -105,10 +105,6 @@ public class Abuse : NeoAccessory
         hybridAccessory.SetEffect(function, hybridAccessory.ReturnPriority(2));
     }
 
-	public override void InitializeExecutionOrder(){
-		hybridAccessory.SetExecutionPriority (Random.Range(1,100));
-	}
-
 	public override void InitializeCheckerFunction(){
 		HybridAccessory.CheckerFunction function = () => {
 			return true;

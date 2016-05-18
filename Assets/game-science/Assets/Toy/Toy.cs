@@ -26,9 +26,6 @@ public class Toy : SmartObject {
     //This is used to specify where equipped Accessories will show up on the Toy.
 	[SerializeField]
     private Transform[] AccessorySlots = new Transform[10];
-    
-    //The current number of available Accessory slots on the Toy.
-    private int AvailableSlots;
 
     //Specifies if the player is currently in control of this Toy.
 	[SerializeField]
@@ -228,60 +225,11 @@ public class Toy : SmartObject {
         anim = GetComponent<Animator>();
         anim.SetBool("isWalk", false);
         playerInControl = false;
-        AvailableSlots = AccessorySlots.Length;
 
-        // Option to start a toy with a target accessory
-        /*if (targetAccessory != null)
-        {
-            Debug.Log("Starting with target accessory: " + targetAccessory);
-            Accessory acc = targetAccessory.GetComponent(typeof(Accessory)) as Accessory;
-			if (acc != null) {
-				Debug.Log ("Accessory found in " + targetAccessory);																														
-				IdleTreeRoot = IdleBehaviors.IdleStandDuringAction(IdleBehaviors.MoveAndEquipAccessory (this, acc));
-
-                // Adding this so Toys with targetAccessories pick them up
-                SetIdleBehavior(IdleTreeRoot);
-			}
-            else IdleTreeRoot = IdleBehaviors.IdleStand();
-        }
-		else // Otherwise, look for a random accessory
-        {
-            // Look for accessory
-            //Debug.Log("Looking for accessory...");
-            /*
-            GameObject[] accessoriesInScene =
-                GameObject.FindGameObjectsWithTag("Accessory");
-
-			if (accessoriesInScene.Length == 0)
-            {
-                Debug.Log("No accessories in scene");
-				IdleTreeRoot = IdleBehaviors.IdleStand ();
-            }
-            else
-            {
-                // Choose a random accessory from the ones in the scene
-                System.Random rand = new System.Random();
-                GameObject chosenAccessory =
-                    accessoriesInScene[rand.Next(0, accessoriesInScene.Length)];
-
-                // Have this accessory be this toy's target accessory
-                SetAccessory(chosenAccessory);
-            }
-			SetIdleBehavior (IdleBehaviors.IdleStand ());
-        }*/
     }
 	
 	// Update is called once per frame
 	void Update () {
-        if(agent == null)
-        {
-            Debug.Log("null");
-        }
-
-		/*if (targetAccessory) {
-			SetTargetAccessory (targetAccessory);
-		}*/
-            
         anim.SetBool("Moving", agent.hasPath);
 
         // If Toy is in range of an accessory, is in the "wantsAccessory" state,
@@ -292,16 +240,14 @@ public class Toy : SmartObject {
         {
             EquipAccessoriesInRange();
         }
-
-        // If Toy is inside of a Playzone, we may want to do something to it here
-        // if(CheckStates(SimpleStateDef.IsInPlayzone)){ }
-
-        /*if (Input.GetKeyDown(KeyCode.P))
-        {
-            //Debug.Log("Toy.Update: P key pressed");
-            //SetIdleBehaviorFromAccessories();
-        }*/
-
+		if (Input.GetKeyDown (KeyCode.P) && AmalgamateAccessory != null) {
+			SetIdleBehavior (AmalgamateAccessory.GetAction());
+			Debug.Log ("Set Idle Behavior to Amalgamate Accessory.");
+		}else if(Input.GetKeyDown(KeyCode.O)){
+			foreach(HybridAccessory hacc in H_LIST){
+				hacc.DisplayTargets ();
+			}
+		}
     }
 
     #region Public interface functions
@@ -356,6 +302,9 @@ public class Toy : SmartObject {
 			}
 		}
 
+		if (AmalgamateAccessory != null)
+			AmalgamateAccessory.DisplayTargets ();
+
         //Debug.Log(gameObject.name + " is selected.");
     }
 
@@ -364,7 +313,7 @@ public class Toy : SmartObject {
 	/// </summary>
 	public void SpawnTargetAccessoryLight(){
 		if (targetAccessory && targetAccessory.activeInHierarchy) {
-			Debug.Log ("Creating targetAccessory light!");
+			//Debug.Log ("Creating targetAccessory light!");
 			AccessorySelectLight = new GameObject ("Spotlight");
 			Light accLightComp = AccessorySelectLight.AddComponent<Light> ();
 			AccessorySelectLight.transform.parent = targetAccessory.gameObject.transform;
@@ -376,7 +325,7 @@ public class Toy : SmartObject {
 		}
         else if (targetNeoAccessory)
         {   // Do the same thing for NeoAccessories
-            Debug.Log("Creating targetAccessory light!");
+            //Debug.Log("Creating targetAccessory light!");
             AccessorySelectLight = new GameObject("Spotlight");
             Light accLightComp = AccessorySelectLight.AddComponent<Light>();
             AccessorySelectLight.transform.parent = targetNeoAccessory.gameObject.transform;
@@ -538,94 +487,20 @@ public class Toy : SmartObject {
     /// Sets the idle behavior of this Toy to the given root node.
     /// </summary>
     /// <param name="root"></param>
-    public void SetIdleBehavior(Node root) //recompile
+    public void SetIdleBehavior(Node root)
     {
 		if (root != null) {
 			IdleTreeRoot = IdleBehaviors.IdleStandDuringAction(root);
             if (bagent != null) { bagent.StopBehavior(); }
             bagent = new BehaviorAgent(IdleTreeRoot);
 
-            // Commenting this out so that user needs to hit play to start behavior
             bagent.StartBehavior();
 
         } else {
-			Debug.Log ("Toy.SetIdleBehavior given null input");
+			Debug.Log ("Toy.SetIdleBehavior given null input!");
 		}
     }
-
-    /// <summary>
-    /// Computes idle behavior Node from this Toy's accessories
-    /// Does so using the priorities of each of the accessories
-    /// </summary>
-    public void SetIdleBehaviorFromAccessories()
-    {
-        ActiveHybridAccessory = HybridAccessory.HybridizeComponents(H_LIST.ToArray());
-
-        if (ActiveHybridAccessory != null)
-        {
-			IdleTreeRoot = IdleBehaviors.IdleStandDuringAction(ActiveHybridAccessory.GetAction());
-            /* If we want the toy to start its new action immediately after picking up accessory,
-            * uncomment the line below. Otherwise, user needs to click start. */
-            // DEBUG_StartBehavior();
-        }
-
-        /*
-        if(NeoAccessories.Count < 1)
-        {
-            Debug.Log("Toy.SetIdleBehaviorFromAccessories: no accessories for " + this);
-            return;
-        }
-
-        int largestTargetPriority = -1,
-            largestActionPriority = -1,
-            largestEffectPriority = -1;
-
-        NeoAccessory targetAccessory = null,
-            actionAccessory = null,
-            effectAccessory = null;
-
-
-        // Get the accessory for target/action/effect based on largest priorities
-        // If the Toy only has one accessory, they should all just be the same
-        foreach(NeoAccessory acc in NeoAccessories)
-        {
-            int[] currentPriorities = acc.GetPriorities();
-
-            if(currentPriorities[(int)NeoAccessory.PriorityIndex.Target] >
-                largestTargetPriority)
-            {
-                largestTargetPriority = currentPriorities[(int)NeoAccessory.PriorityIndex.Target];
-                targetAccessory = acc;
-            }
-            if (currentPriorities[(int)NeoAccessory.PriorityIndex.Action] >
-               largestActionPriority)
-            {
-                largestActionPriority = currentPriorities[(int)NeoAccessory.PriorityIndex.Action];
-                actionAccessory = acc;
-            }
-            if (currentPriorities[(int)NeoAccessory.PriorityIndex.Effect] >
-               largestEffectPriority)
-            {
-                largestEffectPriority = currentPriorities[(int)NeoAccessory.PriorityIndex.Effect];
-                effectAccessory = acc;
-            }
-        }
-
-        Debug.Log("Toy.SetIdleBehaviorFromAccessories: building new root from these accessories:");
-        Debug.Log("\tAction: " + actionAccessory);
-        Debug.Log("\tTargets: " + targetAccessory + ", count = " + targetAccessory.GetTargets().Count);
-        Debug.Log("\tEffect: " + effectAccessory);
-
-        targetAccessory.DEBUG_PrintTargets();
-
-        // Build the node from these accessories
-        IdleTreeRoot = actionAccessory.GetParameterizedAction(this,
-            targetAccessory, effectAccessory);
-
-        // For debug purposes, run the new IdleTreeRoot
-        DEBUG_StartBehavior();
-        */
-    }
+		
 
 	/// <summary>
 	/// Changes the idle tree root, WITHOUT starting the new behavior. The new behavior can be started by calling OnPlay().
@@ -853,21 +728,20 @@ public class Toy : SmartObject {
 	/// </summary>
 	public void RunCheckerFunctions(){
 		if (H_LIST.Count == 1) {
+			Debug.Log ("Only one Hybrid Accessory--running.");
 			SetIdleBehavior (H_LIST[0].GetAction());
 			return;
 		}
-		int i = 0;
-		foreach (HybridAccessory hacc in H_LIST) {
-			HybridAccessory.CheckerFunction function = hacc.GetCheckerFunction ();
+		for (int i = 0; i < H_LIST.Count; i++) {
+			HybridAccessory.CheckerFunction function = H_LIST[i].GetCheckerFunction ();
 			if ( function != null) {
 				bool run = function ();
 				Debug.Log ("Checker function for HybridAccessory " + i + " returns " + run);
 				if (run) {
-					SetIdleBehavior (hacc.GetAction());
+					SetIdleBehavior (H_LIST[i].GetAction());
 					break;
 				}
 			}
-			i++;
 		}
 	}
 

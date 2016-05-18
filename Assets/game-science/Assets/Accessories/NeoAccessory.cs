@@ -94,10 +94,6 @@ public abstract class NeoAccessory : MonoBehaviour{
 	/// </summary>
 	public abstract void InitializeEffects ();
 
-	/// <summary>
-	/// Initializes the priority for executing this Accessory. The list of equipped Accessories is scanned (every second? frame?) by order of priority.
-	/// </summary>
-	public abstract void InitializeExecutionOrder ();
 
 	/// <summary>
 	/// Initializes the checker function for this Accessory. The checker function is called when the Toy is scanning H_LIST, and if it is true, execution of this Accessory takes place.
@@ -159,6 +155,7 @@ public abstract class NeoAccessory : MonoBehaviour{
         InitializeTargets();
         InitializeAction();
         InitializeEffects();
+		InitializeCheckerFunction ();
 
         //Debug.Log("NeoAccessory.OnUse for " + this);
         /*Debug.Log("\tPriorities: " + GetPriorities()[0] + ", "

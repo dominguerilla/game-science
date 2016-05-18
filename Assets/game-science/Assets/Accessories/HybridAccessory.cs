@@ -79,7 +79,7 @@ public class HybridAccessory {
 	/// </summary>
 	/// <param name="Accessories">Accessories.</param>
 	public static HybridAccessory HybridizeComponents(params HybridAccessory[] Accessories){
-		List<int> ExecutionPriorities = new List<int> ();
+		
 
         if(Accessories.Length < 1) { return null; }
 
@@ -96,13 +96,15 @@ public class HybridAccessory {
 			if (priorities [2] > hybrid.ReturnPriority(2)) {
 				hybrid.SetEffect (acc.GetEffect(), priorities[2]);
 			}
-			ExecutionPriorities.Add (priorities[3]);
+			if (priorities [3] > hybrid.ReturnPriority (3)) {
+				hybrid.SetExecutionPriority (priorities[3]);
+			}
 		}
-		int max = ExecutionPriorities [0];
-		for(int i = 0; i < ExecutionPriorities.Count; i++){
-			max = Mathf.Max (max, ExecutionPriorities[i]);
-		}
-		hybrid.SetExecutionPriority (max);
+
+		//This is just so that the new hybrid has a bigger priority
+		hybrid.SetExecutionPriority (hybrid.ReturnPriority (3) + 1);
+
+
 		HybridAccessory.CheckerFunction function = () => {
 			return true;
 		};
@@ -205,7 +207,12 @@ public class HybridAccessory {
 	public void SetTarget(List<GameObject> Targets, int priority){
 		this.Targets = Targets;
 		this.TargetPriority = priority;
-		Debug.Log ("Target set, with priority " + priority);
+		Debug.Log ("Target set, initialized with priority " + priority);
+	}
+
+	public void SetTarget(List<GameObject> Targets){
+		this.Targets = Targets;
+		Debug.Log ("Targets set, with priority " + TargetPriority);
 	}
 
 	/// <summary>
@@ -214,7 +221,12 @@ public class HybridAccessory {
 	public void SetAction(Node Action, int priority){
 		this.Action = Action;
 		this.ActionPriority = priority;
-		Debug.Log ("Action set, with priority " + priority);
+		Debug.Log ("Action set, initialized with priority " + priority);
+	}
+
+	public void SetAction(Node Action){
+		this.Action = Action;
+		Debug.Log ("Action set, with priority " + ActionPriority);
 	}
 
 	/// <summary>
@@ -223,7 +235,12 @@ public class HybridAccessory {
 	public void SetEffect(AccessoryFunction Effect, int priority){
 		this.Effects = Effect;
 		this.EffectPriority = priority;
-		Debug.Log ("Effects set, with priority " + priority);
+		Debug.Log ("Effects set, initialized with priority " + priority);
+	}
+
+	public void SetEffect(AccessoryFunction Effect){
+		this.Effects = Effect;
+		Debug.Log ("Effects set, with priority " + EffectPriority);
 	}
 
 	/// <summary>
@@ -247,6 +264,7 @@ public class HybridAccessory {
 
 	public void SetCheckerFunction(CheckerFunction function){
 		this.CheckerFunc = function;
+		Debug.Log ("Checker function set, with priority " + ExecutionPriority);
 	}
 
 	public void SetEquipper(Toy toy){
