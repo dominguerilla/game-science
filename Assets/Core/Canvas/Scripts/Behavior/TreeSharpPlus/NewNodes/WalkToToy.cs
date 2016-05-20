@@ -34,8 +34,7 @@ namespace TreeSharpPlus{
             // Vector3 vector = target.transform.position;
 
             // Get slight offset of target's location
-            Vector3 vector = 
-                Utils.GetNewRandomPositionInRange(target.transform.position, 0.5f);
+            Vector3 vector = Utils.GetSlightVectorOffset(target.transform.position);
 
             // Walk to the toy
             //Debug.Log("Walking to Toy " + target);
@@ -52,8 +51,7 @@ namespace TreeSharpPlus{
                 if (--maxIterations % 5 == 0)
                 {
                     // Recalculate vector
-                    vector =
-                        Utils.GetNewRandomPositionInRange(target.transform.position, 0.5f);
+                    vector = Utils.GetSlightVectorOffset(target.transform.position);
                     agent.SetDestination(vector);
                 }
                 else if (maxIterations < 1)

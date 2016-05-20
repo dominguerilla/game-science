@@ -7,6 +7,21 @@ public class Utils : MonoBehaviour
 
     public static Vector3 ORIGIN_VECTOR = new Vector3(0, 0, 0);
 
+    // Use this so Toys don't act rude and step inside other Toys
+    public static Vector3 GetSlightVectorOffset(Vector3 pos)
+    {
+        Vector3 returnVector = pos;
+
+        int maxIter = 50;
+        while (--maxIter > 0 && Vector3.Distance(pos, returnVector) < 1)
+        {
+            returnVector.x = Random.Range(pos.x - 1.5f, pos.x + 1.5f);
+            returnVector.z = Random.Range(pos.z - 1.5f, pos.z + 1.5f);
+        }
+
+        return returnVector;
+    }
+
     // Given a vector, returns a new vector in a random range
     public static Vector3 GetNewRandomPosition(Vector3 pos)
     {

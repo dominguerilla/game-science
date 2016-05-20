@@ -65,6 +65,9 @@ namespace TreeSharpPlus{
 
             // Walk to the toy
             Debug.Log("Walking to nearest character: " + nearestChar);
+
+            // Don't be rude and walk inside the other character
+            vector = Utils.GetSlightVectorOffset(vector);
             agent.SetDestination(vector);
 
             int maxIterations = 1000;
@@ -76,11 +79,10 @@ namespace TreeSharpPlus{
                     break;
                 }
 
-                maxIterations--;
-                if(maxIterations % 10 == 0)
+                if(--maxIterations % 10 == 0)
                 {
                     // Recalculate vector
-                    vector = nearestChar.transform.position;
+                    vector = Utils.GetSlightVectorOffset(nearestChar.transform.position);
                     agent.SetDestination(vector);
                 }
                 else if (maxIterations < 1)
