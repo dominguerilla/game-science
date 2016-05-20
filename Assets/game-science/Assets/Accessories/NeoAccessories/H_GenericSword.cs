@@ -20,10 +20,13 @@ public class H_GenericSword : NeoAccessory {
 
 	public override void InitializePriorities()
 	{
-		hybridAccessory.SetPriorities(new int[4] { Random.Range(1, 100), Random.Range(1,100), Random.Range(1,100), Random.Range(1,100)});
-	}
+        // For showing behavior: use GenericSword effect with SantaHat's targets/action
+        hybridAccessory.SetPriorities(new int[4] { 0, 0, 9, 0 });
 
-	public override void InitializeTargets()
+        //hybridAccessory.SetPriorities(new int[4] { Random.Range(1, 100), Random.Range(1,100), Random.Range(1,100), Random.Range(1,100)});
+    }
+
+    public override void InitializeTargets()
 	{
 		hybridAccessory.GetTarget().Add(this.gameObject);
 	}

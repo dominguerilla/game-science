@@ -20,7 +20,10 @@ public class H_SantaHat : NeoAccessory {
 
 	public override void InitializePriorities()
 	{
-		hybridAccessory.SetPriorities(new int[4] { Random.Range(1, 100), Random.Range(1,100), Random.Range(1,100), Random.Range(1,100)});
+        // For showing behavior: use GenericSword effect with SantaHat's targets/action
+        hybridAccessory.SetPriorities(new int[4] { 9, 9, 0, 9 });
+
+        // hybridAccessory.SetPriorities(new int[4] { Random.Range(1, 100), Random.Range(1,100), Random.Range(1,100), Random.Range(1,100)});
 	}
 
 	public override void InitializeTargets()
