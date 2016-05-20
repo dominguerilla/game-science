@@ -17,7 +17,10 @@ public class Joke : NeoAccessory
         IdleRotate(transform, RotateSpeed);
     }
 
+	public override void Initialize(){
 
+	}
+	/*
     public override void InitializePriorities()
     {
         // For showing behavior: use Joke effect with LovePotion's targets/action
@@ -105,5 +108,5 @@ public class Joke : NeoAccessory
 		hybridAccessory.SetCheckerFunction (function);
 	}
 
-
+*/
 }

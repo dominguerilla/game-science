@@ -26,40 +26,34 @@ public class Debug_HA_Text : NeoAccessory {
 		IdleRotate(transform, RotateSpeed);
 	}
 
-	public override void InitializePriorities()
-	{
+	public override void Initialize(){
+
+		//priorities
 		hybridAccessory.SetPriorities(new int[4] { TargetPriority, ActionPriority, EffectPriority, ExecutionPriority});
-	}
 
-	public override void InitializeTargets()
-	{
+		//Targets
 		hybridAccessory.SetTarget (DebugTargets);
-	}
 
-	public override void InitializeAction()
-	{
-		DecoratorLoop root = new DecoratorLoop(
-			new Sequence(
-				new LeafInvoke(() => { hybridAccessory.ExecuteEffects();}),
-				new LeafWait(5000)
-			)
-		);
-
-		hybridAccessory.SetAction (root);
-	}
-
-	//recompile pls
-	public override void InitializeEffects()
-	{
-		HybridAccessory.AccessoryFunction function = () => {
+		//Effects
+		HybridAccessory.AccessoryFunction effectFunc= () => {
 			Debug.Log(DebugActionText + this.RunCount);
 			this.RunCount++;
 		};
-		hybridAccessory.SetEffect(function);
-	}
-		
+		hybridAccessory.SetEffect(effectFunc);
 
-	public override void InitializeCheckerFunction(){
+		//Action and TreeCreator
+		HybridAccessory.TreeFunction treeFunc = (targets, effect) => {
+			return new DecoratorLoop(
+				new Sequence(
+					new LeafInvoke(() => { effect();}),
+					new LeafWait(5000)
+				)
+			);
+		};
+		hybridAccessory.SetTreeFunction(treeFunc);
+		hybridAccessory.SetAction (hybridAccessory.CreateTree(null, hybridAccessory.GetEffect()));
+
+		//CheckerFunction
 		HybridAccessory.CheckerFunction function = () => {
 			return true;
 		};

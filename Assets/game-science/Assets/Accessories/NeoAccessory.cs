@@ -74,31 +74,7 @@ public abstract class NeoAccessory : MonoBehaviour{
 	/// <summary>
 	/// Initializes the priorities of the three components. Should set the values for TargetPriority, ActionPriority, and EffectPriority.
 	/// </summary>
-	public abstract void InitializePriorities ();
-
-	/// <summary>
-	/// This function sets the Targets list. 
-	/// Note that you can either find a way to choose a specific toy, or find a way to select Toys and Accessories
-	/// that fit a criteria. 
-	/// </summary>
-	public abstract void InitializeTargets();
-
-	/// <summary>
-	/// This function constructs the tree that specifies the behavior of the Toy that equips the Accessory.
-	/// It should SET the Action field to the root of the node.
-	/// </summary>
-	public abstract void InitializeAction();
-
-	/// <summary>
-	/// Sets the Effects function in the Hybrid Accessory.
-	/// </summary>
-	public abstract void InitializeEffects ();
-
-
-	/// <summary>
-	/// Initializes the checker function for this Accessory. The checker function is called when the Toy is scanning H_LIST, and if it is true, execution of this Accessory takes place.
-	/// </summary>
-	public abstract void InitializeCheckerFunction ();
+	public abstract void Initialize();
 
 
 	/// <summary>
@@ -150,17 +126,13 @@ public abstract class NeoAccessory : MonoBehaviour{
     public void OnUse()
     {
         // Initialize all the stuff for this Accessory when Toy picks it up
-        /*** NOTE: Please leave this so that InitializePriorities runs FIRST */
-        InitializePriorities();
-        InitializeTargets();
-        InitializeAction();
-        InitializeEffects();
-		InitializeCheckerFunction ();
+        /*** NOTE: Please leave this so that InitializePriorities runs FIRST, and that InitializeEffects runs before InitializeAction! */
+		Initialize ();
 
         //Debug.Log("NeoAccessory.OnUse for " + this);
         /*Debug.Log("\tPriorities: " + GetPriorities()[0] + ", "
             + GetPriorities()[1] + ", "
-            + GetPriorities()[2]);
+            + GetPriorities()[2 ]);
         Debug.Log("\tTargets Count: " + GetTargets().Count);*/
 
         this.gameObject.SetActive(false);

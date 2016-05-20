@@ -16,6 +16,10 @@ public class LovePotion : NeoAccessory {
         IdleRotate(transform, RotateSpeed);
     }
 
+	public override void Initialize(){
+
+	}
+	/*
     public override void InitializePriorities()
     {
         // For showing behavior: use LovePotion target & action, use Joke effect
@@ -75,7 +79,7 @@ public class LovePotion : NeoAccessory {
                                     new LeafAssert(() => {
                                         return currentTarget == null;
                                     }))
-                            )),*/
+                            )),*//*
                             new LeafTrace("Target is: " + (Targets[0].GetComponent<Toy>() as Toy)),
                             new WalkToToy(this.toy, Targets[0].GetComponent<Toy>() as Toy),
                             // Have the Toy turn to face the target and wave

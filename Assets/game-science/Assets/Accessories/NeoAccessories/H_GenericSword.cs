@@ -18,6 +18,11 @@ public class H_GenericSword : NeoAccessory {
 		IdleRotate(transform, RotateSpeed);
 	}
 
+	public override void Initialize(){
+
+	}
+
+	/*
 	public override void InitializePriorities()
 	{
         // For showing behavior: use GenericSword effect with SantaHat's targets/action
@@ -94,6 +99,6 @@ public class H_GenericSword : NeoAccessory {
 		};
 		hybridAccessory.SetCheckerFunction (function);
 	}
-
+*/
 
 }

@@ -12,11 +12,13 @@ public class HybridAccessory {
 
 	public delegate void AccessoryFunction();
 	public delegate bool CheckerFunction();
+	public delegate Node TreeFunction (List<GameObject> targets, AccessoryFunction effects);
 
 	private List<GameObject> Targets;
 	private Node Action;
 	private AccessoryFunction Effects;
 	private CheckerFunction CheckerFunc;
+	private TreeFunction TreeCreator;
 	private Toy Equipper;
 
 	private int TargetPriority, ActionPriority, EffectPriority, ExecutionPriority;
@@ -79,41 +81,59 @@ public class HybridAccessory {
 	/// </summary>
 	/// <param name="Accessories">Accessories.</param>
 	public static HybridAccessory HybridizeComponents(params HybridAccessory[] Accessories){
-		
-
         if(Accessories.Length < 1) { return null; }
 
-		HybridAccessory hybrid = new HybridAccessory ();
+		HybridAccessory newHybrid = new HybridAccessory ();
 
-		foreach (HybridAccessory acc in Accessories) {
-			int[] priorities = acc.ReturnPriorities();
-			if (priorities [0] > hybrid.ReturnPriority(0)) {
-				hybrid.SetTarget (acc.GetTarget(), priorities[0]);
+		foreach (HybridAccessory existingAcc in Accessories) {
+			int[] existingPriorities = existingAcc.ReturnPriorities();
+
+			//For targets
+			if (existingPriorities [0] > newHybrid.ReturnPriority(0)) {
+				newHybrid.SetTarget (existingAcc.GetTarget(), existingPriorities[0]);
 			}
-			if (priorities [1] > hybrid.ReturnPriority(1)) {
-				hybrid.SetAction (acc.GetAction(), priorities[1]);
+
+			//For actions and tree functions
+			if (existingPriorities [1] > newHybrid.ReturnPriority(1)) {
+				Node newRoot = existingAcc.CreateTree (newHybrid.GetTarget(), newHybrid.GetEffect());
+				newHybrid.SetTreeFunction (existingAcc.GetTreeFunction());
+				if (newRoot != null)
+					newHybrid.SetAction (newRoot, existingPriorities [1]);
+				else
+					newHybrid.SetAction (existingAcc.GetAction(), existingPriorities[1]);
 			}
-			if (priorities [2] > hybrid.ReturnPriority(2)) {
-				hybrid.SetEffect (acc.GetEffect(), priorities[2]);
+
+			//For effects--note we have to create a new tree, just in case the effect function is called in the tree
+			if (existingPriorities [2] > newHybrid.ReturnPriority(2)) {
+				Node newRoot = newHybrid.CreateTree (newHybrid.GetTarget(), existingAcc.GetEffect());
+				if (newRoot != null) {
+					newHybrid.SetAction (newRoot, newHybrid.ReturnPriority(1));
+				} else {
+					newHybrid.SetAction (existingAcc.GetAction (), existingAcc.ReturnPriority(1));
+				}
+				newHybrid.SetEffect (existingAcc.GetEffect (), existingPriorities[2]);
 			}
-			if (priorities [3] > hybrid.ReturnPriority (3)) {
-				hybrid.SetExecutionPriority (priorities[3]);
+
+			//For execution priorities
+			if (existingPriorities [3] > newHybrid.ReturnPriority (3)) {
+				newHybrid.SetExecutionPriority (existingPriorities[3]);
 			}
 		}
 
-		//This is just so that the new hybrid has a bigger priority
-		hybrid.SetExecutionPriority (hybrid.ReturnPriority (3) + 1);
+		//This is just so that the new hybrid has a biggest priority
+		newHybrid.SetExecutionPriority (newHybrid.ReturnPriority (3) + 1);
 
 
 		HybridAccessory.CheckerFunction function = () => {
 			return true;
 		};
-		hybrid.SetCheckerFunction (function);
+		newHybrid.SetCheckerFunction (function);
 
-		hybrid.PrintPriorities ();
+		newHybrid.PrintPriorities ();
 
-        return hybrid;
+        return newHybrid;
 	}
+
 
 	public void PrintPriorities(){
 		Debug.Log ("Hybrid Priorities:");
@@ -163,6 +183,21 @@ public class HybridAccessory {
 		priorities [2] = EffectPriority;
 		priorities [3] = ExecutionPriority;
 		return priorities;
+	}
+
+	/// <summary>
+	/// Creates a new Action PBT with the input target list and effect function. If the TreeFunction TreeCreator is not set, will return null.
+	/// </summary>
+	/// <returns>The tree.</returns>
+	/// <param name="Targets">Targets.</param>
+	/// <param name="Effect">Effect.</param>
+	public Node CreateTree(List<GameObject> Targets, AccessoryFunction Effect){
+		if (TreeCreator == null) {
+			Debug.Log ("No TreeFunction set for this HybridAccessory!");
+			return null;
+		} else {
+			return TreeCreator (Targets, Effect);
+		}
 	}
 
 	//TODO PLEASE PLEASE PLEASE only use these for initializing HybridAccessories, NOT for changing other HybridAccessories!
@@ -218,7 +253,7 @@ public class HybridAccessory {
 	/// <summary>
 	/// For PRIVATE USE/INITIALIZATION ONLY!
 	/// </summary>
-	public void SetAction(Node Action, int priority){
+	public void SetAction(Node Action, int priority){ //this is obsolete
 		this.Action = Action;
 		this.ActionPriority = priority;
 		Debug.Log ("Action set, initialized with priority " + priority);
@@ -227,6 +262,14 @@ public class HybridAccessory {
 	public void SetAction(Node Action){
 		this.Action = Action;
 		Debug.Log ("Action set, with priority " + ActionPriority);
+	}
+
+	public void SetTreeFunction(TreeFunction function){
+		this.TreeCreator = function;
+	}
+
+	public TreeFunction GetTreeFunction(){
+		return this.TreeCreator;
 	}
 
 	/// <summary>
