@@ -18,8 +18,10 @@ public class LovePotion : NeoAccessory {
 
     public override void InitializePriorities()
     {
-		//hybridAccessory.SetPriorities(new int[4] { 0, 1, 0, 1});
-		hybridAccessory.SetPriorities(new int[4] { Random.Range(1, 100), Random.Range(1,100), Random.Range(1,100), Random.Range(1,100)});
+        // For showing behavior: use LovePotion target & action, use Joke effect
+        hybridAccessory.SetPriorities(new int[4] { 9, 9, 0, 9});
+
+        //hybridAccessory.SetPriorities(new int[4] { Random.Range(1, 100), Random.Range(1,100), Random.Range(1,100), Random.Range(1,100)});
     }
 
     public override void InitializeTargets()
