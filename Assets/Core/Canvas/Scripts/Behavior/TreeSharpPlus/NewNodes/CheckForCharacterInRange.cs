@@ -18,6 +18,7 @@ namespace TreeSharpPlus{
             this.range = range;
         }
 
+        // NOTE pretty sure this Node doesn't do anything LOL
         public override IEnumerable<RunStatus> Execute()
         {
             Vector3 agentPos = agent.transform.position;
