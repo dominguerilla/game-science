@@ -17,7 +17,10 @@ public class Rose : NeoAccessory
         IdleRotate(transform, RotateSpeed);
     }
 
+	public override void Initialize(){
 
+	}
+	/*
     public override void InitializePriorities()
     {
 		//hybridAccessory.SetPriorities(new int[4] { 1, 1, 0, 1});
@@ -99,5 +102,5 @@ public class Rose : NeoAccessory
 		};
 		hybridAccessory.SetCheckerFunction (function);
 	}
-
+*/
 }

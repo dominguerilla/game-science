@@ -18,6 +18,11 @@ public class H_GenericSword : NeoAccessory {
 		IdleRotate(transform, RotateSpeed);
 	}
 
+	public override void Initialize(){
+
+	}
+
+	/*
 	public override void InitializePriorities()
 	{
 		hybridAccessory.SetPriorities(new int[4] { Random.Range(1, 100), Random.Range(1,100), Random.Range(1,100), Random.Range(1,100)});
@@ -91,6 +96,6 @@ public class H_GenericSword : NeoAccessory {
 		};
 		hybridAccessory.SetCheckerFunction (function);
 	}
-
+*/
 
 }

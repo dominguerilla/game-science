@@ -16,6 +16,10 @@ public class Mic : NeoAccessory {
         IdleRotate(transform, RotateSpeed);
     }
 
+	public override void Initialize(){
+
+	}
+	/*
     public override void InitializePriorities()
     {
 		//hybridAccessory.SetPriorities(new int[4] { 3, 0, 0, 0});
@@ -115,7 +119,7 @@ public class Mic : NeoAccessory {
                 )
             );
     }
-    */
+    *//*
 
 
 
@@ -125,5 +129,5 @@ public class Mic : NeoAccessory {
 		};
 		hybridAccessory.SetCheckerFunction (function);
 	}
-
+	*/
 }

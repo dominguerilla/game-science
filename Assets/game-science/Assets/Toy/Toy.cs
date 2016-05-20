@@ -464,6 +464,12 @@ public class Toy : SmartObject {
     public void ChangeHealth(float healthChange)
     {
         Health += healthChange;
+		if (healthChange < 0) {
+			Debug.Log (this.gameObject.name + " suffers " + healthChange + " damage!");
+		} else {
+			Debug.Log (this.gameObject.name + " is healed for " + healthChange + " points.");
+		}
+
         if (Health <= 0)
         {
             Die();

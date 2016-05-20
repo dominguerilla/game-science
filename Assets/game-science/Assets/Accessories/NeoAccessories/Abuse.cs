@@ -20,8 +20,11 @@ public class Abuse : NeoAccessory
     }
 
     int id = 0;
-	
 
+	public override void Initialize(){
+
+	}
+	/*
     public override void InitializePriorities()
     {
 		hybridAccessory.SetPriorities(new int[4] { Random.Range(1, 100), Random.Range(1,100), Random.Range(1,100), Random.Range(1,100)});
@@ -112,5 +115,5 @@ public class Abuse : NeoAccessory
 		hybridAccessory.SetCheckerFunction (function);
 	}
 
-    
+    */
 }

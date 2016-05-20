@@ -16,6 +16,10 @@ public class LovePotion : NeoAccessory {
         IdleRotate(transform, RotateSpeed);
     }
 
+	public override void Initialize(){
+
+	}
+	/*
     public override void InitializePriorities()
     {
 		//hybridAccessory.SetPriorities(new int[4] { 0, 1, 0, 1});
@@ -73,7 +77,7 @@ public class LovePotion : NeoAccessory {
                                     new LeafAssert(() => {
                                         return currentTarget == null;
                                     }))
-                            )),*/
+                            )),*//*
                             new LeafTrace("Target is: " + (Targets[0].GetComponent<Toy>() as Toy)),
                             new WalkToToy(this.toy, Targets[0].GetComponent<Toy>() as Toy),
                             // Have the Toy turn to face the target and wave

@@ -10,27 +10,29 @@ public class Skelefier : NeoAccessory {
 
 	public GameObject EquipmentModel;
 
+	public override void Initialize(){
 
+	}
 
-	public override void InitializePriorities(){
+	public  void InitializePriorities(){
 		hybridAccessory.SetPriorities(new int[4] { Random.Range(1, 100), Random.Range(1,100), Random.Range(1,100), Random.Range(1,100)});
 	}
 
-	public override void InitializeTargets(){
+	public  void InitializeTargets(){
 		GameObject randomToy = Utils.GetRandomOtherToyInSceneAsGameObject (toy);
 		Debug.Log ("Added " + randomToy.name + " as a Skelefier target.");
 	}
 
-	public override void InitializeAction(){
+	public void InitializeAction(){
 		
 	}
 
-	public override void InitializeEffects(){
+	public void InitializeEffects(){
 
 	}
 
 
-	public override void InitializeCheckerFunction(){
+	public void InitializeCheckerFunction(){
 		HybridAccessory.CheckerFunction function = () => {
 			return true;
 		};

@@ -17,7 +17,10 @@ public class Joke : NeoAccessory
         IdleRotate(transform, RotateSpeed);
     }
 
+	public override void Initialize(){
 
+	}
+	/*
     public override void InitializePriorities()
     {
 		//hybridAccessory.SetPriorities(new int[4] { 0, 0, 1, 0});
@@ -103,5 +106,5 @@ public class Joke : NeoAccessory
 		hybridAccessory.SetCheckerFunction (function);
 	}
 
-
+*/
 }
