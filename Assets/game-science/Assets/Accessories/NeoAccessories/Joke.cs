@@ -17,20 +17,11 @@ public class Joke : NeoAccessory
         IdleRotate(transform, RotateSpeed);
     }
 
+    // UNFINISHED -- NEED TO TEST
 	public override void Initialize(){
-
-	}
-	/*
-    public override void InitializePriorities()
-    {
         // For showing behavior: use Joke effect with LovePotion's targets/action
-		hybridAccessory.SetPriorities(new int[4] { 0, 0, 9, 0});
+        hybridAccessory.SetPriorities(new int[4] { 0, 0, 9, 0 });
 
-		//hybridAccessory.SetPriorities(new int[4] { Random.Range(1, 100), Random.Range(1,100), Random.Range(1,100), Random.Range(1,100)});
-    }
-
-    public override void InitializeTargets()
-    {
         // Target is one random other Toy in scene
         GameObject target = Utils.GetRandomOtherToyInSceneAsGameObject(toy);
         if (target)
@@ -41,9 +32,82 @@ public class Joke : NeoAccessory
         else
         {
             // To avoid errors, add the Toy itself so there's something in the Targets list
-            hybridAccessory.GetTarget().Add(toy.gameObject);
+            hybridAccessory.GetTarget().Add(this.toy.gameObject);
         }
+
+        // Effect
+        HybridAccessory.AccessoryFunction effectFunction = () =>
+        {
+            if(hybridAccessory.GetTarget() == null)
+            {
+                Debug.Log("Joke: No target to perform effect on");
+            }
+            if (hybridAccessory.GetTarget()[0] != null)
+            {
+                Toy targetToy = hybridAccessory.GetTarget()[0].GetComponent<Toy>() as Toy;
+                // Toy should just tell jokes to itself
+                if(targetToy == null) { targetToy = this.toy; }
+
+                if (Random.Range(0, 2) < 1) // Joke accepted
+                    targetToy.ShowEmoji(EmojiScript.EmojiTypes.Laugh_Emoji);
+                else    // The joke is so bad it hurts!
+                    targetToy.ShowEmoji(EmojiScript.EmojiTypes.Hurt_Emoji);
+            }
+            else
+            {
+                Debug.Log("Joke2: No target to perform effect on");
+            }
+        };
+        hybridAccessory.SetEffect(effectFunction);
+
+        // TreeFunction and Action
+        HybridAccessory.TreeFunction function = (targets, effect) =>
+        {
+            WalkToToy walkNode;
+            Node turnAndWaveNode;
+            if(targets[0] != null && targets[0].GetComponent<Toy>() != null)
+            {
+                walkNode = new WalkToToy(toy, targets[0].GetComponent<Toy>() as Toy);
+                turnAndWaveNode = IdleBehaviors.TurnAndWave(toy, targets[0].GetComponent<Toy>() as Toy);
+            }
+            else
+            {   // Oh dear...
+                Debug.Log("Joke: no targets found");
+                walkNode = new WalkToToy(toy, toy);
+                turnAndWaveNode = IdleBehaviors.TurnAndWave(toy, toy);
+            }
+
+            LeafInvoke effectExecute = new LeafInvoke(() => { effect(); });
+
+            Node root = new DecoratorLoop(
+                new SequenceParallel(
+                    new Sequence(
+                        // Wait a bit before walking
+                        new LeafWait(500),
+                        walkNode,
+                        turnAndWaveNode,
+                        new LeafInvoke(() => {
+                            this.toy.ShowEmoji(EmojiScript.EmojiTypes.Laugh_Emoji); }),
+                        // Wait for the joke
+                        new LeafWait(500),
+                        effectExecute
+                        ),
+                    // Show a laugh at the beginning of the behavior
+                    new LeafInvoke(() => {
+                        this.toy.ShowEmoji(EmojiScript.EmojiTypes.Laugh_Emoji); })));
+            return root;
+        };
+        hybridAccessory.SetTreeFunction(function);
+        hybridAccessory.SetAction(hybridAccessory.CreateTree(hybridAccessory.GetTarget(), hybridAccessory.GetEffect()), hybridAccessory.ReturnPriority(1));
+
+        //CheckerFunction
+        HybridAccessory.CheckerFunction checker = () => {
+            return true;
+        };
+        hybridAccessory.SetCheckerFunction(checker);
+
     }
+    /*
 
     public override void InitializeAction()
     {
