@@ -34,8 +34,6 @@ public class H_SantaHat : NeoAccessory {
         // Treefunction and Action
         HybridAccessory.TreeFunction function = (targets, effect) =>
         {
-            GivePresent presentNode = new GivePresent(toy, present);
-
             LeafInvoke effectExecute = new LeafInvoke(() => { effect(); });
 
             NavMeshAgent agent = toy.GetAgent();
@@ -48,9 +46,9 @@ public class H_SantaHat : NeoAccessory {
                         new WalkToNearestCharacter(agent),
                         // Give them a present!
                         new GivePresent(toy, present),
-                        // Show a heart
+                        // Smile
                         new LeafInvoke(() => {
-                            toy.ShowEmoji(EmojiScript.EmojiTypes.Heart_Emoji);
+                            toy.ShowEmoji(EmojiScript.EmojiTypes.Smiley_Emoji);
                         }),
                         // Finally, execute effect
                         effectExecute

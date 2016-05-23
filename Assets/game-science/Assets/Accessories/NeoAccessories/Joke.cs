@@ -45,11 +45,14 @@ public class Joke : NeoAccessory
             if (hybridAccessory.GetTarget()[0] != null)
             {
                 Toy targetToy = hybridAccessory.GetTarget()[0].GetComponent<Toy>() as Toy;
-                // Toy should just tell jokes to itself
+                // Toy should just tell jokes to itself if there's no target
                 if(targetToy == null) { targetToy = this.toy; }
 
-                if (Random.Range(0, 2) < 1) // Joke accepted
+                int randInt = Random.Range(0, 3);
+                if (randInt == 0) // Joke accepted
                     targetToy.ShowEmoji(EmojiScript.EmojiTypes.Laugh_Emoji);
+                else if (randInt == 1)  // Joke was not very good
+                    targetToy.ShowEmoji(EmojiScript.EmojiTypes.Neutral_Emoji);
                 else    // The joke is so bad it hurts!
                     targetToy.ShowEmoji(EmojiScript.EmojiTypes.Hurt_Emoji);
             }

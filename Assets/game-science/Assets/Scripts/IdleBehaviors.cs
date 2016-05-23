@@ -20,6 +20,25 @@ public static class IdleBehaviors {
             toy.transform.LookAt(target.transform); });
     }
 
+    // Overloaded method for GameObject instead of Toy
+    public static Node TurnTowardsTarget(Toy toy, GameObject target)
+    {
+        if (toy == null)
+        {
+            return new LeafTrace("TurnTowardsTarget: toy is null");
+        }
+        if (target == null)
+        {
+            return new LeafTrace("TurnTowardsTarget: target is null");
+        }
+
+        return new LeafInvoke(() => {
+            // For now, just turn instantly
+            Debug.Log("Turning towards target");
+            toy.transform.LookAt(target.transform);
+        });
+    }
+
     public static Node TurnAndWave(Toy toy, Toy target)
     {
         Animator anim = toy.GetAnimator();

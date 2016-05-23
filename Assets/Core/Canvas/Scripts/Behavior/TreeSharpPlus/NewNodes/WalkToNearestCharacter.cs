@@ -94,6 +94,10 @@ namespace TreeSharpPlus{
                 yield return RunStatus.Running;
             }
             //Debug.Log("Arrived at " + vector);
+
+            // Last step: face the other Toy
+            agent.transform.LookAt(nearestChar.transform);
+
             yield return RunStatus.Success;
         }
     }

@@ -468,6 +468,7 @@ public class Toy : SmartObject {
         Health += healthChange;
 		if (healthChange < 0) {
 			Debug.Log (this.gameObject.name + " suffers " + healthChange + " damage!");
+            ShowEmoji(Hurt_Emoji);
 		} else {
 			Debug.Log (this.gameObject.name + " is healed for " + healthChange + " points.");
 		}

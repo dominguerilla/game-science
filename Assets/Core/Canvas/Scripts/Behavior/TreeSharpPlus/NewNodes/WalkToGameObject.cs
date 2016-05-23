@@ -1,17 +1,18 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-namespace TreeSharpPlus{
+namespace TreeSharpPlus
+{
 
     /// <summary>
-    /// Walk to a Toy
+    /// Walk to a GameObject
     /// </summary>
-    public class WalkToToy : Node
+    public class WalkToGameObject : Node
     {
         NavMeshAgent agent;
-        Toy target;
+        GameObject target;
 
-        public WalkToToy(Toy toy, Toy target)
+        public WalkToGameObject(Toy toy, GameObject target)
         {
             this.agent = toy.GetAgent();
             this.target = target;
