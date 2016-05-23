@@ -8,6 +8,10 @@ public class EmojiScript : MonoBehaviour {
         Anger_Emoji,
         Laugh_Emoji,
         Heart_Emoji,
+        BrokenHeart_Emoji,
+        Neutral_Emoji,
+        Shocked_Emoji,
+        Smiley_Emoji,
     }
 
     private float time = 0;

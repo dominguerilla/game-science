@@ -1307,6 +1307,10 @@ MonoBehaviour:
   Anger_Emoji: {fileID: 140712, guid: 8e6df9feb6fe2ee478f513480fd08021, type: 2}
   Laugh_Emoji: {fileID: 197980, guid: 0ccf276194eae7143a863be9457d9f99, type: 2}
   Heart_Emoji: {fileID: 187812, guid: 63b0761cecef23a47947af14292a0012, type: 2}
+  BrokenHeart_Emoji: {fileID: 188032, guid: adc362b067390044daf7615fcc5f5d5b, type: 2}
+  Neutral_Emoji: {fileID: 176288, guid: 21318c8d096efbf488e98f43ac9c7c58, type: 2}
+  Shocked_Emoji: {fileID: 192390, guid: 886a4f9184b2ed74b84410744c9dc9d6, type: 2}
+  Smiley_Emoji: {fileID: 151868, guid: 1c0af257c3f8e174097a4878b6c9bf20, type: 2}
 --- !u!136 &13653288
 CapsuleCollider:
   m_ObjectHideFlags: 1
@@ -1455,6 +1459,22 @@ Prefab:
       propertyPath: m_TagString
       value: Toy
       objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: BrokenHeart_Emoji
+      value: 
+      objectReference: {fileID: 188032, guid: adc362b067390044daf7615fcc5f5d5b, type: 2}
+    - target: {fileID: 0}
+      propertyPath: Neutral_Emoji
+      value: 
+      objectReference: {fileID: 176288, guid: 21318c8d096efbf488e98f43ac9c7c58, type: 2}
+    - target: {fileID: 0}
+      propertyPath: Shocked_Emoji
+      value: 
+      objectReference: {fileID: 192390, guid: 886a4f9184b2ed74b84410744c9dc9d6, type: 2}
+    - target: {fileID: 0}
+      propertyPath: Smiley_Emoji
+      value: 
+      objectReference: {fileID: 151868, guid: 1c0af257c3f8e174097a4878b6c9bf20, type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 171864}

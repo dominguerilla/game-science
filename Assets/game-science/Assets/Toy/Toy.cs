@@ -84,7 +84,9 @@ public class Toy : SmartObject {
 
     // The Emojis for this Toy
     public GameObject Hurt_Emoji,
-        Anger_Emoji, Laugh_Emoji, Heart_Emoji;
+        Anger_Emoji, Laugh_Emoji, Heart_Emoji,
+        BrokenHeart_Emoji, Neutral_Emoji, Shocked_Emoji,
+        Smiley_Emoji;
 
     #region setters
     // All states are initially set to true
@@ -615,6 +617,18 @@ public class Toy : SmartObject {
                 break;
             case EmojiScript.EmojiTypes.Laugh_Emoji:
                 ShowEmoji(Laugh_Emoji);
+                break;
+            case EmojiScript.EmojiTypes.BrokenHeart_Emoji:
+                ShowEmoji(BrokenHeart_Emoji);
+                break;
+            case EmojiScript.EmojiTypes.Neutral_Emoji:
+                ShowEmoji(Neutral_Emoji);
+                break;
+            case EmojiScript.EmojiTypes.Shocked_Emoji:
+                ShowEmoji(Shocked_Emoji);
+                break;
+            case EmojiScript.EmojiTypes.Smiley_Emoji:
+                ShowEmoji(Smiley_Emoji);
                 break;
             default:
                 print("Toy.ShowEmoji: Got bad input");
