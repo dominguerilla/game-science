@@ -39,13 +39,24 @@ public class H_GenericSword : NeoAccessory {
             NavMeshAgent agent = toy.GetAgent();
             LeafInvoke effectExecute = new LeafInvoke(() => { effect(); });
 
+            Node walkNode;
+            // Is there another Toy in the scene?
+            if(Utils.GetAllOtherToysInSceneAsGameObjects(this.toy.gameObject) != null)
+            {
+                walkNode = new WalkToNearestCharacter(agent, 0.2f);
+            }
+            else
+            {
+                walkNode = new WalkToRandomNewVector(this.toy);
+            }
+
             DecoratorLoop root = new DecoratorLoop(
                 new Sequence(
                     // Check for a nearby character
                     new CheckForCharacterInRange(agent, 100f),
                     // Go to them, if they're nearby
-                    new WalkToNearestCharacter(agent, 0.2f),
-                    new LeafWait(2000),
+                    walkNode,
+                    new LeafWait(1000),
 
                     //face and attack, use Core()
                     // TODO: make the Toy face the nearest character
