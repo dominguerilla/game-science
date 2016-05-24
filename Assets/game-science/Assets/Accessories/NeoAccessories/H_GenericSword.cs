@@ -39,38 +39,22 @@ public class H_GenericSword : NeoAccessory {
             NavMeshAgent agent = toy.GetAgent();
             LeafInvoke effectExecute = new LeafInvoke(() => { effect(); });
 
-            /*Node turnTowardsNode;
-            WalkToGameObject walkToObjectNode;
-
-            if(targets[0] != null)
-            {
-                turnTowardsNode = IdleBehaviors.TurnTowardsTarget(this.toy, targets[0]);
-                walkToObjectNode = new WalkToGameObject(this.toy, targets[0]);
-            }
-            else
-            {   // :(
-                turnTowardsNode = IdleBehaviors.TurnTowardsTarget(this.toy, this.toy);
-                walkToObjectNode = new WalkToGameObject(this.toy, this.toy.gameObject);
-            }*/
-
             DecoratorLoop root = new DecoratorLoop(
                 new Sequence(
                     // Check for a nearby character
                     new CheckForCharacterInRange(agent, 100f),
                     // Go to them, if they're nearby
-                    new WalkToNearestCharacter(agent),
-                    //walkToObjectNode,
+                    new WalkToNearestCharacter(agent, 0.2f),
                     new LeafWait(2000),
-
-                    //assuming walktonearestcharacter will have the accessory face the target
-                    //turnTowardsNode,
 
                     //face and attack, use Core()
+                    // TODO: make the Toy face the nearest character
                     effectExecute,
-                    new LeafWait(2000),
-                    new WalkToRandomNewVector(toy),
+
+                    new LeafWait(1000),
+                    new WalkToRandomRange(toy, 1f),
                     // Wait a bit
-                    new LeafWait(2000)));
+                    new LeafWait(1000)));
             return root;
         };
 

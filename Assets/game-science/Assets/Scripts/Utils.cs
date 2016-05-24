@@ -22,6 +22,21 @@ public class Utils : MonoBehaviour
         return returnVector;
     }
 
+    // Use this so Toys don't act rude and step inside other Toys
+    public static Vector3 GetSlightVectorOffset(Vector3 pos, float offset)
+    {
+        Vector3 returnVector = pos;
+
+        int maxIter = 50;
+        while (--maxIter > 0 && Vector3.Distance(pos, returnVector) < 1)
+        {
+            returnVector.x = Random.Range(pos.x - offset, pos.x + offset);
+            returnVector.z = Random.Range(pos.z - offset, pos.z + offset);
+        }
+
+        return returnVector;
+    }
+
     // Given a vector, returns a new vector in a random range
     public static Vector3 GetNewRandomPosition(Vector3 pos)
     {

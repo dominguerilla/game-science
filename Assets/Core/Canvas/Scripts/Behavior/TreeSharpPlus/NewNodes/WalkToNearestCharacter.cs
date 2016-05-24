@@ -10,10 +10,28 @@ namespace TreeSharpPlus{
     public class WalkToNearestCharacter : Node {
 
         NavMeshAgent agent;
+        bool exact;
+        float offset;
 
+        // Walk to character with a distance offset
         public WalkToNearestCharacter(NavMeshAgent agent)
         {
             this.agent = agent;
+            this.exact = false;
+        }
+
+        // Walk to character without a distance offset, if exact is true
+        public WalkToNearestCharacter(NavMeshAgent agent, bool exact)
+        {
+            this.agent = agent;
+            this.exact = exact;
+        }
+
+        // Walk to character with a specified distance offset
+        public WalkToNearestCharacter(NavMeshAgent agent, float offset)
+        {
+            this.agent = agent;
+            this.offset = offset;
         }
 
         public override IEnumerable<RunStatus> Execute()
@@ -66,8 +84,11 @@ namespace TreeSharpPlus{
             // Walk to the toy
             Debug.Log("Walking to nearest character: " + nearestChar);
 
-            // Don't be rude and walk inside the other character
-            vector = Utils.GetSlightVectorOffset(vector);
+            if (!exact) // Don't be rude and walk inside the other character
+                vector = Utils.GetSlightVectorOffset(vector);
+            if (offset != default(float))
+                vector = Utils.GetSlightVectorOffset(vector, offset);
+
             agent.SetDestination(vector);
 
             int maxIterations = 1000;
@@ -82,7 +103,14 @@ namespace TreeSharpPlus{
                 if(--maxIterations % 10 == 0)
                 {
                     // Recalculate vector
-                    vector = Utils.GetSlightVectorOffset(nearestChar.transform.position);
+                    if (!exact)
+                        vector = Utils.GetSlightVectorOffset(nearestChar.transform.position);
+                    else
+                        vector = nearestChar.transform.position;
+
+                    if (offset != default(float))
+                        vector = Utils.GetSlightVectorOffset(nearestChar.transform.position, offset);
+
                     agent.SetDestination(vector);
                 }
                 else if (maxIterations < 1)
@@ -94,9 +122,6 @@ namespace TreeSharpPlus{
                 yield return RunStatus.Running;
             }
             //Debug.Log("Arrived at " + vector);
-
-            // Last step: face the other Toy
-            agent.transform.LookAt(nearestChar.transform);
 
             yield return RunStatus.Success;
         }
