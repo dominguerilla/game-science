@@ -40,12 +40,8 @@ public class LovePotion : NeoAccessory {
         // Effect
         HybridAccessory.AccessoryFunction effectFunction = () =>
         {
-            // This Toy is happy and in love
-            for (int i = 0; i < 3; i++)
-            {
-                toy.ShowEmoji(EmojiScript.EmojiTypes.Laugh_Emoji);
-                toy.ShowEmoji(EmojiScript.EmojiTypes.Heart_Emoji);
-            }
+            // This Toy is in so much love
+            toy.ShowEmoji(EmojiScript.EmojiTypes.Heart_Emoji);
         };
         hybridAccessory.SetEffect(effectFunction);
 
@@ -82,7 +78,12 @@ public class LovePotion : NeoAccessory {
                         new Sequence(
                             walkNode,
                             turnAndWaveNode,
-                            effectExecute,
+                            // Show 3 hearts, or execute some other effect 3 times in a row
+                            new DecoratorLoop(3,
+                                new Sequence(
+                                    effectExecute,
+                                    new LeafWait(200)
+                                )),
                             new LeafWait(1000))
                         )
                     )

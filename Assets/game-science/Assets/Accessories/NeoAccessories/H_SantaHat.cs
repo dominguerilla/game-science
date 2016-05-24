@@ -34,25 +34,42 @@ public class H_SantaHat : NeoAccessory {
         // Treefunction and Action
         HybridAccessory.TreeFunction function = (targets, effect) =>
         {
-            LeafInvoke effectExecute = new LeafInvoke(() => { effect(); });
-
             NavMeshAgent agent = toy.GetAgent();
-            DecoratorLoop root = new DecoratorLoop(
-                new Sequence(
-                    // Walk somewhere
-                    new WalkToRandomNewVector(toy),
-                    new Sequence(
+
+            LeafInvoke effectExecute = new LeafInvoke(() => { effect(); });
+            Sequence behaviorNode;
+            if(Utils.GetAllOtherToysInSceneAsGameObjects(this.toy.gameObject) == null)
+            {
+                // Toy will randomly walk around, giving presents and executing effect
+                behaviorNode = new Sequence(
+                    new GivePresent(toy, present),
+                    new LeafWait(200),
+                    effectExecute);
+            }
+            else
+            {
+                behaviorNode = new Sequence(
                         // Go to other character
                         new WalkToNearestCharacter(agent),
                         // Give them a present!
                         new GivePresent(toy, present),
                         // Smile
-                        new LeafInvoke(() => {
+                        new LeafInvoke(() =>
+                        {
                             toy.ShowEmoji(EmojiScript.EmojiTypes.Smiley_Emoji);
                         }),
                         // Finally, execute effect
+                        new LeafWait(200),
                         effectExecute
-                    ),
+                    );
+            }
+
+            DecoratorLoop root = new DecoratorLoop(
+                new Sequence(
+                    // Walk somewhere
+                    new WalkToRandomNewVector(toy),
+                    // Execute behavior
+                    behaviorNode,
                     // Wait a bit
                     new LeafWait(2000)));
             return root;
