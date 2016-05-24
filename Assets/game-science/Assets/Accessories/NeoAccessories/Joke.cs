@@ -20,7 +20,11 @@ public class Joke : NeoAccessory
     // UNFINISHED -- NEED TO TEST
 	public override void Initialize(){
         // For showing behavior: use Joke effect with LovePotion's targets/action
-        hybridAccessory.SetPriorities(new int[4] { 0, 0, 9, 0 });
+        //hybridAccessory.SetPriorities(new int[4] { 0, 0, 9, 0 });
+
+        // Joke target/effect, LovePotion Action
+        hybridAccessory.SetPriorities(new int[4] { 10, 0, 9, 0 });
+
 
         // Target is one random other Toy in scene
         GameObject target = Utils.GetRandomOtherToyInSceneAsGameObject(toy);
@@ -42,7 +46,7 @@ public class Joke : NeoAccessory
             {
                 Debug.Log("Joke: No target to perform effect on");
             }
-            if (hybridAccessory.GetTarget()[0] != null)
+            else if (hybridAccessory.GetTarget()[0] != null)
             {
                 Toy targetToy = hybridAccessory.GetTarget()[0].GetComponent<Toy>() as Toy;
                 // Toy should just tell jokes to itself if there's no target
@@ -83,21 +87,18 @@ public class Joke : NeoAccessory
             LeafInvoke effectExecute = new LeafInvoke(() => { effect(); });
 
             Node root = new DecoratorLoop(
-                new SequenceParallel(
                     new Sequence(
                         // Wait a bit before walking
                         new LeafWait(500),
                         walkNode,
                         turnAndWaveNode,
+                        // Tell the joke
                         new LeafInvoke(() => {
                             this.toy.ShowEmoji(EmojiScript.EmojiTypes.Laugh_Emoji); }),
-                        // Wait for the joke
-                        new LeafWait(500),
+                        // Wait for the reaction
+                        new LeafWait(1000),
                         effectExecute
-                        ),
-                    // Show a laugh at the beginning of the behavior
-                    new LeafInvoke(() => {
-                        this.toy.ShowEmoji(EmojiScript.EmojiTypes.Laugh_Emoji); })));
+                        ));
             return root;
         };
         hybridAccessory.SetTreeFunction(function);
