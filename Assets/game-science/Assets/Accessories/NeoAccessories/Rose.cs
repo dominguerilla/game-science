@@ -70,8 +70,16 @@ public class Rose : NeoAccessory
             Node turnAndWaveNode;
             if (targets[0] != null)
             {
-                walkNode = new WalkToToy(this.toy, targets[0].GetComponent<Toy>() as Toy);
-                turnAndWaveNode = IdleBehaviors.TurnAndWave(this.toy, targets[0].GetComponent<Toy>() as Toy);
+                if (targets[0].GetComponent<Toy>() != null)
+                {
+                    walkNode = new WalkToToy(this.toy, targets[0].GetComponent<Toy>() as Toy);
+                    turnAndWaveNode = IdleBehaviors.TurnAndWave(this.toy, targets[0].GetComponent<Toy>() as Toy);
+                }
+                else
+                {
+                    walkNode = new WalkToToy(this.toy, this.toy);
+                    turnAndWaveNode = IdleBehaviors.TurnAndWave(this.toy, this.toy);
+                }
             }
             else
             {   // This will be interesting...

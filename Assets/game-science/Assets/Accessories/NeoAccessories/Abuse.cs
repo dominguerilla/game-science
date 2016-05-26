@@ -25,32 +25,42 @@ public class Abuse : NeoAccessory
         // Priorities
         hybridAccessory.SetPriorities(new int[4] { Random.Range(1, 100), Random.Range(1, 100), Random.Range(1, 100), Random.Range(1, 100) });
 
-        // Targets
-        hybridAccessory.GetTarget().Add(this.gameObject);
+        // Target is one random other Toy in scene
+        GameObject target = Utils.GetRandomOtherToyInSceneAsGameObject(toy);
+        hybridAccessory.SetTarget(new List<GameObject>());
+        if (target)
+        {
+            hybridAccessory.GetTarget().Add(target);
+        }
+        else
+        {
+            // To avoid errors, add the Toy itself so there's something in the Targets list
+            hybridAccessory.GetTarget().Add(toy.gameObject);
+        }
 
         // Effects
         HybridAccessory.AccessoryFunction effectFunction = () =>
         {
             if (hybridAccessory.GetTarget()[0] != null)
             {
-                Toy target = hybridAccessory.GetTarget()[0].GetComponent<Toy>();
-                if (target)
+                Toy targetToy = hybridAccessory.GetTarget()[0].GetComponent<Toy>();
+                if (targetToy)
                 {
                     if (id == 0)
                     {
                         if (UnityEngine.Random.Range(0, 2) < 1)
                         {   // Accepted
-                            target.ShowEmoji(EmojiScript.EmojiTypes.Heart_Emoji);
+                            targetToy.ShowEmoji(EmojiScript.EmojiTypes.Heart_Emoji);
                         }
                         else
                         {   // Rejected
                             reject = true;
-                            target.ShowEmoji(EmojiScript.EmojiTypes.Anger_Emoji);
+                            targetToy.ShowEmoji(EmojiScript.EmojiTypes.Anger_Emoji);
                         }
                     }
                     else if (id == 1)
                     {
-                        target.ShowEmoji(EmojiScript.EmojiTypes.Hurt_Emoji);
+                        targetToy.ShowEmoji(EmojiScript.EmojiTypes.Hurt_Emoji);
                     }
                 }
             }
@@ -69,12 +79,20 @@ public class Abuse : NeoAccessory
             Node turnAndWaveNode;
             if (targets[0] != null)
             {
-                walkNode = new WalkToToy(this.toy, targets[0].GetComponent<Toy>() as Toy);
-                turnAndWaveNode = IdleBehaviors.TurnAndWave(this.toy, targets[0].GetComponent<Toy>() as Toy);
+                if (targets[0].GetComponent<Toy>() != null)
+                {
+                    walkNode = new WalkToToy(this.toy, targets[0].GetComponent<Toy>() as Toy);
+                    turnAndWaveNode = IdleBehaviors.TurnAndWave(this.toy, targets[0].GetComponent<Toy>() as Toy);
+                }
+                else
+                {
+                    walkNode = new WalkToToy(this.toy, this.toy);
+                    turnAndWaveNode = IdleBehaviors.TurnAndWave(this.toy, this.toy);
+                }
             }
             else
             {   // This will be interesting...
-                Debug.Log("Rose: targets[0] is null");
+                Debug.Log("Abuse: targets[0] is null");
                 walkNode = new WalkToToy(this.toy, this.toy);
                 turnAndWaveNode = IdleBehaviors.TurnAndWave(this.toy, this.toy);
             }
