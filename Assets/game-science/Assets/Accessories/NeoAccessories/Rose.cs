@@ -17,6 +17,8 @@ public class Rose : NeoAccessory
         IdleRotate(transform, RotateSpeed);
     }
 
+    bool startBehavior = true;
+
 	public override void Initialize(){
         // Priorities
         hybridAccessory.SetPriorities(new int[4] { Random.Range(1, 100), Random.Range(1, 100), Random.Range(1, 100), Random.Range(1, 100) });
@@ -82,8 +84,13 @@ public class Rose : NeoAccessory
 
             Node root = new DecoratorLoop(
                 new Sequence(
-                    new LeafInvoke(() => {
-                        this.toy.ShowEmoji(EmojiScript.EmojiTypes.Heart_Emoji);
+                    new LeafInvoke(() =>
+                    {
+                        if (startBehavior)
+                        {
+                            this.toy.ShowEmoji(EmojiScript.EmojiTypes.Heart_Emoji);
+                        }
+                        startBehavior = false;
                     }),
                     // Wait a bit before walking
                     new LeafWait(500),
@@ -92,8 +99,8 @@ public class Rose : NeoAccessory
                     new LeafInvoke(() => {
                         this.toy.ShowEmoji(EmojiScript.EmojiTypes.Smiley_Emoji);
                     }),
-                    // Wait for the proposal
-                    new LeafWait(500),
+                    // Wait for the proposal...
+                    new LeafWait(1000),
                     effectExecute)
                 );
             return root;
