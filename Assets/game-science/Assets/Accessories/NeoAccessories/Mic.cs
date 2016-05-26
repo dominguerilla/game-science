@@ -17,9 +17,79 @@ public class Mic : NeoAccessory {
     }
 
 	public override void Initialize(){
+        // Priorities
+        hybridAccessory.SetPriorities(new int[4] { Random.Range(1, 100), Random.Range(1, 100), Random.Range(1, 100), Random.Range(1, 100) });
 
-	}
-	/*
+        // Target is all other Toys in scene at time of initialization
+        List<GameObject> tempList = Utils.GetAllOtherToysInSceneAsGameObjects(this.toy.gameObject);
+        hybridAccessory.SetTarget(new List<GameObject>());
+
+        if (tempList != null)
+        {
+            foreach (GameObject o in tempList)
+            {
+                hybridAccessory.GetTarget().Add(o);
+            }
+        }
+        else
+        {
+            // Add the Toy itself to ensure there's something in the Target list
+            hybridAccessory.GetTarget().Add(this.toy.gameObject);
+        }
+
+        // Effect: tell a joke
+        HybridAccessory.AccessoryFunction effectFunction = () =>
+        {
+            toy.ShowEmoji(EmojiScript.EmojiTypes.Laugh_Emoji);
+        };
+        hybridAccessory.SetEffect(effectFunction);
+
+        // TreeFunction
+        HybridAccessory.TreeFunction function = (targets, effect) =>
+        {
+            WalkToToy walkNode;
+            Node turnAndWaveNode;
+            if (targets[0] != null)
+            {
+                walkNode = new WalkToToy(this.toy, targets[0].GetComponent<Toy>() as Toy);
+                turnAndWaveNode = IdleBehaviors.TurnAndWave(this.toy, targets[0].GetComponent<Toy>() as Toy);
+            }
+            else
+            {   // This will be interesting...
+                Debug.Log("Mic: targets[0] is null");
+                walkNode = new WalkToToy(this.toy, this.toy);
+                turnAndWaveNode = IdleBehaviors.TurnAndWave(this.toy, this.toy);
+            }
+
+            LeafInvoke effectExecute = new LeafInvoke(() => { effect(); });
+
+            Node root = new DecoratorLoop(
+                new Sequence(
+                    new LeafInvoke(() => {
+                        this.toy.ShowEmoji(EmojiScript.EmojiTypes.Laugh_Emoji);
+                    }),
+                    // Wait a bit before walking
+                    new LeafWait(500),
+                    walkNode,
+                    turnAndWaveNode,
+                    // Tell the Joke
+                    effectExecute)
+                );
+            return root;
+        };
+
+        hybridAccessory.SetTreeFunction(function);
+        hybridAccessory.SetAction(hybridAccessory.CreateTree(hybridAccessory.GetTarget(), hybridAccessory.GetEffect()), hybridAccessory.ReturnPriority(1));
+
+        //CheckerFunction
+        HybridAccessory.CheckerFunction checker = () => {
+            return true;
+        };
+        hybridAccessory.SetCheckerFunction(checker);
+
+
+    }
+    /*
     public override void InitializePriorities()
     {
 		//hybridAccessory.SetPriorities(new int[4] { 3, 0, 0, 0});
